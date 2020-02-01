@@ -20,11 +20,11 @@ public class Drive extends DifferentialDrive{
 
         switch(state.driveState){
             case kAuto:
-            setSpeed(state.driveStraightSpeed, state.driveRotateSpeed);
+
             break;
 
             case kManual:
-
+            setSpeed(state.driveStraightSpeed, state.driveRotateSpeed);
             break;
 
             case kTest:
@@ -37,6 +37,6 @@ public class Drive extends DifferentialDrive{
 
     public void setSpeed(double straightSpeed,double rotateSpeed) {
 		arcadeDrive(straightSpeed, rotateSpeed);
-	}
+    }
 
 }

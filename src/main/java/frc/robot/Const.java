@@ -13,9 +13,9 @@ public class Const {
 
     //Drive-mortor-port
 	public static final int DriveRightFrontPort = 0;
-	public static final int DriveRightBackPort = 1;
-	public static final int DriveLeftFrontPort = 2;
-    public static final int DriveLeftBackPort = 3;
+	public static final int DriveRightBackPort = 5;
+	public static final int DriveLeftFrontPort = 1;
+    public static final int DriveLeftBackPort = 6;
 
     //Drive
     public static final double DriveFullSpeedTime = 0.5;
