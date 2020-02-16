@@ -68,10 +68,30 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    driveLeftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
-    driveRightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
-    driveLeftFront.setSensorPhase(false);
-    driveRightFront.setSensorPhase(false);
+    driveLeftFront.configSelectedFeedbackSensor(FeedbackDevice.Analog,0,0);
+    driveRightFront.configSelectedFeedbackSensor(FeedbackDevice.Analog,0,0);
+    driveLeftFront.setSensorPhase(true);
+    driveRightFront.setSensorPhase(true);
+    driveRightFront.setInverted(false);
+    driveLeftFront.setInverted(false);
+    /* Config the peak and nominal outputs, 12V means full */
+    driveLeftFront.configNominalOutputForward(0,0);
+    driveLeftFront.configNominalOutputReverse(0,0);
+    driveLeftFront.configPeakOutputForward(1,0);
+    driveLeftFront.configPeakOutputReverse(-1,0);
+    driveRightFront.configNominalOutputForward(0,0);
+    driveRightFront.configNominalOutputReverse(0,0);
+    driveRightFront.configPeakOutputForward(1,0);
+    driveRightFront.configPeakOutputReverse(-1,0);
+    driveLeftFront.configAllowableClosedloopError(0,0,0);
+    /* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
+    driveLeftFront.config_kF(0,0.0,0);
+    driveLeftFront.config_kP(0,0.15,0);
+    driveLeftFront.config_kI(0,0.0,0);
+    driveLeftFront.config_kD(0,1.0,0);
+    double targetPositionRotations = 0.2 * 10.0 * 4096;
+    driveLeftFront.set(ControlMode.Position, targetPositionRotations);
+    driveRightFront.set(ControlMode.Position, targetPositionRotations);
 
   }
 
