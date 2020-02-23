@@ -16,7 +16,6 @@ public class Const {
 	public static final int DriveRightBackPort = 12;
 	public static final int DriveLeftFrontPort = 6;
     public static final int DriveLeftBackPort = 13;
-
     //Drive
     public static final double DriveFullSpeedTime = 0.5;
 
