@@ -52,4 +52,9 @@ public class Const {
     public final static Gains kGains_Velocit = new Gains( 0.01, 0.01, 0, 1023.0/7200.0,  300,  1.00,20000000);
     public final static double shooterOutTakeSpeed = 0.4;
     public final static double shooterIntakeSpeed = 0.4;
+
+
+
+    public final static double intakeSpeed = 0.6;
+    public final static double outTakeSoeed = 0.4;
 }

@@ -25,6 +25,9 @@ public class Shooter {
             case kmanual:
                 setSpeedPersent(state.shooterLeftSpeed,state.shooterRightSpeed);
                 break;
+            case doNothing:
+                setSpeed(0);
+                break;
         }
     }
     public void setSpeed(double speed){

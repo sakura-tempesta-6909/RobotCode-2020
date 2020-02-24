@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
     //SubClass
     Drive drive;
     State state;
+    Shooter shooter;
 
     @Override
     public void robotInit() {

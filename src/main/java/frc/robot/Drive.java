@@ -13,15 +13,11 @@ public class Drive extends DifferentialDrive{
 
         switch(state.driveState){
             case kAuto:
-
             break;
-
             case kManual:
             setSpeed(state.driveStraightSpeed, state.driveRotateSpeed);
             break;
-
-            case kTest:
-
+            case kdoNothing:
             break;
 
         }
