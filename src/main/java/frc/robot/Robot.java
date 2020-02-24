@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.interfaces.*;
 
 //TalonSRX&VictorSPXのライブラリー
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -13,54 +12,56 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.*;
 
 import edu.wpi.first.wpilibj.Joystick;
-
 import edu.wpi.first.wpilibj.DigitalInput;
-
 import edu.wpi.first.wpilibj.smartdashboard.*;
+import edu.wpi.first.cameraserver.CameraServer;
 
-import edu.wpi.first.wpilibj.*;
 public class Robot extends TimedRobot {
 
     //コントローラー
     //とりあえず、Xbox2つ
     XboxController driver, operator;
+    Joystick _joy;
 
     //DriveMotor
     WPI_TalonSRX  driveRightFront,driveLeftFront;
     VictorSPX driveRightBack,driveLeftBack;
 
+    //ShooterMortor
+    TalonSRX shooterLeft, shooterRight;
+
+    //IntakaMortor
+    VictorSPX intakeBeltFront,intakeBeltBack ;
+    VictorSPX intake;
+
     //センサー
-    //Gyro gyro;
+    DigitalInput intake_f ,intake_b;
+
+    //カメラ
+    CameraServer camera;
 
     //SubClass
     Drive drive;
     State state;
 
-    TalonSRX _talon;
-    TalonSRX _talon_s ;
-
-    VictorSPX ibf ;
-    Joystick _joy;
-    VictorSPX ibb ;
-    VictorSPX intake ;
-    DigitalInput intake_f,intake_b;
-    CameraServer camera;
-
     @Override
     public void robotInit() {
+
         intake_f = new DigitalInput(0);
         intake_b = new DigitalInput(1);
-        _talon = new TalonSRX(4);
-        _talon_s = new TalonSRX(5);
+        shooterLeft = new TalonSRX(4);
+        shooterRight = new TalonSRX(5);
 
-        ibf = new VictorSPX(11);
-        ibb = new VictorSPX(15);
+        //IntakeBelt
+        intakeBeltFront = new VictorSPX(11);
+        intakeBeltBack = new VictorSPX(15);
         intake = new VictorSPX(14);
 
         //コントローラーの初期化
         driver = new XboxController(2);
         _joy = new Joystick(0);
 
+        //cameraの初期化
         camera = CameraServer.getInstance();
         camera.startAutomaticCapture();
 
@@ -80,42 +81,49 @@ public class Robot extends TimedRobot {
         driveRightBack.follow(driveRightFront);
 
 
-        ibb.follow(ibf);
+        intakeBeltBack.follow(intakeBeltFront);
         /* Factory Default all hardware to prevent unexpected behaviour */
-        _talon.configFactoryDefault();
-        _talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-                Constants.kPIDLoopIdx,
-                Constants.kTimeoutMs);
+        shooterLeft.configFactoryDefault();
+        shooterLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+                Const.kPIDLoopIdx,
+                Const.kTimeoutMs);
 
-        _talon_s.configFactoryDefault();
-        _talon_s.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-                Constants.kPIDLoopIdx,
-                Constants.kTimeoutMs);
-
-
-        _talon.setSensorPhase(true);
-        _talon.configNominalOutputForward(0, Constants.kTimeoutMs);
-        _talon.configNominalOutputReverse(0, Constants.kTimeoutMs);
-        _talon.configPeakOutputForward(1, Constants.kTimeoutMs);
-        _talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
-        _talon.config_kF(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kF, Constants.kTimeoutMs);
-        _talon.config_kP(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kP, Constants.kTimeoutMs);
-        _talon.config_kI(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kI, Constants.kTimeoutMs);
-        _talon.config_kD(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kD, Constants.kTimeoutMs);
+        shooterRight.configFactoryDefault();
+        shooterRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+                Const.kPIDLoopIdx,
+                Const.kTimeoutMs);
 
 
-        _talon_s.setSensorPhase(true);
-        _talon_s.configNominalOutputForward(0, Constants.kTimeoutMs);
-        _talon_s.configNominalOutputReverse(0, Constants.kTimeoutMs);
-        _talon_s.configPeakOutputForward(1, Constants.kTimeoutMs);
-        _talon_s.configPeakOutputReverse(-1, Constants.kTimeoutMs);
-        _talon_s.config_kF(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kF, Constants.kTimeoutMs);
-        _talon_s.config_kP(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kP, Constants.kTimeoutMs);
-        _talon_s.config_kI(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kI, Constants.kTimeoutMs);
-        _talon_s.config_kD(Constants.kPIDLoopIdx, Constants.kGains_Velocit.kD, Constants.kTimeoutMs);
+        shooterLeft.setSensorPhase(true);
 
-        _talon.configMaxIntegralAccumulator(Constants.kPIDLoopIdx,2000000);
-        _talon_s.configMaxIntegralAccumulator(Constants.kPIDLoopIdx,2000000);
+        /*
+        初期値が確認できたら、削除予定
+        shooterLeft.configNominalOutputForward(0, Const.kTimeoutMs);
+        shooterLeft.configNominalOutputReverse(0, Const.kTimeoutMs);
+        shooterLeft.configPeakOutputForward(1, Const.kTimeoutMs);
+        shooterLeft.configPeakOutputReverse(-1, Const.kTimeoutMs);
+        */
+        shooterLeft.config_kF(Const.kPIDLoopIdx, Const.kGains_Velocit.kF, Const.kTimeoutMs);
+        shooterLeft.config_kP(Const.kPIDLoopIdx, Const.kGains_Velocit.kP, Const.kTimeoutMs);
+        shooterLeft.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
+        shooterLeft.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
+
+
+        shooterRight.setSensorPhase(true);
+        /*
+        初期値が確認できたら、削除予定
+        shooterRight.configNominalOutputForward(0, Const.kTimeoutMs);
+        shooterRight.configNominalOutputReverse(0, Const.kTimeoutMs);
+        shooterRight.configPeakOutputForward(1, Const.kTimeoutMs);
+        shooterRight.configPeakOutputReverse(-1, Const.kTimeoutMs);
+         */
+        shooterRight.config_kF(Const.kPIDLoopIdx, Const.kGains_Velocit.kF, Const.kTimeoutMs);
+        shooterRight.config_kP(Const.kPIDLoopIdx, Const.kGains_Velocit.kP, Const.kTimeoutMs);
+        shooterRight.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
+        shooterRight.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
+
+        shooterLeft.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
+        shooterRight.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
 
 
 
@@ -176,17 +184,17 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         double leftYstick = -1 * _joy.getY();
-        double motorOutput = _talon.getMotorOutputPercent();
+        double motorOutput = shooterLeft.getMotorOutputPercent();
         if(_joy.getRawButton(3)||_joy.getRawButton(4)){
             if(!intake_f.get()){
-                ibf.set(ControlMode.PercentOutput,-1);
+                intakeBeltFront.set(ControlMode.PercentOutput,-1);
             }else if (driver.getAButton()){
-                ibf.set(ControlMode.PercentOutput,1);
+                intakeBeltFront.set(ControlMode.PercentOutput,1);
             }else{
-                ibf.set(ControlMode.PercentOutput,0);
+                intakeBeltFront.set(ControlMode.PercentOutput,0);
             }
         }else{
-            ibf.set(ControlMode.PercentOutput,0);
+            intakeBeltFront.set(ControlMode.PercentOutput,0);
         }
 
 
@@ -197,26 +205,26 @@ public class Robot extends TimedRobot {
             }else{
                 targetVelocity_UnitsPer100ms = 0;
             }
-            ibf.set(ControlMode.PercentOutput,1.0);
-            _talon.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-            _talon_s.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
+            intakeBeltFront.set(ControlMode.PercentOutput,1.0);
+            shooterLeft.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+            shooterRight.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
         }else if(_joy.getRawButton(4)){
             intake.set(ControlMode.PercentOutput,-1.0);
-            _talon.set(ControlMode.PercentOutput, -0.6);
-            _talon_s.set(ControlMode.PercentOutput, 0.6);
+            shooterLeft.set(ControlMode.PercentOutput, -0.6);
+            shooterRight.set(ControlMode.PercentOutput, 0.6);
         }else  if(_joy.getRawButton(3)){
-            _talon.set(ControlMode.PercentOutput, 0.6);
-            _talon_s.set(ControlMode.PercentOutput, -0.6);
+            shooterLeft.set(ControlMode.PercentOutput, 0.6);
+            shooterRight.set(ControlMode.PercentOutput, -0.6);
             intake.set(ControlMode.PercentOutput,1.0);
         }else{
             if(Math.abs(leftYstick)>0.2){
                 double targetVelocity_UnitsPer100ms = leftYstick *100000;
-                _talon.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-                _talon_s.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
+                shooterLeft.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+                shooterRight.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
             }else{
                 intake.set(ControlMode.PercentOutput,0);
-                _talon.set(ControlMode.PercentOutput, 0);
-                _talon_s.set(ControlMode.PercentOutput, 0);
+                shooterLeft.set(ControlMode.PercentOutput, 0);
+                shooterRight.set(ControlMode.PercentOutput, 0);
             }
         }
 
@@ -241,23 +249,23 @@ public class Robot extends TimedRobot {
         System.out.println("HellowWorld");
         if(!intake_f.get()&&!driver.getAButton()){
             System.out.println("true");
-            ibf.set(ControlMode.PercentOutput,-1);
-            _talon.set(ControlMode.PercentOutput, 0.);
-            _talon_s.set(ControlMode.PercentOutput, 0);
+            intakeBeltFront.set(ControlMode.PercentOutput,-1);
+            shooterLeft.set(ControlMode.PercentOutput, 0.);
+            shooterRight.set(ControlMode.PercentOutput, 0);
         }else if (driver.getAButton()){
-            ibf.set(ControlMode.PercentOutput,1);
-            _talon.set(ControlMode.PercentOutput, 0.3);
-            _talon_s.set(ControlMode.PercentOutput, -0.3);
+            intakeBeltFront.set(ControlMode.PercentOutput,1);
+            shooterLeft.set(ControlMode.PercentOutput, 0.3);
+            shooterRight.set(ControlMode.PercentOutput, -0.3);
             System.out.println("false");
         }else{
-            ibf.set(ControlMode.PercentOutput,0);
-            _talon.set(ControlMode.PercentOutput, 0);
-            _talon_s.set(ControlMode.PercentOutput, 0);
+            intakeBeltFront.set(ControlMode.PercentOutput,0);
+            shooterLeft.set(ControlMode.PercentOutput, 0);
+            shooterRight.set(ControlMode.PercentOutput, 0);
             System.out.println("false");
         }
         if (driver.getXButton()){
-            _talon.set(ControlMode.PercentOutput, -0.3);
-            _talon_s.set(ControlMode.PercentOutput, 0.3);
+            shooterLeft.set(ControlMode.PercentOutput, -0.3);
+            shooterRight.set(ControlMode.PercentOutput, 0.3);
         }
         SmartDashboard.putBoolean("intake_f",intake_f.get());
         SmartDashboard.putBoolean("intake_b",intake_b.get());

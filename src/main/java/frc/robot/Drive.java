@@ -5,14 +5,10 @@ import edu.wpi.first.wpilibj.*;
 
 public class Drive extends DifferentialDrive{
 
-/*    public Drive(SpeedController leftMotor, SpeedController rightMotor, Encoder drive_left, Encoder drive_right, ADXRS450_Gyro g_drive) {
-        super(leftMotor, rightMotor);
-    }
-  */
-
   public Drive(SpeedController leftMotor, SpeedController rightMotor) {
     super(leftMotor, rightMotor);
 }
+
     public void apllyState(State state){
 
         switch(state.driveState){
@@ -35,9 +31,5 @@ public class Drive extends DifferentialDrive{
     public void setSpeed(double straightSpeed,double rotateSpeed) {
     arcadeDrive(straightSpeed, rotateSpeed);
   }
-    public void setSetPoint(double setPoint) {
-
-      
-    }
 
 }

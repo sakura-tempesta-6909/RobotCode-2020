@@ -2,16 +2,23 @@ package frc.robot;
 
 public class State {
 
+
     public enum DriveState{
         kManual,
         kAuto,
         kTest
     }
+    public enum ShooterState{
+        kshoot,
+        kintake,
+        kmanual,
+        kouttake
+    }
 
     public DriveState driveState;
     public double driveStraightSpeed, driveRotateSpeed;  //Driveの速度
-    public double driveStraightSetpoint, driveRotateSetpoint;    // PID制御の目標値
-    public boolean is_drivePIDOn;    // PID制御するかどうか
+    public ShooterState shooterState;
+    public double shooterLeftSpeed,shooterRightSpeed,shooterPIDSpeed;
 
     State(){
         stateInit();
@@ -21,9 +28,14 @@ public class State {
 
         //DriveのStateを初期化
         driveState = DriveState.kManual;
-        driveStraightSetpoint = 0;
         driveRotateSpeed = 0;
-        is_drivePIDOn = false;
+
+        //Shooter
+        shooterState = ShooterState.kintake;
+        shooterLeftSpeed = 0;
+        shooterRightSpeed = 0;
+        shooterPIDSpeed = 0;
+
 
     }
 
