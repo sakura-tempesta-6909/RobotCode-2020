@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
 
   //コントローラー
   //とりあえず、Xbox2つ
-  XboxController driver, operator;
+  XboxController driver, operator,sub;
 
   //DriveMotor
   WPI_TalonSRX  driveRightFront,driveLeftFront;
@@ -44,27 +44,29 @@ public class Robot extends TimedRobot {
   State state;
 
 	TalonSRX _talon;
-	TalonSRX _talon_s ;
+	TalonSRX _talon_s,arm;
 
   VictorSPX ibf ;
   Joystick _joy;
   VictorSPX ibb ;
   VictorSPX intake ;
   DigitalInput intake_f,intake_b;
+
   @Override
   public void robotInit() {
     intake_f = new DigitalInput(0);
     intake_b = new DigitalInput(1);
- _talon = new TalonSRX(4);
- _talon_s = new TalonSRX(5);
-
-ibf = new VictorSPX(11);
-  ibb = new VictorSPX(15);
-  intake = new VictorSPX(14);
+    _talon = new TalonSRX(4);
+    _talon_s = new TalonSRX(5);
+    ibf = new VictorSPX(11);
+    ibb = new VictorSPX(15);
+    intake = new VictorSPX(14);
+     arm = new TalonSRX(3);
 
     //コントローラーの初期化
-    driver = new XboxController(Const.DriveControllerPort);
-     _joy = new Joystick(1);
+    driver = new XboxController(2);
+    sub = new XboxController(1);
+     _joy = new Joystick(0);
 
     //gyroの初期化
     //gyro = new ADXRS450_Gyro();
@@ -173,14 +175,13 @@ ibf = new VictorSPX(11);
     double targetPositionRotations = 0.01 * 10.0 * 4096;
     driveLeftFront.set(ControlMode.Position, targetPositionRotations);
     driveRightFront.set(ControlMode.Position, targetPositionRotations);
-  
   */
 }
 
   @Override
   public void teleopPeriodic() {
 
-
+/*
     double leftYstick = -1 * _joy.getY();
     double motorOutput = _talon.getMotorOutputPercent();
     if(_joy.getRawButton(3)||_joy.getRawButton(4)){
@@ -193,36 +194,46 @@ ibf = new VictorSPX(11);
       }
     }else{
       ibf.set(ControlMode.PercentOutput,0);
-    }
+    }*/
 
-
-		if (_joy.getRawButton(1)) {
-			double targetVelocity_UnitsPer100ms;
-			if(Math.abs(leftYstick)>0.2){
-				 targetVelocity_UnitsPer100ms = leftYstick * 500.0 * 4096 / 600*1.5;
+      double targetVelocity_UnitsPer100ms;
+      double leftYstick_j = sub.getX(Hand.kLeft);
+			if(Math.abs(leftYstick_j)>0.2){
+				 targetVelocity_UnitsPer100ms = leftYstick_j * 500.0 * 4096 / 600*1.5;
 				 ibf.set(ControlMode.PercentOutput,1.0);
-			}else{
-				 targetVelocity_UnitsPer100ms = 0;
-				 ibf.set(ControlMode.PercentOutput,0.0);
-			}
 			_talon.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
 			_talon_s.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
-    }else if(_joy.getRawButton(4)){
-      intake.set(ControlMode.PercentOutput,-1.0);
-			_talon.set(ControlMode.PercentOutput, -0.6);
-			_talon_s.set(ControlMode.PercentOutput, 0.6);
-    }else  if(_joy.getRawButton(3)){
-			_talon.set(ControlMode.PercentOutput, 0.6);
-      _talon_s.set(ControlMode.PercentOutput, -0.6);
-      intake.set(ControlMode.PercentOutput,1.0);
     }else{
       intake.set(ControlMode.PercentOutput,0);
 			_talon.set(ControlMode.PercentOutput, 0);
-			_talon_s.set(ControlMode.PercentOutput, 0);
+      _talon_s.set(ControlMode.PercentOutput, 0);
+				 ibf.set(ControlMode.PercentOutput,0);
+    }
+    double leftYstick = _joy.getY();
+		boolean button1 = _joy.getRawButton(1);
+		boolean button2 = _joy.getRawButton(2);
+		if (button1) {
+			double targetPositionRotations = leftYstick * 10.0 * 4096;
+			arm.set(ControlMode.Position, targetPositionRotations);
+		}else if (button2) {
+			arm.set(ControlMode.PercentOutput, leftYstick);
+		}
+ if(!intake_f.get()&&!driver.getAButton()){
+    System.out.println("true");
+    ibf.set(ControlMode.PercentOutput,-1);
+			_talon.set(ControlMode.PercentOutput, 0.);
+      _talon_s.set(ControlMode.PercentOutput, 0);
+    }else if (driver.getAButton()){
+      ibf.set(ControlMode.PercentOutput,1);
+			_talon.set(ControlMode.PercentOutput, 0.3);
+      _talon_s.set(ControlMode.PercentOutput, -0.3);
+      intake.set(ControlMode.PercentOutput, 0.5);
+      System.out.println("false");
     }
 
+    SmartDashboard.putBoolean("intake_f",intake_f.get());
+    SmartDashboard.putBoolean("intake_b",intake_b.get());
 
-    /********** Drive ***********/
           state.driveState = State.DriveState.kManual;
           state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(Hand.kLeft));
           state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(Hand.kRight));
@@ -241,6 +252,7 @@ ibf = new VictorSPX(11);
       ibf.set(ControlMode.PercentOutput,1);
 			_talon.set(ControlMode.PercentOutput, 0.3);
       _talon_s.set(ControlMode.PercentOutput, -0.3);
+      intake.set(ControlMode.PercentOutput, 0.5);
       System.out.println("false");
     }else{
       ibf.set(ControlMode.PercentOutput,0);
@@ -251,6 +263,9 @@ ibf = new VictorSPX(11);
     if (driver.getXButton()){
 			_talon.set(ControlMode.PercentOutput, -0.3);
       _talon_s.set(ControlMode.PercentOutput, 0.3);
+      intake.set(ControlMode.PercentOutput, -0.5);
+    }else{
+      intake.set(ControlMode.PercentOutput, 0);
     }
     SmartDashboard.putBoolean("intake_f",intake_f.get());
     SmartDashboard.putBoolean("intake_b",intake_b.get());
