@@ -158,4 +158,8 @@ bin/
 imgui.ini
 
 
+
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
