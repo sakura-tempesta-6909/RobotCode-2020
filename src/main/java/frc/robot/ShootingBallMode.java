@@ -66,8 +66,6 @@ public class ShootingBallMode {
             drive.apllyState(state);
             shooter.applyState(state);
             arm.applyState(state);
-
         }
-
     }
 }

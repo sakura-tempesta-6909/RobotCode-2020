@@ -18,8 +18,6 @@ public class Const {
 
     //Arm - Motor-port & Encoder - port
     public static final int CanonMotorPort = 3;
-    //public static final int CanonEncoderPort_A = 0;
-    //public static final int CanonEncoderPort_B = 0;
 
 
     public static final int IntakeMotorPort = 14;
@@ -28,12 +26,6 @@ public class Const {
     public static final int BeltMotorBackPort  = 15;
 
     public static final int HangingMotorPort = 7;
-    //public static final int HangingEncoderPort_A = 0;
-    //public static final int HangingEncoderPort_B = 0;
-
-    //microSwitch-port
-    public static final int MaxUpSwitchPort   = 0;
-    public static final int MaxDownSwitchPort = 0;
 
 
     //Drive

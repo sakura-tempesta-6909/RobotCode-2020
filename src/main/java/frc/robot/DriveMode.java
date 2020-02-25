@@ -54,6 +54,5 @@ public class DriveMode {
             intake.applyState(state);
             intakeBelt.applyState(state);
         }
-
     }
 }

@@ -26,7 +26,21 @@ public class ClimbMode {
             state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
             //Climb
-
+            if(operator.getYButton()){
+                state.climbState = State.ClimbState.climbExtend;
+            }else if(operator.getBButton()){
+                state.climbState = State.ClimbState.climbShrink;
+            }else if(operator.getBumper(GenericHID.Hand.kLeft)){
+                state.climbState = State.ClimbState.climbLeftSlide;
+            }else if(operator.getBumper(GenericHID.Hand.kRight)){
+                state.climbState = State.ClimbState.climbRightSlide;
+            }else if(operator.getStartButton()){
+                state.climbState = State.ClimbState.climbLock;
+            }else{
+                state.climbState = State.ClimbState.doNothing;
+            }
+            drive.apllyState(state);
+            climb.apllyState(state);
         }
 
     }
