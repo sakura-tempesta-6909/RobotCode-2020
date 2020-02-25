@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
         panel = new Panel(shooter);
         state = new State();
 
-        driveMode = new DriveMode(drive,intake,controller);
+        driveMode = new DriveMode(drive,intake,intakeBelt,controller);
         panelRotationMode = new PanelRotationMode(drive,panel,controller);
         shootingBallMode = new ShootingBallMode(drive,shooter,arm,controller);
         climbMode = new ClimbMode(drive,arm,climb,controller);

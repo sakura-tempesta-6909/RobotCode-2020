@@ -65,6 +65,7 @@ public class State {
     public double hangingServoAngle;
     public double climbSlideMotorSpeed;
     public double panelManualSpeed;
+    public double shooterAngle;
 
     public ShooterState shooterState;
     public IntakeState intakeState;
@@ -111,6 +112,8 @@ public class State {
         //ContloalMode
 
         controlState = ControlState.m_Drive;
+
+        shooterAngle = 0;
 
 
     }

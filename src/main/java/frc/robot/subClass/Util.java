@@ -7,7 +7,9 @@ public class Util {
     public static double deadbandProcessing(double value) {
         return Math.abs(value) > Const.Deadband ? value : 0 ;
     }
-
+    public static boolean deadbandCheck(double value) {
+        return Math.abs(value) > Const.Deadband;
+    }
     
     //カラーセンサー
 

@@ -7,6 +7,8 @@ public class Const {
     public static final int DriveControllerPort = 0;
     public static final int OperateControllerPort = 1;
 
+    public static final double deadband =0.2;
+
 
     //Drive-motor-port
     public static final int DriveRightFrontPort = 2;

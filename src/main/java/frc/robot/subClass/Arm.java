@@ -60,24 +60,21 @@ public class Arm {
 
     //--------------------------------------------------------------------------------
 
-    /*
+
     //PID管理
     //PIDの目標値を設定
     public void PIDSetPoint(double setPoint){
-        ArmPID.setSetpoint(setPoint);
     }
 
     //PIDコントローラーをオン
     public void PIDEnable(){
-        ArmPID.enable();
     }
 
     //PIDコントローラーをオフ
     public void PIDDisable(){
-        ArmPID.disable();
     }
 
-    */
+
 
 
 }
