@@ -71,11 +71,13 @@ public class Const {
 
 
     //ARM
-    public static final double ArmMBasicSpeed_P = 0.05;
-    public static final double ArmBasicSpeed_M = -0.05;
+    public static final double armMBasicSpeed_P = 0.05;
+    public static final double armBasicSpeed_M = -0.05;
     //スティックの傾きに対するモーターの速さの倍率
-    public static final double ArmMagni = 0.005;
+    public static final double armMagni = 0.005;
     //アームの可動域の角度＆エンコーダーからの値の最大
-    public static final double ArmMaxAngle = 135;
-    public static final double ArmMaxPoint = 383;
+    public static final double armMaxAngle = 135;
+    public static final double armMaxPoint = 383;
+
+    public static final double shooterPanelSpeed = 0.2;
 }

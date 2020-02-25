@@ -137,7 +137,6 @@ public class Robot extends TimedRobot {
         shooterRightMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
 
 
-
         armSensor = new ArmSensor(armMotor);
         arm = new Arm(armMotor,armSensor);
         drive = new Drive(driveLeftFrontMotor, driveRightFrontMotor);
@@ -154,6 +153,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+
         /*
         driveLeftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
         driveRightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
@@ -201,7 +201,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-
 
     }
 
