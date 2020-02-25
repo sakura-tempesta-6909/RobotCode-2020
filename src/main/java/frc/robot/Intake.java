@@ -1,14 +1,14 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class Intake {
-    TalonSRX intakeMortor;
+    VictorSPX intakeMotor;
 
 
-    Intake(TalonSRX intakeMotor){
-        this.intakeMortor = intakeMotor;
+    Intake(VictorSPX intakeMotor){
+        this.intakeMotor = intakeMotor;
     }
 
     public void applyState(State state){
@@ -25,6 +25,6 @@ public class Intake {
         }
     }
     public void setSpeed(double speed){
-        intakeMortor.set(ControlMode.Current,speed);
+        intakeMotor.set(ControlMode.Current,speed);
     }
 }

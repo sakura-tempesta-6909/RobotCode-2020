@@ -21,11 +21,18 @@ public class State {
         doNothing
     }
 
+    public enum IntakeBeltState{
+        kIntake,
+        kouttake,
+        doNothing
+    }
+
     public DriveState driveState;
-    public double driveStraightSpeed, driveRotateSpeed;  //Driveの速度
+    public double driveStraightSpeed, driveRotateSpeed;  //Driveの速度;
+    public double shooterLeftSpeed,shooterRightSpeed,shooterPIDSpeed;
     public ShooterState shooterState;
     public IntakeState intakeState;
-    public double shooterLeftSpeed,shooterRightSpeed,shooterPIDSpeed;
+    public IntakeBeltState intakeBeltState;
 
     State(){
         stateInit();
@@ -45,6 +52,9 @@ public class State {
 
         //Intake
         intakeState = IntakeState.doNothing;
+
+        //IntakeBeltState
+        intakeBeltState = IntakeBeltState.doNothing;
 
 
     }

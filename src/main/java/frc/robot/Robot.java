@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 //TalonSRX&VictorSPXのライブラリー
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -21,21 +20,21 @@ public class Robot extends TimedRobot {
     //コントローラー
     //とりあえず、Xbox2つ
     XboxController driver, operator;
-    Joystick _joy;
+    Joystick joystick;
 
     //DriveMotor
-    WPI_TalonSRX  driveRightFront,driveLeftFront;
-    VictorSPX driveRightBack,driveLeftBack;
+    WPI_TalonSRX driveRightFrontMotor, driveLeftFrontMotor;
+    VictorSPX driveRightBackMotor, driveLeftBackMotor;
 
     //ShooterMortor
-    TalonSRX shooterLeft, shooterRight;
+    TalonSRX shooterLeftMotor, shooterRightMotor;
 
     //IntakaMortor
-    VictorSPX intakeBeltFront,intakeBeltBack ;
-    VictorSPX intake;
+    VictorSPX intakeBeltFrontMortor, intakeBeltBackMotor;
+    VictorSPX intakeMotor;
 
     //センサー
-    DigitalInput intake_f ,intake_b;
+    DigitalInput intakeFrontSensor, intakeBackSensor;
 
     //カメラ
     CameraServer camera;
@@ -44,58 +43,59 @@ public class Robot extends TimedRobot {
     Drive drive;
     State state;
     Shooter shooter;
+    Intake intake;
+    IntakeBelt intakeBelt;
 
     @Override
     public void robotInit() {
 
-        intake_f = new DigitalInput(0);
-        intake_b = new DigitalInput(1);
-        shooterLeft = new TalonSRX(4);
-        shooterRight = new TalonSRX(5);
+        intakeFrontSensor = new DigitalInput(0);
+        intakeBackSensor = new DigitalInput(1);
+
+        shooterLeftMotor = new TalonSRX(4);
+        shooterRightMotor = new TalonSRX(5);
 
         //IntakeBelt
-        intakeBeltFront = new VictorSPX(11);
-        intakeBeltBack = new VictorSPX(15);
-        intake = new VictorSPX(14);
+        intakeBeltFrontMortor = new VictorSPX(11);
+        intakeBeltBackMotor = new VictorSPX(15);
+        intakeMotor = new VictorSPX(14);
+        intakeBeltBackMotor.follow(intakeBeltFrontMortor);
 
         //コントローラーの初期化
         driver = new XboxController(2);
-        _joy = new Joystick(0);
+        joystick = new Joystick(0);
 
         //cameraの初期化
         camera = CameraServer.getInstance();
         camera.startAutomaticCapture();
 
-        //gyroの初期化
-        //gyro = new ADXRS450_Gyro();
-
         //DriveMotor
         //ドライブモーターの初期化
-        driveRightFront = new WPI_TalonSRX(Const.DriveRightFrontPort);
-        driveRightBack = new VictorSPX(Const.DriveRightBackPort);
-        driveLeftFront = new WPI_TalonSRX(Const.DriveLeftFrontPort);
-        driveLeftBack = new VictorSPX(Const.DriveLeftBackPort);
+        driveRightFrontMotor = new WPI_TalonSRX(Const.DriveRightFrontPort);
+        driveRightBackMotor = new VictorSPX(Const.DriveRightBackPort);
+        driveLeftFrontMotor = new WPI_TalonSRX(Const.DriveLeftFrontPort);
+        driveLeftBackMotor = new VictorSPX(Const.DriveLeftBackPort);
         //ドライブモーターの台形加速&フォローの設定
-        driveLeftFront.configOpenloopRamp(Const.DriveFullSpeedTime);
-        driveLeftBack.follow(driveLeftFront);
-        driveRightFront.configOpenloopRamp(Const.DriveFullSpeedTime);
-        driveRightBack.follow(driveRightFront);
+        driveLeftFrontMotor.configOpenloopRamp(Const.DriveFullSpeedTime);
+        driveLeftBackMotor.follow(driveLeftFrontMotor);
+        driveRightFrontMotor.configOpenloopRamp(Const.DriveFullSpeedTime);
+        driveRightBackMotor.follow(driveRightFrontMotor);
 
 
-        intakeBeltBack.follow(intakeBeltFront);
+        intakeBeltBackMotor.follow(intakeBeltFrontMortor);
         /* Factory Default all hardware to prevent unexpected behaviour */
-        shooterLeft.configFactoryDefault();
-        shooterLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        shooterLeftMotor.configFactoryDefault();
+        shooterLeftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
                 Const.kPIDLoopIdx,
                 Const.kTimeoutMs);
 
-        shooterRight.configFactoryDefault();
-        shooterRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        shooterRightMotor.configFactoryDefault();
+        shooterRightMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
                 Const.kPIDLoopIdx,
                 Const.kTimeoutMs);
 
 
-        shooterLeft.setSensorPhase(true);
+        shooterLeftMotor.setSensorPhase(true);
 
         /*
         初期値が確認できたら、削除予定
@@ -104,13 +104,13 @@ public class Robot extends TimedRobot {
         shooterLeft.configPeakOutputForward(1, Const.kTimeoutMs);
         shooterLeft.configPeakOutputReverse(-1, Const.kTimeoutMs);
         */
-        shooterLeft.config_kF(Const.kPIDLoopIdx, Const.kGains_Velocit.kF, Const.kTimeoutMs);
-        shooterLeft.config_kP(Const.kPIDLoopIdx, Const.kGains_Velocit.kP, Const.kTimeoutMs);
-        shooterLeft.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
-        shooterLeft.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
+        shooterLeftMotor.config_kF(Const.kPIDLoopIdx, Const.kGains_Velocit.kF, Const.kTimeoutMs);
+        shooterLeftMotor.config_kP(Const.kPIDLoopIdx, Const.kGains_Velocit.kP, Const.kTimeoutMs);
+        shooterLeftMotor.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
+        shooterLeftMotor.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
 
 
-        shooterRight.setSensorPhase(true);
+        shooterRightMotor.setSensorPhase(true);
         /*
         初期値が確認できたら、削除予定
         shooterRight.configNominalOutputForward(0, Const.kTimeoutMs);
@@ -118,18 +118,21 @@ public class Robot extends TimedRobot {
         shooterRight.configPeakOutputForward(1, Const.kTimeoutMs);
         shooterRight.configPeakOutputReverse(-1, Const.kTimeoutMs);
          */
-        shooterRight.config_kF(Const.kPIDLoopIdx, Const.kGains_Velocit.kF, Const.kTimeoutMs);
-        shooterRight.config_kP(Const.kPIDLoopIdx, Const.kGains_Velocit.kP, Const.kTimeoutMs);
-        shooterRight.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
-        shooterRight.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
+        shooterRightMotor.config_kF(Const.kPIDLoopIdx, Const.kGains_Velocit.kF, Const.kTimeoutMs);
+        shooterRightMotor.config_kP(Const.kPIDLoopIdx, Const.kGains_Velocit.kP, Const.kTimeoutMs);
+        shooterRightMotor.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
+        shooterRightMotor.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
 
-        shooterLeft.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
-        shooterRight.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
-
-
+        shooterLeftMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
+        shooterRightMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
 
 
-        drive = new Drive(driveLeftFront, driveRightFront);
+
+
+        drive = new Drive(driveLeftFrontMotor, driveRightFrontMotor);
+        shooter = new Shooter(shooterRightMotor,shooterLeftMotor);
+        intake = new Intake(intakeMotor);
+        intakeBelt = new IntakeBelt(intakeBeltFrontMortor,intakeFrontSensor,intakeBackSensor);
         state = new State();
 
     }
@@ -140,6 +143,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        /*
         driveLeftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
         driveRightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
 
@@ -162,7 +166,6 @@ public class Robot extends TimedRobot {
         driveLeftFront.configAllowableClosedloopError(0,0,0);
 
         driveRightFront.configAllowableClosedloopError(0,0,0);
-        /* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
         driveLeftFront.config_kF(0,0.0,0);
         driveLeftFront.config_kP(0,0.15,0);
         driveLeftFront.config_kI(0,0.0,0);
@@ -172,103 +175,49 @@ public class Robot extends TimedRobot {
         driveRightFront.config_kP(0,0.15,0);
         driveRightFront.config_kI(0,0.0,0);
         driveRightFront.config_kD(0,1.0,0);
+        */
 
     }
 
     @Override
     public void autonomousPeriodic() {
+        /*
         double targetPositionRotations = Util.deadbandProcessing(_joy.getY()) * 10.0 * 4096;
         driveLeftFront.set(ControlMode.Position, targetPositionRotations);
         driveRightFront.set(ControlMode.Position, targetPositionRotations);
+         */
     }
 
     @Override
     public void teleopPeriodic() {
-        double leftYstick = -1 * _joy.getY();
-        double motorOutput = shooterLeft.getMotorOutputPercent();
-        if(_joy.getRawButton(3)||_joy.getRawButton(4)){
-            if(!intake_f.get()){
-                intakeBeltFront.set(ControlMode.PercentOutput,-1);
-            }else if (driver.getAButton()){
-                intakeBeltFront.set(ControlMode.PercentOutput,1);
-            }else{
-                intakeBeltFront.set(ControlMode.PercentOutput,0);
-            }
-        }else{
-            intakeBeltFront.set(ControlMode.PercentOutput,0);
-        }
 
 
-        if (_joy.getRawButton(1)) {
-            double targetVelocity_UnitsPer100ms;
-            if(Math.abs(leftYstick)>0.2){
-                targetVelocity_UnitsPer100ms = leftYstick *100000;
-            }else{
-                targetVelocity_UnitsPer100ms = 0;
-            }
-            intakeBeltFront.set(ControlMode.PercentOutput,1.0);
-            shooterLeft.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-            shooterRight.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
-        }else if(_joy.getRawButton(4)){
-            intake.set(ControlMode.PercentOutput,-1.0);
-            shooterLeft.set(ControlMode.PercentOutput, -0.6);
-            shooterRight.set(ControlMode.PercentOutput, 0.6);
-        }else  if(_joy.getRawButton(3)){
-            shooterLeft.set(ControlMode.PercentOutput, 0.6);
-            shooterRight.set(ControlMode.PercentOutput, -0.6);
-            intake.set(ControlMode.PercentOutput,1.0);
-        }else{
-            if(Math.abs(leftYstick)>0.2){
-                double targetVelocity_UnitsPer100ms = leftYstick *100000;
-                shooterLeft.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
-                shooterRight.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
-            }else{
-                intake.set(ControlMode.PercentOutput,0);
-                shooterLeft.set(ControlMode.PercentOutput, 0);
-                shooterRight.set(ControlMode.PercentOutput, 0);
-            }
-        }
-
-
-        /********** Drive ***********/
-        state.driveState = State.DriveState.kManual;
-        if(driver.getRawButton(6)){
-        state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(Hand.kLeft)/3);
-        state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(Hand.kRight)/3);
-        }else if(driver.getRawButton(5)){
-          state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(Hand.kLeft)/2);
-          state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(Hand.kRight)/2);
-          }else{
-          state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(Hand.kLeft));
-          state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(Hand.kRight));
-        }
-        drive.apllyState(state);
     }
 
     @Override
     public void testPeriodic() {
         System.out.println("HellowWorld");
-        if(!intake_f.get()&&!driver.getAButton()){
+        if(!intakeFrontSensor.get()&&!driver.getAButton()){
             System.out.println("true");
-            intakeBeltFront.set(ControlMode.PercentOutput,-1);
-            shooterLeft.set(ControlMode.PercentOutput, 0.);
-            shooterRight.set(ControlMode.PercentOutput, 0);
+            intakeBeltFrontMortor.set(ControlMode.PercentOutput,-1);
+            shooterLeftMotor.set(ControlMode.PercentOutput, 0.);
+            shooterRightMotor.set(ControlMode.PercentOutput, 0);
         }else if (driver.getAButton()){
-            intakeBeltFront.set(ControlMode.PercentOutput,1);
-            shooterLeft.set(ControlMode.PercentOutput, 0.3);
-            shooterRight.set(ControlMode.PercentOutput, -0.3);
+            intakeBeltFrontMortor.set(ControlMode.PercentOutput,1);
+            shooterLeftMotor.set(ControlMode.PercentOutput, 0.3);
+            shooterRightMotor.set(ControlMode.PercentOutput, -0.3);
             System.out.println("false");
         }else{
-            intakeBeltFront.set(ControlMode.PercentOutput,0);
-            shooterLeft.set(ControlMode.PercentOutput, 0);
-            shooterRight.set(ControlMode.PercentOutput, 0);
+            intakeBeltFrontMortor.set(ControlMode.PercentOutput,0);
+            shooterLeftMotor.set(ControlMode.PercentOutput, 0);
+            shooterRightMotor.set(ControlMode.PercentOutput, 0);
             System.out.println("false");
         }
         if (driver.getXButton()){
-            shooterLeft.set(ControlMode.PercentOutput, -0.3);
-            shooterRight.set(ControlMode.PercentOutput, 0.3);
+            shooterLeftMotor.set(ControlMode.PercentOutput, -0.3);
+            shooterRightMotor.set(ControlMode.PercentOutput, 0.3);
         }
-        SmartDashboard.putBoolean("intake_f",intake_f.get());
-        SmartDashboard.putBoolean("intake_b",intake_b.get());
+        SmartDashboard.putBoolean("intake_f", intakeFrontSensor.get());
+        SmartDashboard.putBoolean("intake_b", intakeBackSensor.get());
     }
 }
