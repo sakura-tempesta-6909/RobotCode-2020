@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -29,6 +31,7 @@ public class Robot extends TimedRobot {
     //ShooterMortor
     TalonSRX shooterLeftMotor, shooterRightMotor;
 
+    TalonSRX armMotor;
     //IntakaMortor
     VictorSPX intakeBeltFrontMortor, intakeBeltBackMotor;
     VictorSPX intakeMotor;
@@ -45,6 +48,9 @@ public class Robot extends TimedRobot {
     Shooter shooter;
     Intake intake;
     IntakeBelt intakeBelt;
+    Climb climb;
+    Arm arm;
+    ArmSensor armSensor;
 
     @Override
     public void robotInit() {
@@ -54,6 +60,10 @@ public class Robot extends TimedRobot {
 
         shooterLeftMotor = new TalonSRX(4);
         shooterRightMotor = new TalonSRX(5);
+
+        armMotor = new TalonSRX(1);
+        armMotor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
+        armMotor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
 
         //IntakeBelt
         intakeBeltFrontMortor = new VictorSPX(11);
@@ -128,7 +138,8 @@ public class Robot extends TimedRobot {
 
 
 
-
+        armSensor = new ArmSensor(armMotor);
+        arm = new Arm(armMotor,armSensor);
         drive = new Drive(driveLeftFrontMotor, driveRightFrontMotor);
         shooter = new Shooter(shooterRightMotor,shooterLeftMotor);
         intake = new Intake(intakeMotor);

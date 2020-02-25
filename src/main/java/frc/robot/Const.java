@@ -54,7 +54,28 @@ public class Const {
     public final static double shooterIntakeSpeed = 0.4;
 
 
-
+    //Intake
     public final static double intakeSpeed = 0.6;
     public final static double outTakeSoeed = 0.4;
+
+
+    //Climb
+    public static final double climbMotorAdvanceSpeed = 0.30;
+    public static final double canonMotorAdvanceSpeed = 0.15;
+    public static final double climbMotorShrinkSpeed = -0.30;
+    public static final double canonMotorShrinkSpeed = -0.15;
+    public static final double unLockAngle = 30;
+    public static final double lockAngle = 0;
+    public static final double slideMotorRight = 0.30;
+    public static final double slideMotorLeft = -0.30;
+
+
+    //ARM
+    public static final double ArmMBasicSpeed_P = 0.05;
+    public static final double ArmBasicSpeed_M = -0.05;
+    //スティックの傾きに対するモーターの速さの倍率
+    public static final double ArmMagni = 0.005;
+    //アームの可動域の角度＆エンコーダーからの値の最大
+    public static final double ArmMaxAngle = 135;
+    public static final double ArmMaxPoint = 383;
 }
