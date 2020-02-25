@@ -1,9 +1,8 @@
-package frc.robot;
+package frc.robot.subClass;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.PIDController;
 
 public class Arm {
@@ -16,7 +15,7 @@ public class Arm {
     ArmSensor armSensor;
 
     //コンストラクター
-    Arm(TalonSRX ArmMotor, ArmSensor armSensor){
+    public Arm(TalonSRX ArmMotor, ArmSensor armSensor){
         this.Motor = ArmMotor;
         this.armSensor = armSensor;
     }
@@ -45,7 +44,7 @@ public class Arm {
     //砲台を初期状態にするコマンド
     private void ArmChangeBasic(){
         while(armSensor.getArmFrontSensor()){
-            setArmSpeed(Const.ArmBasicSpeed_M);
+            setArmSpeed(0);
         }
     }
 

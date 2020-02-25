@@ -1,11 +1,16 @@
-package frc.robot;
+package frc.robot.subClass;
 
 public class State {
 
 
+    public enum ControlState{
+        m_ShootingBall, m_PanelRotation, m_Climb, m_Drive
+
+    }
+
     public enum DriveState{
         kManual,
-        kAuto,
+        kLow,
         kdoNothing
     }
     public enum ShooterState{
@@ -42,6 +47,16 @@ public class State {
         k_Maxup            //最も上を向いている状態
     }
 
+    public enum PanelState{
+        p_DoNothing,        //stop
+        p_ManualRot,        //手動
+        p_toBlue,           //色合わせ(大会のパネル側のセンサーの色なのでカラーセンサーが読み取るのは二つずれた値。青<->赤、黄<->緑）
+        p_toYellow,
+        p_toRed,
+        p_toGreen
+
+    }
+
 
     public double driveStraightSpeed, driveRotateSpeed;  //Driveの速度;
     public double shooterLeftSpeed,shooterRightSpeed,shooterPIDSpeed;
@@ -56,8 +71,10 @@ public class State {
     public DriveState driveState;
     public ClimbState climbState;
     public ArmState armState;
+    public ControlState controlState;
+    public PanelState panelState;
 
-    State(){
+    public State(){
         stateInit();
     }
 
@@ -88,6 +105,11 @@ public class State {
 
         //Arm
         armState = ArmState.k_Basic;
+
+        panelState = PanelState.p_DoNothing;
+        //ContloalMode
+
+        controlState = ControlState.m_Drive;
 
 
     }

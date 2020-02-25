@@ -1,12 +1,12 @@
-package frc.robot;
+package frc.robot.subClass;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.State.ControlState;
+import frc.robot.subClass.Const;
+import frc.robot.subClass.Shooter;
+import frc.robot.subClass.State;
 
 public class Panel{
 
@@ -26,7 +26,7 @@ public class Panel{
     //construction
     Shooter shooter;
 
-    Panel(Shooter shooter){
+    public Panel(Shooter shooter){
         this.shooter = shooter;
     }
 

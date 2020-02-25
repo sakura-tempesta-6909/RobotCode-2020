@@ -1,21 +1,21 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-
-//TalonSRX&VictorSPXのライブラリー
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.ctre.phoenix.motorcontrol.can.*;
-
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.*;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subClass.*;
+
+//TalonSRX&VictorSPXのライブラリー
 
 public class Robot extends TimedRobot {
 
@@ -23,6 +23,7 @@ public class Robot extends TimedRobot {
     //とりあえず、Xbox2つ
     XboxController driver, operator;
     Joystick joystick;
+    Controller controller;
 
     //DriveMotor
     WPI_TalonSRX driveRightFrontMotor, driveLeftFrontMotor;
@@ -51,10 +52,15 @@ public class Robot extends TimedRobot {
     Climb climb;
     Arm arm;
     ArmSensor armSensor;
+    Panel panel;
+
+    PanelRotationMode panelRotationMode;
+    ShootingBallMode shootingBallMode;
+    DriveMode driveMode;
+    ClimbMode climbMode;
 
     @Override
     public void robotInit() {
-
         intakeFrontSensor = new DigitalInput(0);
         intakeBackSensor = new DigitalInput(1);
 
@@ -72,9 +78,10 @@ public class Robot extends TimedRobot {
         intakeBeltBackMotor.follow(intakeBeltFrontMortor);
 
         //コントローラーの初期化
+        operator = new XboxController(1);
         driver = new XboxController(2);
         joystick = new Joystick(0);
-
+        controller = new Controller(driver,operator);
         //cameraの初期化
         camera = CameraServer.getInstance();
         camera.startAutomaticCapture();
@@ -143,8 +150,13 @@ public class Robot extends TimedRobot {
         shooter = new Shooter(shooterRightMotor,shooterLeftMotor);
         intake = new Intake(intakeMotor);
         intakeBelt = new IntakeBelt(intakeBeltFrontMortor,intakeFrontSensor,intakeBackSensor);
+        panel = new Panel(shooter);
         state = new State();
 
+        driveMode = new DriveMode(drive,intake,controller);
+        panelRotationMode = new PanelRotationMode(drive,panel,controller);
+        shootingBallMode = new ShootingBallMode(drive,shooter,arm,controller);
+        climbMode = new ClimbMode(drive,arm,climb,controller);
     }
 
     @Override
@@ -201,7 +213,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-
+        climbMode.applyMode(state);
+        driveMode.applyMode(state);
+        panelRotationMode.applyMode(state);
+        shootingBallMode.applyMode(state);
     }
 
     @Override

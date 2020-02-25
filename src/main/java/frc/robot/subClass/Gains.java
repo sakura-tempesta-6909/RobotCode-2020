@@ -1,7 +1,7 @@
 /**
  *  Class that organizes gains used when assigning values to slots
  */
-package frc.robot;
+package frc.robot.subClass;
 
 public class Gains {
 	public final double kP;

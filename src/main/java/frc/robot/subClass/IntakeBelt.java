@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subClass;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -9,7 +9,7 @@ public class IntakeBelt {
     private VictorSPX intakeBelt;
     private DigitalInput intakeFrontSensor, intakeBackSensor;
 
-    IntakeBelt(VictorSPX intakeBelt, DigitalInput intakeFrontSensor, DigitalInput intakeBack) {
+    public IntakeBelt(VictorSPX intakeBelt, DigitalInput intakeFrontSensor, DigitalInput intakeBack) {
         this.intakeBelt = intakeBelt;
         this.intakeFrontSensor = intakeFrontSensor;
         this.intakeBackSensor = intakeBack;

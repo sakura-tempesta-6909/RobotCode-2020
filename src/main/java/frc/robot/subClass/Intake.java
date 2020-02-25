@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subClass;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -7,7 +7,7 @@ public class Intake {
     VictorSPX intakeMotor;
 
 
-    Intake(VictorSPX intakeMotor){
+    public Intake(VictorSPX intakeMotor){
         this.intakeMotor = intakeMotor;
     }
 

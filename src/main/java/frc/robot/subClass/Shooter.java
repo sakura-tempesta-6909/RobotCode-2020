@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subClass;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class Shooter {
     TalonSRX shooterRight,shooterLeft;
 
-    Shooter(TalonSRX shooterRight,TalonSRX shooterLeft){
+    public Shooter(TalonSRX shooterRight, TalonSRX shooterLeft){
         this.shooterLeft = shooterLeft;
         this.shooterRight = shooterRight;
     }

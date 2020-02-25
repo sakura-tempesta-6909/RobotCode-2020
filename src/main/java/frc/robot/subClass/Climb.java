@@ -1,12 +1,9 @@
-package frc.robot;
+package frc.robot.subClass;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DigitalInput;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 public class Climb {

@@ -1,11 +1,11 @@
-package frc.robot;
+package frc.robot.subClass;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ArmSensor {
     private TalonSRX armMotor;
-    ArmSensor(TalonSRX armMotor){
+    public ArmSensor(TalonSRX armMotor){
         this.armMotor = armMotor;
     }
 

@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subClass;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.*;
@@ -12,7 +12,8 @@ public class Drive extends DifferentialDrive{
     public void apllyState(State state){
 
         switch(state.driveState){
-            case kAuto:
+            case kLow:
+                setSpeed(state.driveStraightSpeed/2, state.driveRotateSpeed/2);
             break;
             case kManual:
             setSpeed(state.driveStraightSpeed, state.driveRotateSpeed);
