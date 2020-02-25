@@ -20,47 +20,38 @@ public class ShootingBallMode {
 
     public void applyMode(State state){
         if(state.controlState == State.ControlState.m_ShootingBall){
-
-            if(operator.getBumper(GenericHID.Hand.kLeft)){
-
+            //もう一度バンパーが押されたら、ドライブモードへ切り替え
+            if(!operator.getBumper(GenericHID.Hand.kLeft)){
                 if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))){
                     //ボールを飛ばす
                     state.shooterState = State.ShooterState.kshoot;
                     state.shooterPIDSpeed = operator.getTriggerAxis(GenericHID.Hand.kRight);
-
                     state.driveState = State.DriveState.kdoNothing;
-
                 }else if(Util.deadbandCheck(driver.getX(GenericHID.Hand.kLeft))){
-                   //ドライブを左右に少し動かす
+                   //ドライブを少し動かす
                     state.shooterState = State.ShooterState.doNothing;
-
                     state.driveState = State.DriveState.kLow;
                     state.driveRotateSpeed = driver.getX(GenericHID.Hand.kLeft);
-                    state.driveStraightSpeed = 0;
-
+                    state.driveStraightSpeed = driver.getY(GenericHID.Hand.kRight);;
                 }else if(operator.getBButton()){
                     //砲台の角度をゴールへ調節する
                     state.driveState = State.DriveState.kdoNothing;
-
                     state.shooterState = State.ShooterState.doNothing;
-
                     state.armState = State.ArmState.k_Aaiming;
                     state.shooterAngle = 0;
-
                 }else if(Util.deadbandCheck(operator.getX(GenericHID.Hand.kLeft))){
                     //砲台の角度を手動で調節
                     state.driveState = State.DriveState.kdoNothing;
-
                     state.shooterState = State.ShooterState.doNothing;
-
                     state.armState = State.ArmState.k_Aaiming;
                     state.shooterAngle = operator.getX(GenericHID.Hand.kLeft);
-
                 }
-
             }else{
                 //ドライブモードへ切り替え
                 state.controlState = State.ControlState.m_Drive;
+                state.driveState = State.DriveState.kManual;
+                state.shooterState = State.ShooterState.doNothing;
+                state.armState = State.ArmState.k_Aaiming;
             }
 
             drive.apllyState(state);

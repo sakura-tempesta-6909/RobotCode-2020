@@ -25,11 +25,11 @@ public class DriveMode {
             state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
             state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
-            if(Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))&&Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))){
+            if(Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))&&!Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))){
                 //ボールを取り込む
                 state.intakeState = State.IntakeState.kIntake;
                 state.intakeBeltState = State.IntakeBeltState.kIntake;
-            }else if(Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight)) && Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
+            }else if(Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))&&!Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
                 //ボールを出す
                 state.intakeState = State.IntakeState.kouttake;
                 state.intakeBeltState = State.IntakeBeltState.kouttake;

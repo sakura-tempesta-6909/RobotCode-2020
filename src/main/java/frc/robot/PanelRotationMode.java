@@ -18,7 +18,8 @@ public class PanelRotationMode {
 
     public void applyMode(State state){
         if(state.controlState == State.ControlState.m_PanelRotation){
-            if(operator.getBackButton()){
+            //もう一度ボタンが押されたら切り替え
+            if(!operator.getBackButton()){
                 if(operator.getXButton()){
                     //赤に合わせる
                     state.panelState = State.PanelState.p_toRed;
