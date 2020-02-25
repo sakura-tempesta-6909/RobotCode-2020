@@ -64,6 +64,7 @@ public class State {
     public double canonMotorSpeed;
     public double hangingServoAngle;
     public double climbSlideMotorSpeed;
+    public double panelManualSpeed;
 
     public ShooterState shooterState;
     public IntakeState intakeState;

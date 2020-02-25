@@ -35,8 +35,7 @@ public class Panel{
             switch (state.panelState) {
 
                 case p_ManualRot:
-                    MotorLeft.set(state.panelManualSpeed);
-                    MotorRight.set(state.panelManualSpeed);
+                    shooter.setSpeedPersent(state.panelManualSpeed,state.panelManualSpeed);
                     break;
 
                 //色合わせ　青<->赤、黄<->緑

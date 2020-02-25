@@ -3,15 +3,12 @@ package frc.robot.subClass;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDController;
 
 public class Arm {
 
     //宣言
     Encoder Encoder;            //エンコーダー（多分使わない）
     TalonSRX Motor;      //モーター
-
-    PIDController ArmPID;     //PID制御（今後使う）
     ArmSensor armSensor;
 
     //コンストラクター
