@@ -42,12 +42,18 @@ public class DriveMode {
             if(operator.getBumper(GenericHID.Hand.kLeft)){
                 //ボール発射モードへ切り替え
                 state.controlState = State.ControlState.m_ShootingBall;
+                state.intakeState = State.IntakeState.doNothing;
+                state.intakeBeltState = State.IntakeBeltState.doNothing;
             }else if(operator.getBackButton()){
                 //コントロールパネル回転モードへ切り替え
                 state.controlState = State.ControlState.m_PanelRotation;
+                state.intakeState = State.IntakeState.doNothing;
+                state.intakeBeltState = State.IntakeBeltState.doNothing;
             }else if(driver.getStartButton()){
                 //クライムモードへ切り替え
                 state.controlState = State.ControlState.m_Climb;
+                state.intakeState = State.IntakeState.doNothing;
+                state.intakeBeltState = State.IntakeBeltState.doNothing;
             }
 
             drive.apllyState(state);

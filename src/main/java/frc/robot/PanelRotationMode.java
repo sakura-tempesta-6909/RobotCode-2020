@@ -47,6 +47,8 @@ public class PanelRotationMode {
             }else{
                 //ドライブモードへ切り替え
                 state.controlState = State.ControlState.m_Drive;
+                state.driveState = State.DriveState.kManual;
+                state.panelState = State.PanelState.p_DoNothing;
             }
             drive.apllyState(state);
             panel.applyState(state);
