@@ -52,6 +52,7 @@ public class ShootingBallMode {
                 state.driveState = State.DriveState.kManual;
                 state.shooterState = State.ShooterState.doNothing;
                 state.armState = State.ArmState.k_Aaiming;
+                Util.sendConsole("Mode","DriveMode");
             }
 
             drive.apllyState(state);

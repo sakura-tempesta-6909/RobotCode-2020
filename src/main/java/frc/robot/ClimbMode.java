@@ -45,6 +45,7 @@ public class ClimbMode {
                 //ドライブモードへ切り替え
                 state.controlState = State.ControlState.m_Drive;
                 state.climbState = State.ClimbState.doNothing;
+                Util.sendConsole("Mode","DriveMode");
             }else{
                 state.climbState = State.ClimbState.doNothing;
             }

@@ -1,4 +1,5 @@
 package frc.robot.subClass;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class Util {
@@ -9,6 +10,11 @@ public class Util {
     }
     public static boolean deadbandCheck(double value) {
         return Math.abs(value) > Const.Deadband;
+    }
+
+    public static void sendConsole(String key,String text){
+        System.out.println(key+":"+text);
+        SmartDashboard.putString(key, text);
     }
     
     //カラーセンサー

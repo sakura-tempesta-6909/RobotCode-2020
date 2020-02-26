@@ -44,16 +44,19 @@ public class DriveMode {
                 state.controlState = State.ControlState.m_ShootingBall;
                 state.intakeState = State.IntakeState.doNothing;
                 state.intakeBeltState = State.IntakeBeltState.doNothing;
+                Util.sendConsole("Mode","ShootingBallMode");
             }else if(operator.getBackButton()){
                 //コントロールパネル回転モードへ切り替え
                 state.controlState = State.ControlState.m_PanelRotation;
                 state.intakeState = State.IntakeState.doNothing;
                 state.intakeBeltState = State.IntakeBeltState.doNothing;
+                Util.sendConsole("Mode","PanelRotationMode");
             }else if(driver.getStartButton()){
                 //クライムモードへ切り替え
                 state.controlState = State.ControlState.m_Climb;
                 state.intakeState = State.IntakeState.doNothing;
                 state.intakeBeltState = State.IntakeBeltState.doNothing;
+                Util.sendConsole("Mode","ClimbMode");
             }
 
             drive.apllyState(state);
