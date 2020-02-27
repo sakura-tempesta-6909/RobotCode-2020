@@ -1,4 +1,5 @@
 package frc.robot.subClass;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.io.BufferedReader;
@@ -11,12 +12,14 @@ import java.net.URL;
 public class SendJson {
     /**
      * JSON文字列の送信
+     *
      * @param strPostUrl 送信先URL
      * @param JSON 送信するJSON文字列
      * @return
      */
 
-    private String strPostUrl="https://api.sakura-tempesta.org/robot/";
+    private String strPostUrl = "https://api.sakura-tempesta.org/robot/";
+
     public String callPost(String JSON) {
 
         HttpURLConnection con = null;
@@ -74,10 +77,12 @@ public class SendJson {
         }
         return result.toString();
     }
-    private void outputStatus(String text){
-        SmartDashboard.putString("SendJsonStatus",text);
+
+    private void outputStatus(String text) {
+        SmartDashboard.putString("SendJsonStatus", text);
     }
-    private void outputResult(String text){
-        SmartDashboard.putString("SendjsonResult",text);
+
+    private void outputResult(String text) {
+        SmartDashboard.putString("SendjsonResult", text);
     }
 }

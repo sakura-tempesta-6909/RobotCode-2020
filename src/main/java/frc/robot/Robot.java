@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
         operator = new XboxController(Const.OperateControllerPort);
         driver = new XboxController(Const.DriveControllerPort);
         //Sjoystick = new Joystick(Const.JoystickPort);
-        controller = new Controller(driver,operator);
+        controller = new Controller(driver, operator);
 
         //cameraの初期化
         camera = CameraServer.getInstance();
@@ -125,8 +125,8 @@ public class Robot extends TimedRobot {
         shooterRightMotor.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
         shooterRightMotor.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
 
-        shooterLeftMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
-        shooterRightMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx,Const.kGains_Velocit.MaxIntegralAccumulator);
+        shooterLeftMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_Velocit.MaxIntegralAccumulator);
+        shooterRightMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_Velocit.MaxIntegralAccumulator);
 
         shooterRightMotor.setSensorPhase(true);
         shooterLeftMotor.setSensorPhase(true);
@@ -149,19 +149,19 @@ public class Robot extends TimedRobot {
 
         //サブクラスの生成
         armSensor = new ArmSensor(armMotor);
-        arm = new Arm(armMotor,armSensor);
+        arm = new Arm(armMotor, armSensor);
         drive = new Drive(driveLeftFrontMotor, driveRightFrontMotor);
-        shooter = new Shooter(shooterRightMotor,shooterLeftMotor);
+        shooter = new Shooter(shooterRightMotor, shooterLeftMotor);
         intake = new Intake(intakeMotor);
-        intakeBelt = new IntakeBelt(intakeBeltFrontMotor,intakeFrontSensor,intakeBackSensor);
+        intakeBelt = new IntakeBelt(intakeBeltFrontMotor, intakeFrontSensor, intakeBackSensor);
         panel = new Panel(shooter);
         state = new State();
 
         //モードのクラスの生成
-        driveMode = new DriveMode(drive,intake,intakeBelt,shooter,controller);
-        panelRotationMode = new PanelRotationMode(drive,panel,controller);
-        shootingBallMode = new ShootingBallMode(drive,shooter,arm,intakeBelt,controller);
-        climbMode = new ClimbMode(drive,arm,climb,controller);
+        driveMode = new DriveMode(drive, intake, intakeBelt, shooter, controller);
+        panelRotationMode = new PanelRotationMode(drive, panel, controller);
+        shootingBallMode = new ShootingBallMode(drive, shooter, arm, intakeBelt, controller);
+        climbMode = new ClimbMode(drive, arm, climb, controller);
     }
 
     @Override

@@ -7,11 +7,11 @@ public class Intake {
     VictorSPX intakeMotor;
 
 
-    public Intake(VictorSPX intakeMotor){
+    public Intake(VictorSPX intakeMotor) {
         this.intakeMotor = intakeMotor;
     }
 
-    public void applyState(State state){
+    public void applyState(State state) {
         switch (state.intakeState) {
             case kouttake:
                 setSpeed(Const.outtakeSpeed);
@@ -24,7 +24,8 @@ public class Intake {
                 break;
         }
     }
-    public void setSpeed(double speed){
-        intakeMotor.set(ControlMode.PercentOutput,speed);
+
+    public void setSpeed(double speed) {
+        intakeMotor.set(ControlMode.PercentOutput, speed);
     }
 }

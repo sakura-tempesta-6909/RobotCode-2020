@@ -15,14 +15,14 @@ public class IntakeBelt {
         this.intakeBackSensor = intakeBack;
     }
 
-    public void applyState(State state){
-        switch (state.intakeBeltState){
+    public void applyState(State state) {
+        switch (state.intakeBeltState) {
             case kIntake:
                 intake();
                 break;
             case kouttake:
                 outtake();
-                Util.sendConsole("outtake","out");
+                Util.sendConsole("outtake", "out");
                 break;
             case doNothing:
                 setSpeed(0);
@@ -30,21 +30,23 @@ public class IntakeBelt {
         }
     }
 
-    private void setSpeed(double speed){
-        intakeBelt.set(ControlMode.PercentOutput,speed);
+    private void setSpeed(double speed) {
+        intakeBelt.set(ControlMode.PercentOutput, speed);
     }
 
-    private void intake(){
-            setSpeed(-1);
+    private void intake() {
+        setSpeed(-1);
     }
-    private void outtake(){
+
+    private void outtake() {
         setSpeed(1);
     }
-    private boolean getFrontSensor(){
+
+    private boolean getFrontSensor() {
         return intakeFrontSensor.get();
     }
 
-    private boolean getBackSensor(){
+    private boolean getBackSensor() {
         return intakeBackSensor.get();
     }
 }

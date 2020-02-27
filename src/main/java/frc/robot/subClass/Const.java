@@ -7,7 +7,7 @@ public class Const {
     public static final int DriveControllerPort = 0;
     public static final int OperateControllerPort = 1;
 
-    public static final double deadband =0.2;
+    public static final double deadband = 0.2;
 
 
     //Drive-motor-port
@@ -21,7 +21,7 @@ public class Const {
 
 
     public static final int IntakeMotorPort = 14;
-    public static final int IntakeBeltSensorFrontPort  = 0;
+    public static final int IntakeBeltSensorFrontPort = 0;
     public static final int IntakeBeltSensorBackPort = 1;
 
     public static final int HangingMotorPort = 7;
@@ -44,7 +44,7 @@ public class Const {
     public static final int kSlotIdx = 0;
     public static final int kPIDLoopIdx = 0;
     public static final int kTimeoutMs = 30;
-    public final static Gains kGains_Velocit = new Gains( 0.01, 0.000005, 0, 1023.0/7200.0,  300,  1.00,20000000);
+    public final static Gains kGains_Velocit = new Gains(0.01, 0.000005, 0, 1023.0 / 7200.0, 300, 1.00, 20000000);
     public final static double shooterOutTakeSpeed = -0.2;
     public final static double shooterIntakeSpeed = 0.18;
 

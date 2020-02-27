@@ -12,14 +12,14 @@ public class Arm {
     ArmSensor armSensor;
 
     //コンストラクター
-    public Arm(TalonSRX ArmMotor, ArmSensor armSensor){
+    public Arm(TalonSRX ArmMotor, ArmSensor armSensor) {
         this.Motor = ArmMotor;
         this.armSensor = armSensor;
     }
 
     //現在の砲台の状態を確認
-   public void applyState(State state){
-        switch (state.armState){
+    public void applyState(State state) {
+        switch (state.armState) {
             case k_Basic:
                 setArmSpeed(state.armMotorSpeed);
                 break;
@@ -29,10 +29,11 @@ public class Arm {
                 break;
         }
     }
+
     //--------------------------------------------------------------------------------
     //砲台のモーターを回す(速さはsetspeedで決める)
-    public void setArmSpeed(double setSpeed){
-        Motor.set(ControlMode.PercentOutput,setSpeed);
+    public void setArmSpeed(double setSpeed) {
+        Motor.set(ControlMode.PercentOutput, setSpeed);
     }
 
 
@@ -40,14 +41,14 @@ public class Arm {
     //砲台の位置を管理
 
     //砲台を初期状態にするコマンド
-    private void ArmChangeBasic(){
-        while(armSensor.getArmFrontSensor()){
+    private void ArmChangeBasic() {
+        while (armSensor.getArmFrontSensor()) {
             setArmSpeed(0);
         }
     }
 
     //砲台を地面と平行にするコマンド
-    void ArmChangeParallel(){
+    void ArmChangeParallel() {
 
 
     }
@@ -57,25 +58,21 @@ public class Arm {
     //エンコーダー管理
 
 
-
-
     //--------------------------------------------------------------------------------
 
 
     //PID管理
     //PIDの目標値を設定
-    public void PIDSetPoint(double setPoint){
+    public void PIDSetPoint(double setPoint) {
     }
 
     //PIDコントローラーをオン
-    public void PIDEnable(){
+    public void PIDEnable() {
     }
 
     //PIDコントローラーをオフ
-    public void PIDDisable(){
+    public void PIDDisable() {
     }
-
-
 
 
 }

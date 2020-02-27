@@ -1,20 +1,20 @@
 package frc.robot.subClass;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 public class ArmSensor {
     private TalonSRX armMotor;
-    public ArmSensor(TalonSRX armMotor){
+
+    public ArmSensor(TalonSRX armMotor) {
         this.armMotor = armMotor;
     }
 
 
-    public boolean getArmFrontSensor(){
+    public boolean getArmFrontSensor() {
         return armMotor.isFwdLimitSwitchClosed() == 1;
     }
 
-    public boolean getArmBackSensor(){
+    public boolean getArmBackSensor() {
         return armMotor.isRevLimitSwitchClosed() == 1;
     }
 }
