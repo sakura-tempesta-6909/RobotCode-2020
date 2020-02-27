@@ -66,6 +66,7 @@ public class State {
     public double climbSlideMotorSpeed;
     public double panelManualSpeed;
     public double shooterAngle;
+    public double armMotorSpeed;
 
     public ShooterState shooterState;
     public IntakeState intakeState;
@@ -107,6 +108,7 @@ public class State {
 
         //Arm
         armState = ArmState.k_Basic;
+        armMotorSpeed = 0;
 
         panelState = PanelState.p_DoNothing;
         //ContloalMode

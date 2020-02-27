@@ -22,6 +22,7 @@ public class IntakeBelt {
                 break;
             case kouttake:
                 outtake();
+                Util.sendConsole("outtake","out");
                 break;
             case doNothing:
                 setSpeed(0);
@@ -30,15 +31,11 @@ public class IntakeBelt {
     }
 
     private void setSpeed(double speed){
-        intakeBelt.set(ControlMode.Current,speed);
+        intakeBelt.set(ControlMode.PercentOutput,speed);
     }
 
     private void intake(){
-        if(getFrontSensor()){
-            setSpeed(1);
-        }else{
-            setSpeed(0);
-        }
+            setSpeed(-1);
     }
     private void outtake(){
         setSpeed(1);

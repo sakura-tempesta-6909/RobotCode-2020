@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
 
     TalonSRX armMotor;
     //IntakeMotor
-    VictorSPX intakeBeltFrontMortor, intakeBeltBackMotor;
+    VictorSPX intakeBeltFrontMotor, intakeBeltBackMotor;
     VictorSPX intakeMotor;
 
     //センサー
@@ -62,30 +62,30 @@ public class Robot extends TimedRobot {
     public void robotInit() {
 
         //Intakeセンサー
-        intakeFrontSensor = new DigitalInput(0);
-        intakeBackSensor = new DigitalInput(1);
+        intakeFrontSensor = new DigitalInput(Const.IntakeBeltSensorFrontPort);
+        intakeBackSensor = new DigitalInput(Const.IntakeBeltSensorBackPort);
 
         //シューターのモーター
-        shooterLeftMotor = new TalonSRX(4);
-        shooterRightMotor = new TalonSRX(5);
+        shooterLeftMotor = new TalonSRX(Const.shooterLeftMotor);
+        shooterRightMotor = new TalonSRX(Const.shooterRightMotor);
 
         //アームのモーター
-        armMotor = new TalonSRX(1);
+        armMotor = new TalonSRX(Const.armMotor);
         armMotor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
         armMotor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
 
         //IntakeBelt
-        intakeBeltFrontMortor = new VictorSPX(11);
-        intakeBeltBackMotor = new VictorSPX(15);
-        intakeMotor = new VictorSPX(14);
+        intakeBeltFrontMotor = new VictorSPX(Const.intakeBeltFrontMotor);
+        intakeBeltBackMotor = new VictorSPX(Const.intakeBeltBackMotor);
+        intakeMotor = new VictorSPX(Const.IntakeMotorPort);
 
         //IntakeBeltのフォローの設定
-        intakeBeltBackMotor.follow(intakeBeltFrontMortor);
+        intakeBeltBackMotor.follow(intakeBeltFrontMotor);
 
         //コントローラーの初期化
-        operator = new XboxController(1);
-        driver = new XboxController(2);
-        joystick = new Joystick(0);
+        operator = new XboxController(Const.OperateControllerPort);
+        driver = new XboxController(Const.DriveControllerPort);
+        //Sjoystick = new Joystick(Const.JoystickPort);
         controller = new Controller(driver,operator);
 
         //cameraの初期化
@@ -153,14 +153,14 @@ public class Robot extends TimedRobot {
         drive = new Drive(driveLeftFrontMotor, driveRightFrontMotor);
         shooter = new Shooter(shooterRightMotor,shooterLeftMotor);
         intake = new Intake(intakeMotor);
-        intakeBelt = new IntakeBelt(intakeBeltFrontMortor,intakeFrontSensor,intakeBackSensor);
+        intakeBelt = new IntakeBelt(intakeBeltFrontMotor,intakeFrontSensor,intakeBackSensor);
         panel = new Panel(shooter);
         state = new State();
 
         //モードのクラスの生成
-        driveMode = new DriveMode(drive,intake,intakeBelt,controller);
+        driveMode = new DriveMode(drive,intake,intakeBelt,shooter,controller);
         panelRotationMode = new PanelRotationMode(drive,panel,controller);
-        shootingBallMode = new ShootingBallMode(drive,shooter,arm,controller);
+        shootingBallMode = new ShootingBallMode(drive,shooter,arm,intakeBelt,controller);
         climbMode = new ClimbMode(drive,arm,climb,controller);
     }
 

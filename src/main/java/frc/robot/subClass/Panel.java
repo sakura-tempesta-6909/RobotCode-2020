@@ -56,6 +56,7 @@ public class Panel{
                     break;
 
                 case p_DoNothing:
+                    shooter.setSpeed(0);
                     break;
         }
 

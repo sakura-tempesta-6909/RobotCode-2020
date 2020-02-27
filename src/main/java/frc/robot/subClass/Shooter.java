@@ -17,16 +17,16 @@ public class Shooter {
                 setSpeed(state.shooterPIDSpeed);
                 break;
             case kintake:
-                setSpeed(Const.shooterIntakeSpeed);
+                setSpeedPersent(Const.shooterIntakeSpeed,-Const.shooterIntakeSpeed);
                 break;
             case kouttake:
-                setSpeed(Const.shooterOutTakeSpeed);
+                setSpeedPersent(Const.shooterOutTakeSpeed,-Const.shooterOutTakeSpeed);
                 break;
             case kmanual:
                 setSpeedPersent(state.shooterLeftSpeed,state.shooterRightSpeed);
                 break;
             case doNothing:
-                setSpeed(0);
+                setSpeedPersent(0,0);
                 break;
         }
     }

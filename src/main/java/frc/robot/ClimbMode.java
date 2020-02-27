@@ -26,6 +26,7 @@ public class ClimbMode {
             state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
             //Climb
+
             if(operator.getYButton()){
                 //クライムの棒を伸ばす
                 state.climbState = State.ClimbState.climbExtend;

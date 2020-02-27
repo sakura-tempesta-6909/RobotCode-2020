@@ -8,12 +8,14 @@ public class DriveMode {
     Drive drive;
     Intake intake;
     IntakeBelt intakeBelt;
+    Shooter shooter;
     XboxController driver,operator;
 
-    DriveMode(Drive drive, Intake intake,IntakeBelt intakeBelt, Controller controller){
+    DriveMode(Drive drive, Intake intake,IntakeBelt intakeBelt,Shooter shooter,Controller controller){
         this.drive = drive;
         this.intake = intake;
         this.intakeBelt = intakeBelt;
+        this.shooter = shooter;
         this.driver = controller.driver;
         this.operator = controller.operator;
     }
@@ -25,18 +27,22 @@ public class DriveMode {
             state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
             state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
-            if(Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))&&!Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))){
+            if(Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))){
                 //ボールを取り込む
                 state.intakeState = State.IntakeState.kIntake;
                 state.intakeBeltState = State.IntakeBeltState.kIntake;
-            }else if(Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))&&!Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
+                state.shooterState = State.ShooterState.kintake;
+            }else if(Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
                 //ボールを出す
                 state.intakeState = State.IntakeState.kouttake;
                 state.intakeBeltState = State.IntakeBeltState.kouttake;
+                state.shooterState = State.ShooterState.kouttake;
+
             }else{
                 //インテイクは何もしない
                 state.intakeState = State.IntakeState.doNothing;
                 state.intakeBeltState = State.IntakeBeltState.doNothing;
+                state.shooterState = State.ShooterState.doNothing;
             }
 
             if(operator.getBumper(GenericHID.Hand.kLeft)){
@@ -62,6 +68,7 @@ public class DriveMode {
             drive.apllyState(state);
             intake.applyState(state);
             intakeBelt.applyState(state);
+            shooter.applyState(state);
         }
     }
 }

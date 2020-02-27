@@ -7,26 +7,29 @@ import frc.robot.subClass.*;
 public class ShootingBallMode {
     Drive drive;
     Shooter shooter;
+    IntakeBelt intakeBelt;
     Arm arm;
     XboxController driver,operator;
 
-    ShootingBallMode(Drive drive, Shooter shooter,Arm arm, Controller controller){
+    ShootingBallMode(Drive drive, Shooter shooter,Arm arm,IntakeBelt intakeBelt, Controller controller){
         this.drive = drive;
         this.shooter = shooter;
         this.arm = arm;
         this.driver = controller.driver;
         this.operator = controller.operator;
+        this.intakeBelt = intakeBelt;
     }
 
     public void applyMode(State state){
         if(state.controlState == State.ControlState.m_ShootingBall){
             //もう一度バンパーが押されたら、ドライブモードへ切り替え
-            if(!operator.getBumper(GenericHID.Hand.kLeft)){
+            if(operator.getBumper(GenericHID.Hand.kLeft)){
                 if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))){
                     //ボールを飛ばす
                     state.shooterState = State.ShooterState.kshoot;
                     state.shooterPIDSpeed = operator.getTriggerAxis(GenericHID.Hand.kRight);
                     state.driveState = State.DriveState.kdoNothing;
+                    state.intakeBeltState = State.IntakeBeltState.kouttake;
                 }else if(Util.deadbandCheck(driver.getX(GenericHID.Hand.kLeft))){
                    //ドライブを少し動かす
                     state.shooterState = State.ShooterState.doNothing;
@@ -43,9 +46,16 @@ public class ShootingBallMode {
                     //砲台の角度を手動で調節
                     state.driveState = State.DriveState.kdoNothing;
                     state.shooterState = State.ShooterState.doNothing;
-                    state.armState = State.ArmState.k_Aaiming;
-                    state.shooterAngle = operator.getX(GenericHID.Hand.kLeft);
+                    state.armState = State.ArmState.k_Basic;
+                    state.armMotorSpeed = operator.getX(GenericHID.Hand.kLeft);
+                }else{
+                    state.shooterState = State.ShooterState.doNothing;
+                    state.driveState = State.DriveState.kdoNothing;
+                    state.intakeBeltState = State.IntakeBeltState.doNothing;
                 }
+                /*if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))&&Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
+                    state.intakeBeltState = State.IntakeBeltState.kouttake;
+                }*/
             }else{
                 //ドライブモードへ切り替え
                 state.controlState = State.ControlState.m_Drive;
@@ -58,6 +68,8 @@ public class ShootingBallMode {
             drive.apllyState(state);
             shooter.applyState(state);
             arm.applyState(state);
+            intakeBelt.applyState(state);
+
         }
     }
 }

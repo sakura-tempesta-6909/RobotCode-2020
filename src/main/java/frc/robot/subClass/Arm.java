@@ -21,6 +21,7 @@ public class Arm {
    public void applyState(State state){
         switch (state.armState){
             case k_Basic:
+                setArmSpeed(state.armMotorSpeed);
                 break;
             case k_Maxup:
                 break;
@@ -31,7 +32,7 @@ public class Arm {
     //--------------------------------------------------------------------------------
     //砲台のモーターを回す(速さはsetspeedで決める)
     public void setArmSpeed(double setSpeed){
-        Motor.set(ControlMode.Current,setSpeed);
+        Motor.set(ControlMode.PercentOutput,setSpeed);
     }
 
 

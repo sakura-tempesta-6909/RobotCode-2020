@@ -21,9 +21,8 @@ public class Const {
 
 
     public static final int IntakeMotorPort = 14;
-
-    public static final int BeltMotorFrontPort = 11;
-    public static final int BeltMotorBackPort  = 15;
+    public static final int IntakeBeltSensorFrontPort  = 0;
+    public static final int IntakeBeltSensorBackPort = 1;
 
     public static final int HangingMotorPort = 7;
 
@@ -39,18 +38,22 @@ public class Const {
 
 
     //Shooter
+    public static final int shooterLeftMotor = 4;
+    public static final int shooterRightMotor = 5;
     public static final int shooterMotorMaxOutput = 100000;
     public static final int kSlotIdx = 0;
     public static final int kPIDLoopIdx = 0;
     public static final int kTimeoutMs = 30;
-    public final static Gains kGains_Velocit = new Gains( 0.01, 0.01, 0, 1023.0/7200.0,  300,  1.00,20000000);
-    public final static double shooterOutTakeSpeed = 0.4;
-    public final static double shooterIntakeSpeed = 0.4;
+    public final static Gains kGains_Velocit = new Gains( 0.01, 0.000005, 0, 1023.0/7200.0,  300,  1.00,20000000);
+    public final static double shooterOutTakeSpeed = -0.2;
+    public final static double shooterIntakeSpeed = 0.18;
 
 
     //Intake
-    public final static double intakeSpeed = 0.6;
-    public final static double outTakeSoeed = 0.4;
+    public final static double intakeSpeed = 0.8;
+    public final static double outtakeSpeed = -0.6;
+    public final static int intakeBeltFrontMotor = 11;
+    public final static int intakeBeltBackMotor = 15;
 
 
     //Climb
@@ -65,6 +68,7 @@ public class Const {
 
 
     //ARM
+    public static final int armMotor = 3;
     public static final double armMBasicSpeed_P = 0.05;
     public static final double armBasicSpeed_M = -0.05;
     //スティックの傾きに対するモーターの速さの倍率

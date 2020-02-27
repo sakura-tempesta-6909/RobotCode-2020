@@ -14,7 +14,7 @@ public class Intake {
     public void applyState(State state){
         switch (state.intakeState) {
             case kouttake:
-                setSpeed(Const.outTakeSoeed);
+                setSpeed(Const.outtakeSpeed);
                 break;
             case kIntake:
                 setSpeed(Const.intakeSpeed);
@@ -25,6 +25,6 @@ public class Intake {
         }
     }
     public void setSpeed(double speed){
-        intakeMotor.set(ControlMode.Current,speed);
+        intakeMotor.set(ControlMode.PercentOutput,speed);
     }
 }
