@@ -35,7 +35,7 @@ public class Arm{
 
     //----------------------------------------------------------------------------------------------------
     //現在の砲台の状態を確認（行き過ぎを防ぐ）(DownがRev、UpがVel)（最も上を向いているときが0度、最も下が135度）
-    void ArmCheck(State state){
+    public void ArmCheck(State state){
 
         if(MaxUp.isFwdLimitSwitchClosed()){
             //角度上限スイッチがONの時、砲台は基本状態である
@@ -63,7 +63,7 @@ public class Arm{
 
     //---------------------------------------------------------------------------------------------------
     //出力処理
-    void applyState(State state){
+    public void applyState(State state){
         //まず、最初に砲台の状態を確認
         ArmCheck(state);
 
@@ -110,7 +110,7 @@ public class Arm{
 
     //--------------------------------------------------------------------------------
     //砲台の角度を微調整する（PID無し）
-    void ArmAiming(State state){
+    public void ArmAiming(State state){
 
         //砲台の状態に合わせて微妙に動く
         switch(state.armState){
@@ -141,13 +141,13 @@ public class Arm{
 
     //--------------------------------------------------------------------------------
     //砲台のモーターを回す制御(速度をsetSpeedで決める)（）
-    void ArmMove(double setSpeed){
+    public void ArmMove(double setSpeed){
         Motor.set(setSpeed);
     }
 
 
     //砲台のモーターを回すPID制御(位置をSetPoint()で決める・重力オフセットをSetFeedForward()で決める)
-    void ArmPIDMove(int TargetAngle){
+    public void ArmPIDMove(int TargetAngle){
 
         Motor.set(ControlMode.Position, SetPoint(TargetAngle),
                 DemandType.ArbitraryFeedForward, SetFeedForward(TargetAngle));
@@ -174,7 +174,7 @@ public class Arm{
 
     //現在の砲台の角度を計算 
     //(角度の最大最小差分) ÷（エンコーダー値の最大最小差分) × (エンコーダー現在値 - 最小値) + (角度の最小値)
-    double getArmNow(int ArmNowPoint){
+    public double getArmNow(int ArmNowPoint){
 
         double NowAngle;
         NowAngle = Const.ArmAngleError / Const.ArmPointError *
@@ -185,7 +185,7 @@ public class Arm{
 
     //目標角度に合わせたPIDの目標値を計算
     //(目標角度 - 最小角度) ×（エンコーダー値の最大最小差分) ÷ (角度の最大最小差分) + (0からの差分)
-    double SetPoint(int TargetAngle){
+    public double SetPoint(int TargetAngle){
 
         double Targetpoint;
         Targetpoint = (TargetAngle - Const.ArmMinAngle) * Const.ArmMaxPoint /
@@ -196,7 +196,7 @@ public class Arm{
 
     //目標角度に合わせた重力オフセットを計算
     //(地面と水平な時の重力オフセット) × (cos目標角度)
-    double SetFeedForward(int TargetAngle){
+    public double SetFeedForward(int TargetAngle){
 
         double FeedForward;
         FeedForward = Const.ArmMaxOffset * Math.cos(Math.toRadians(TargetAngle));

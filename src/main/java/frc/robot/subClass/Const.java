@@ -57,7 +57,7 @@ public class Const {
 
 
     //Climb
-    public static final double climbMotorAdvanceSpeed = 0.30;
+    public static final double climbMotorExtendSpeed = 0.30;
     public static final double armMotorAdvanceSpeed = 0.15;
     public static final double climbMotorShrinkSpeed = -0.30;
     public static final double armMotorShrinkSpeed = -0.15;
@@ -65,6 +65,9 @@ public class Const {
     public static final double lockAngle = 0;
     public static final double slideMotorRight = 0.30;
     public static final double slideMotorLeft = -0.30;
+    public static final double climbArmExtendSpeed = 0;
+    public static final double climbArmShrinkSpeed = 0;
+    public static final double armParallelAngleRange = 10;
 
 
     //ARM

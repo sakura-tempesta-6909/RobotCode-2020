@@ -32,7 +32,7 @@ public class Climb {
             case doNothing:
                 break;
             case climbExtend:
-                climbExtend();
+                climbExtend(state.armAngle);
                 break;
 
             case climbShrink:
@@ -40,9 +40,9 @@ public class Climb {
                 lockTimer.reset();
                 lockTimer.start();
                 if (lockTimer.get() > 0.3) {
-                    climbShrink();
+                    climbShrink(state.armAngle);
                 }
-                climbShrink();
+                climbShrink(state.armAngle);
                 break;
 
             case climbLock:
@@ -64,31 +64,41 @@ public class Climb {
 
 
      // クライムを伸ばす
-    private void climbExtend() {
+    private void climbExtend(double armAngle) {
         unlockServo();
-        //Armの角度調整　スピードはPercentで入力
-        /*
-        if(ArmAngle≒水平)　{
+        //Armの角度変更
+        //arm.ArmMove(Const.climbArmExtendSpeed);
+
+        if(-Const.armParallelAngleRange < armAngle && armAngle < Const.armParallelAngleRange){
             // Aｒｍ機構と合うようにスピードを調整
-            setClimbMotorSpeed(Const.climbMotorAdvanceSpeed);
+            arm.ArmMove(Const.climbArmExtendSpeed);
+            setClimbMotorSpeed(Const.climbMotorExtendSpeed);
         }
-        */
+
 
 
 
     }
 
     // クライムを縮める
-    private void climbShrink() {
-        /*
-        if(ArmAngle>水平) {
+    private void climbShrink(double armAngle) {
+
+        if(armAngle > Const.armParallelAngleRange) {
             unlockServo();
-            //Armの角度調整　Percentで
+            //Armの角度変更
+            arm.ArmMove(Const.climbArmShrinkSpeed);
             setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
-        } else if(ArmAngle<≒水平) {
+        } else if(-Const.armParallelAngleRange <= armAngle && armAngle <= Const.armParallelAngleRange) {
+            arm.ArmMove(0);
+            setClimbMotorSpeed(0);
             lockServo();
+        }else if(armAngle < Const.armParallelAngleRange) {
+            //機構破壊防止のためClimbが下がりすぎたら上げる。
+            unlockServo();
+            arm.ArmMove(Const.climbArmExtendSpeed);
+            setClimbMotorSpeed(Const.climbMotorExtendSpeed);
         }
-         */
+
 
     }
 
