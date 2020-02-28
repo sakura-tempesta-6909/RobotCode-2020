@@ -9,18 +9,18 @@ import edu.wpi.first.wpilibj.Timer;
 public class Climb {
 
     //クライム用のモーター&エンコーダー
-    private TalonSRX ClimbMotor;
-    private TalonSRX CanonMotor;
-    private Servo Servo;
-    private TalonSRX SlideMotor;
+    private TalonSRX climbMotor;
+    private TalonSRX armMotor;
+    private Servo climbServo;
+    private TalonSRX slideMotor;
     private ArmSensor armSensor;
     private Timer lockTimer;
     private Arm arm;
 
-    Climb(TalonSRX hangingMotor, Servo hangingServo, TalonSRX climbSlideMotor, Timer climbTimer, ArmSensor armSensor, Arm arm) {
-        this.ClimbMotor = hangingMotor;
-        this.Servo = hangingServo;
-        this.SlideMotor = climbSlideMotor;
+    Climb(TalonSRX climbMotor, Servo climbServo, TalonSRX climbSlideMotor, Timer climbTimer, ArmSensor armSensor, Arm arm) {
+        this.climbMotor = climbMotor;
+        this.climbServo = climbServo;
+        this.slideMotor = climbSlideMotor;
         this.lockTimer = climbTimer;
         this.armSensor = armSensor;
         this.arm = arm;
@@ -32,18 +32,17 @@ public class Climb {
             case doNothing:
                 break;
             case climbExtend:
-                unlockServo();
-                climbAdvanced();
+                climbExtend();
                 break;
 
             case climbShrink:
-                unlockServo();
+                // ここ、if文の意味ないし、マイループreset and startする。0.3秒は長い気もする。
                 lockTimer.reset();
                 lockTimer.start();
                 if (lockTimer.get() > 0.3) {
-                    climbShrinked();
+                    climbShrink();
                 }
-                climbShrinked();
+                climbShrink();
                 break;
 
             case climbLock:
@@ -62,32 +61,34 @@ public class Climb {
         }
     }
 
-    //砲台のモーターを回す(速さはsetSpeedで決める)
 
-    private void ClimbMove() {
 
-        if (armSensor.getArmFrontSensor()) {
+     // クライムを伸ばす
+    private void climbExtend() {
+        unlockServo();
+        //Armの角度調整　スピードはPercentで入力
+        /*
+        if(ArmAngle≒水平)　{
+            // Aｒｍ機構と合うようにスピードを調整
             setClimbMotorSpeed(Const.climbMotorAdvanceSpeed);
-            arm.setArmSpeed(Const.canonMotorAdvanceSpeed);
-        } else if (armSensor.getArmBackSensor()) {
-            setClimbMotorSpeed(Const.climbMotorAdvanceSpeed);
-            arm.setArmSpeed(Const.canonMotorShrinkSpeed);
         }
+        */
 
-    }
 
-    // クライムを伸ばす
-    private void climbAdvanced() {
-        setClimbMotorSpeed(Const.climbMotorAdvanceSpeed);
-        ClimbMove();
-        // CanonMotor.set(0.15);
 
     }
 
     // クライムを縮める
-    private void climbShrinked() {
-        setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
-        ClimbMove();
+    private void climbShrink() {
+        /*
+        if(ArmAngle>水平) {
+            unlockServo();
+            //Armの角度調整　Percentで
+            setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
+        } else if(ArmAngle<≒水平) {
+            lockServo();
+        }
+         */
 
     }
 
@@ -112,16 +113,16 @@ public class Climb {
     }
 
     private void setSlideMotorSpeed(double speed) {
-        SlideMotor.set(ControlMode.Current, speed);
+        slideMotor.set(ControlMode.Velocity, speed);
     }
 
     private void setClimbMotorSpeed(double speed) {
-        ClimbMotor.set(ControlMode.Current, speed);
+        climbMotor.set(ControlMode.Velocity, speed);
     }
 
 
     private void setServoAngle(double angle) {
-        Servo.set(angle);
+        climbServo.set(angle);
     }
     // private void climbCheck (State state) {
 
