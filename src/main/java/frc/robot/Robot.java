@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
         //コントローラーの初期化
         operator = new XboxController(Const.OperateControllerPort);
         driver = new XboxController(Const.DriveControllerPort);
-        //Sjoystick = new Joystick(Const.JoystickPort);
+        //joystick = new Joystick(Const.JoystickPort);
         controller = new Controller(driver, operator);
 
         //cameraの初期化
@@ -149,7 +149,7 @@ public class Robot extends TimedRobot {
 
         //サブクラスの生成
         armSensor = new ArmSensor(armMotor);
-        arm = new Arm(armMotor, armSensor);
+        //arm = new Arm(armMotor, armSensor);
         drive = new Drive(driveLeftFrontMotor, driveRightFrontMotor);
         shooter = new Shooter(shooterRightMotor, shooterLeftMotor);
         intake = new Intake(intakeMotor);

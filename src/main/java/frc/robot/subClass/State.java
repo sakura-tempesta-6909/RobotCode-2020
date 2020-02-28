@@ -6,18 +6,19 @@ public class State {
     public double driveStraightSpeed, driveRotateSpeed;  //Driveの速度;
     public double shooterLeftSpeed, shooterRightSpeed, shooterPIDSpeed;
     public double hangingMotorSpeed;
-    public double canonMotorSpeed;
-    public double hangingServoAngle;
+    public double armMotorSpeed;
+    public double armAngle;
     public double climbSlideMotorSpeed;
     public double panelManualSpeed;
     public double shooterAngle;
-    public double armMotorSpeed;
+    public double armRotateSpeed;
     public ShooterState shooterState;
     public IntakeState intakeState;
     public IntakeBeltState intakeBeltState;
     public DriveState driveState;
     public ClimbState climbState;
     public ArmState armState;
+    public ArmOutState armOutState;
     public ControlState controlState;
     public PanelState panelState;
 
@@ -46,12 +47,13 @@ public class State {
         //Climb
         climbState = ClimbState.doNothing;
         hangingMotorSpeed = 0;
-        canonMotorSpeed = 0;
-        hangingServoAngle = 0;
+        armMotorSpeed = 0;
+        armAngle = 0;
         climbSlideMotorSpeed = 0;
 
         //Arm
         armState = ArmState.k_Basic;
+        armOutState = ArmOutState.k_DoNothing;
         armMotorSpeed = 0;
 
         panelState = PanelState.p_DoNothing;
@@ -84,8 +86,8 @@ public class State {
         //Climb
         climbState = ClimbState.doNothing;
         hangingMotorSpeed = 0;
-        canonMotorSpeed = 0;
-        hangingServoAngle = 0;
+        armMotorSpeed = 0;
+        armAngle = 0;
         climbSlideMotorSpeed = 0;
         armState = ArmState.k_Aiming;
         panelState = PanelState.p_DoNothing;
@@ -126,6 +128,15 @@ public class State {
         climbLock,
         climbRightSlide,
         climbLeftSlide
+    }
+
+    public enum ArmOutState {
+        k_ChangeBasic,
+        k_Shoot,
+        k_Panel,
+        k_LittleAaim,
+        k_Parallel,
+        k_DoNothing
     }
 
     public enum ArmState {

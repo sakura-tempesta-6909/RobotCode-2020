@@ -17,7 +17,7 @@ public class Const {
     public static final int DriveLeftBackPort = 13;
 
     //Arm - Motor-port & Encoder - port
-    public static final int CanonMotorPort = 3;
+    public static final int ArmMotorPort = 3;
 
 
     public static final int IntakeMotorPort = 14;
@@ -30,7 +30,7 @@ public class Const {
     //Drive
     public static final double DriveFullSpeedTime = 0.5;
 
-    //Seosor
+    //Sensor
 
 
     //その他
@@ -58,9 +58,9 @@ public class Const {
 
     //Climb
     public static final double climbMotorAdvanceSpeed = 0.30;
-    public static final double canonMotorAdvanceSpeed = 0.15;
+    public static final double armMotorAdvanceSpeed = 0.15;
     public static final double climbMotorShrinkSpeed = -0.30;
-    public static final double canonMotorShrinkSpeed = -0.15;
+    public static final double armMotorShrinkSpeed = -0.15;
     public static final double unLockAngle = 30;
     public static final double lockAngle = 0;
     public static final double slideMotorRight = 0.30;
@@ -72,10 +72,16 @@ public class Const {
     public static final double armMBasicSpeed_P = 0.05;
     public static final double armBasicSpeed_M = -0.05;
     //スティックの傾きに対するモーターの速さの倍率
-    public static final double armMagni = 0.005;
+    public static final double ArmMagni = 0.005;
     //アームの可動域の角度＆エンコーダーからの値の最大
-    public static final double armMaxAngle = 135;
-    public static final double armMaxPoint = 383;
+    public static final double ArmMaxAngle = 135;
+    public static final double ArmMaxPoint = 383;
+
+    public static final double ArmAngleError = 0;
+    public static final double ArmPointError = 0;
+    public static final double ArmMinPoint = 0;
+    public static final double ArmMinAngle = 0;
+    public static final double ArmMaxOffset = 0;
 
     public static final double shooterPanelSpeed = 0.2;
 }
