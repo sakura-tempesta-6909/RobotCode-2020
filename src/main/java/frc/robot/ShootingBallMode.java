@@ -40,7 +40,7 @@ public class ShootingBallMode {
                     //砲台の角度をゴールへ調節する
                     state.driveState = State.DriveState.kdoNothing;
                     state.shooterState = State.ShooterState.doNothing;
-                    state.armState = State.ArmState.k_Aaiming;
+                    state.armState = State.ArmState.k_Aiming;
                     state.shooterAngle = 0;
                 } else if (Util.deadbandCheck(operator.getX(GenericHID.Hand.kLeft))) {
                     //砲台の角度を手動で調節
@@ -61,11 +61,11 @@ public class ShootingBallMode {
                 state.controlState = State.ControlState.m_Drive;
                 state.driveState = State.DriveState.kManual;
                 state.shooterState = State.ShooterState.doNothing;
-                state.armState = State.ArmState.k_Aaiming;
+                state.armState = State.ArmState.k_Aiming;
                 Util.sendConsole("Mode", "DriveMode");
             }
 
-            drive.apllyState(state);
+            drive.applyState(state);
             shooter.applyState(state);
             arm.applyState(state);
             intakeBelt.applyState(state);

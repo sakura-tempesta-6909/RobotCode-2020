@@ -55,7 +55,7 @@ public class State {
         armMotorSpeed = 0;
 
         panelState = PanelState.p_DoNothing;
-        //ContloalMode
+        //ControlMode
 
         controlState = ControlState.m_Drive;
 
@@ -87,7 +87,7 @@ public class State {
         canonMotorSpeed = 0;
         hangingServoAngle = 0;
         climbSlideMotorSpeed = 0;
-        armState = ArmState.k_Aaiming;
+        armState = ArmState.k_Aiming;
         panelState = PanelState.p_DoNothing;
 
 
@@ -130,7 +130,7 @@ public class State {
 
     public enum ArmState {
         k_Basic,           //基本状態（最も下を向いている）
-        k_Aaiming,         //砲台の照準を合わせている状態
+        k_Aiming,         //砲台の照準を合わせている状態
         k_Maxup            //最も上を向いている状態
     }
 

@@ -9,7 +9,7 @@ public class Drive extends DifferentialDrive {
         super(leftMotor, rightMotor);
     }
 
-    public void apllyState(State state) {
+    public void applyState(State state) {
 
         switch (state.driveState) {
             case kLow:

@@ -65,7 +65,7 @@ public class DriveMode {
                 Util.sendConsole("Mode", "ClimbMode");
             }
 
-            drive.apllyState(state);
+            drive.applyState(state);
             intake.applyState(state);
             intakeBelt.applyState(state);
             shooter.applyState(state);

@@ -50,8 +50,8 @@ public class ClimbMode {
             } else {
                 state.climbState = State.ClimbState.doNothing;
             }
-            drive.apllyState(state);
-            climb.apllyState(state);
+            drive.applyState(state);
+            climb.applyState(state);
         }
 
     }

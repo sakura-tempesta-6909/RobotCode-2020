@@ -26,11 +26,11 @@ public class Climb {
         this.arm = arm;
     }
 
-    public void apllyState(State state) {
+    public void applyState(State state) {
         switch (state.climbState) {
 
             case doNothing:
-
+                break;
             case climbExtend:
                 unlockServo();
                 climbAdvanced();
@@ -62,7 +62,7 @@ public class Climb {
         }
     }
 
-    //砲台のモーターを回す(速さはsetspeedで決める)
+    //砲台のモーターを回す(速さはsetSpeedで決める)
 
     private void ClimbMove() {
 

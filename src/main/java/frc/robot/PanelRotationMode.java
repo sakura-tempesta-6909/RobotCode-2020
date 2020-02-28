@@ -51,7 +51,7 @@ public class PanelRotationMode {
                 state.panelState = State.PanelState.p_DoNothing;
                 Util.sendConsole("Mode", "DriveMode");
             }
-            drive.apllyState(state);
+            drive.applyState(state);
             panel.applyState(state);
         }
     }

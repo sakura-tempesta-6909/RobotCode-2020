@@ -25,13 +25,13 @@ public class Arm {
                 break;
             case k_Maxup:
                 break;
-            case k_Aaiming:
+            case k_Aiming:
                 break;
         }
     }
 
     //--------------------------------------------------------------------------------
-    //砲台のモーターを回す(速さはsetspeedで決める)
+    //砲台のモーターを回す(速さはsetSpeedで決める)
     public void setArmSpeed(double setSpeed) {
         Motor.set(ControlMode.PercentOutput, setSpeed);
     }
