@@ -52,6 +52,7 @@ public class ClimbMode {
             }
             drive.applyState(state);
             climb.applyState(state);
+            arm.applyState(state);
         }
 
     }

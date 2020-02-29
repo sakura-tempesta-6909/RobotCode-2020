@@ -131,9 +131,22 @@ public class Robot extends TimedRobot {
         shooterRightMotor.setSensorPhase(true);
         shooterLeftMotor.setSensorPhase(true);
 
+        //ArmのPID設定
+        shooterLeftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+                Const.kArmPIDLoopIdx,
+                Const.kTimeoutMs);
+
+        armMotor.config_kF(Const.kArmPIDLoopIdx, Const.kGains_ArmPosition.kF, Const.kTimeoutMs);
+        armMotor.config_kP(Const.kArmPIDLoopIdx, Const.kGains_ArmPosition.kP, Const.kTimeoutMs);
+        armMotor.config_kI(Const.kArmPIDLoopIdx, Const.kGains_ArmPosition.kI, Const.kTimeoutMs);
+        armMotor.config_kD(Const.kArmPIDLoopIdx, Const.kGains_ArmPosition.kD, Const.kTimeoutMs);
+
+        armMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_ArmPosition.MaxIntegralAccumulator);
+
+        armMotor.setSensorPhase(true);
         /*
         初期値が確認できたら、削除予定
-        shooterLeft.configNominalOutputForward(0, Const.kTimeoutMs);
+        ShooterLeft.configNominalOutputForward(0, Const.kTimeoutMs);
         shooterLeft.configNominalOutputReverse(0, Const.kTimeoutMs);
         shooterLeft.configPeakOutputForward(1, Const.kTimeoutMs);
         shooterLeft.configPeakOutputReverse(-1, Const.kTimeoutMs);
@@ -149,7 +162,7 @@ public class Robot extends TimedRobot {
 
         //サブクラスの生成
         armSensor = new ArmSensor(armMotor);
-        //arm = new Arm(armMotor, armSensor);
+        arm = new Arm(armMotor, armSensor);
         drive = new Drive(driveLeftFrontMotor, driveRightFrontMotor);
         shooter = new Shooter(shooterRightMotor, shooterLeftMotor);
         intake = new Intake(intakeMotor);
@@ -219,10 +232,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+
         climbMode.applyMode(state);
         driveMode.applyMode(state);
         panelRotationMode.applyMode(state);
         shootingBallMode.applyMode(state);
+
     }
 
     @Override
