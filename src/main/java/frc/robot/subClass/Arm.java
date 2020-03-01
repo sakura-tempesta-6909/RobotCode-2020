@@ -28,7 +28,7 @@ public class Arm{
     //出力処理
     public void applyState(State state){
 
-        state.nowArmAngle = getArmNow(armSensor.getArmSensorRaw());
+        state.armAngle = getArmNow(armSensor.getArmSensorRaw());
 
         switch(state.armOutState){
             //---------------------------------------------------------------
