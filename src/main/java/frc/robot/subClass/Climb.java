@@ -15,11 +15,11 @@ public class Climb {
     private Timer lockTimer;
     private Arm arm;
 
-    Climb(TalonSRX climbMotor, Servo climbServo, TalonSRX climbSlideMotor, Timer climbTimer, Arm arm) {
+    public Climb(TalonSRX climbMotor, Servo climbServo, TalonSRX climbSlideMotor, Arm arm) {
         this.climbMotor = climbMotor;
         this.climbServo = climbServo;
         this.slideMotor = climbSlideMotor;
-        this.lockTimer = climbTimer;
+        this.lockTimer = new Timer();
        
         this.arm = arm;
     }

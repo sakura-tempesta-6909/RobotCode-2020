@@ -94,9 +94,9 @@ public class Robot extends TimedRobot {
         intakeBeltBackMotor.follow(intakeBeltFrontMotor);
 
         //Climb Motor
-        climbMotor = new TalonSRX(c);
-        climbServo = new Servo(f);
-        slideMotor = new TalonSRX(deviceNumber);
+        climbMotor = new TalonSRX(Const.climbMotorPort);
+        climbServo = new Servo(Const.climbServoPort);
+        slideMotor = new TalonSRX(Const.climbSlideMotor);
 
         //コントローラーの初期化
         operator = new XboxController(Const.OperateControllerPort);
@@ -185,7 +185,7 @@ public class Robot extends TimedRobot {
         intakeBelt = new IntakeBelt(intakeBeltFrontMotor, intakeFrontSensor, intakeBackSensor);
         panel = new Panel(shooter);
         state = new State();
-        climb = new Climb();
+        climb = new Climb(climbMotor, climbServo, slideMotor, arm);
 
         //モードのクラスの生成
         driveMode = new DriveMode(drive, intake, intakeBelt, shooter, controller);

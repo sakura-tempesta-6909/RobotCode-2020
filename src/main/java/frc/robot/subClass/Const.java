@@ -57,9 +57,9 @@ public class Const {
 
 
     //Climb
-    public static final int climbMotorPort;
-    public static final int climbServoPort;
-    public static final int climbSlideMotor;
+    public static final int climbMotorPort = 7;
+    public static final int climbServoPort = 9;
+    public static final int climbSlideMotor = 16;
     public static final double climbMotorExtendSpeed = 0.30;
     public static final double armMotorAdvanceSpeed = 0.15;
     public static final double climbMotorShrinkSpeed = -0.30;
