@@ -57,6 +57,9 @@ public class Const {
 
 
     //Climb
+    public static final int climbMotorPort;
+    public static final int climbServoPort;
+    public static final int climbSlideMotor;
     public static final double climbMotorExtendSpeed = 0.30;
     public static final double armMotorAdvanceSpeed = 0.15;
     public static final double climbMotorShrinkSpeed = -0.30;
@@ -86,7 +89,7 @@ public class Const {
 
     public static final double armMaxOffset = 0.13;
 
-    public final static Gains kGains_ArmPosition = new Gains(0, 0, 0, 0, 300, 1.00, 200000);
+    public final static Gains kGains_ArmPosition = new Gains(10, 0, 25, 0, 300, 1.00, 200000);
     public static final int kArmPIDLoopIdx = 0;
 
     //目標角度（現在不明）

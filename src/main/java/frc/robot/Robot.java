@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subClass.*;
@@ -35,6 +36,12 @@ public class Robot extends TimedRobot {
     //IntakeMotor
     VictorSPX intakeBeltFrontMotor, intakeBeltBackMotor;
     VictorSPX intakeMotor;
+
+    //climbMotor
+    TalonSRX climbMotor;
+    Servo climbServo;
+    TalonSRX slideMotor;
+
 
     //センサー
     DigitalInput intakeFrontSensor, intakeBackSensor;
@@ -85,6 +92,11 @@ public class Robot extends TimedRobot {
 
         //IntakeBeltのフォローの設定
         intakeBeltBackMotor.follow(intakeBeltFrontMotor);
+
+        //Climb Motor
+        climbMotor = new TalonSRX(c);
+        climbServo = new Servo(f);
+        slideMotor = new TalonSRX(deviceNumber);
 
         //コントローラーの初期化
         operator = new XboxController(Const.OperateControllerPort);
@@ -173,6 +185,7 @@ public class Robot extends TimedRobot {
         intakeBelt = new IntakeBelt(intakeBeltFrontMotor, intakeFrontSensor, intakeBackSensor);
         panel = new Panel(shooter);
         state = new State();
+        climb = new Climb();
 
         //モードのクラスの生成
         driveMode = new DriveMode(drive, intake, intakeBelt, shooter, controller);

@@ -10,19 +10,17 @@ public class Climb {
 
     //クライム用のモーター&エンコーダー
     private TalonSRX climbMotor;
-    private TalonSRX armMotor;
     private Servo climbServo;
     private TalonSRX slideMotor;
-    private ArmSensor armSensor;
     private Timer lockTimer;
     private Arm arm;
 
-    Climb(TalonSRX climbMotor, Servo climbServo, TalonSRX climbSlideMotor, Timer climbTimer, ArmSensor armSensor, Arm arm) {
+    Climb(TalonSRX climbMotor, Servo climbServo, TalonSRX climbSlideMotor, Timer climbTimer, Arm arm) {
         this.climbMotor = climbMotor;
         this.climbServo = climbServo;
         this.slideMotor = climbSlideMotor;
         this.lockTimer = climbTimer;
-        this.armSensor = armSensor;
+       
         this.arm = arm;
     }
 
@@ -67,7 +65,7 @@ public class Climb {
     private void climbExtend(double armAngle) {
         unlockServo();
         //Armの角度変更
-        //arm.ArmMove(Const.climbArmExtendSpeed);
+        arm.ArmMove(Const.climbArmExtendSpeed);
 
         if(-Const.armParallelAngleRange < armAngle && armAngle < Const.armParallelAngleRange){
             // Arｍ機構と合うようにスピードを調整
