@@ -30,6 +30,7 @@ public class Arm{
 
         state.armAngle = getArmNow(armSensor.getArmSensorRaw());
 
+        
         switch(state.armOutState){
             //---------------------------------------------------------------
             //砲台の角度を基本状態に
