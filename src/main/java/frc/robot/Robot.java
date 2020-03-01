@@ -300,7 +300,7 @@ public class Robot extends TimedRobot {
 
         //ShootingBall Mode
         if (state.controlState == State.ControlState.m_ShootingBall) {
-
+            state.armState = State.ArmState.k_Conserve;
             if (operator.getBumper(GenericHID.Hand.kLeft)) {
                 if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //ボールを飛ばす

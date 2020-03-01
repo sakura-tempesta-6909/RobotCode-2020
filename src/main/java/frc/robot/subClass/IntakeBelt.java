@@ -17,6 +17,8 @@ public class IntakeBelt {
     }
 
     public void applyState(State state) {
+        System.out.println("intakesensorF" + getFrontSensor());
+        System.out.println("intakesensorB" + getBackSensor());
         switch (state.intakeBeltState) {
             case kIntake:
                 intake();
