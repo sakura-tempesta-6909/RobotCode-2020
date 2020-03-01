@@ -8,6 +8,7 @@ public class State {
     public double hangingMotorSpeed;
     public double armMotorSpeed;
     public double armAngle;
+    public double setArmAngle;
     public double climbSlideMotorSpeed;
     public double panelManualSpeed;
     public double shooterAngle;
@@ -21,6 +22,7 @@ public class State {
     public ArmOutState armOutState;
     public ControlState controlState;
     public PanelState panelState;
+	public boolean armPID_ON;
 
     public State() {
         stateInit();
@@ -55,6 +57,8 @@ public class State {
         armState = ArmState.k_Basic;
         armOutState = ArmOutState.k_DoNothing;
         armMotorSpeed = 0;
+        armPID_ON = false;
+        setArmAngle = Const.armMinAngle;
 
         panelState = PanelState.p_DoNothing;
         //ControlMode

@@ -14,13 +14,15 @@ public class Arm{
 
     //宣言
     TalonSRX Motor;            //モーター
+    SensorCollection Encoder;
 
     ArmSensor armSensor;
 
 
     //コンストラクター
-    public Arm(TalonSRX ArmMotor, ArmSensor armSensor){
+    public Arm(TalonSRX ArmMotor,SensorCollection Encoder, ArmSensor armSensor){
         this.Motor = ArmMotor;
+        this.Encoder = Encoder;
         this.armSensor = armSensor;
     }
 
@@ -28,9 +30,9 @@ public class Arm{
     //出力処理
     public void applyState(State state){
 
-        state.armAngle = getArmNow(armSensor.getArmSensorRaw());
+        state.armAngle = getArmNow(Encoder.getAnalogInRaw());
 
-        
+
         switch(state.armOutState){
             //---------------------------------------------------------------
             //砲台の角度を基本状態に
@@ -42,7 +44,7 @@ public class Arm{
             //砲台の角度をセル発射用に(PID)
             case k_Shoot:
                 state.armPID_ON = true;
-                ArmPIDMove(state.setArmAngle,getArmNow(armSensor.getArmSensorRaw()));
+                ArmPIDMove(state.setArmAngle,getArmNow(Encoder.getAnalogInRaw()));
                 state.setArmAngle = Const.armShootAngle;
                 break;
             //---------------------------------------------------------------
@@ -50,7 +52,7 @@ public class Arm{
             case k_Panel:
                 state.armPID_ON = true;
                 state.setArmAngle = Const.armPanelAngle;
-                ArmPIDMove(state.setArmAngle, getArmNow(armSensor.getArmSensorRaw()));
+                ArmPIDMove(state.setArmAngle, getArmNow(Encoder.getAnalogInRaw()));
                 break;
             //---------------------------------------------------------------
             //砲台の角度を微調整
@@ -63,7 +65,7 @@ public class Arm{
             case k_Parallel:
                 state.armPID_ON = true;
                 state.setArmAngle = Const.armParallelAngle;
-                ArmPIDMove(state.setArmAngle, getArmNow(armSensor.getArmSensorRaw()));
+                ArmPIDMove(state.setArmAngle, getArmNow(Encoder.getAnalogInRaw()));
                 break;
             //---------------------------------------------------------------
             //何もしない

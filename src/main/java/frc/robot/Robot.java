@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
 
     //センサー
     DigitalInput intakeFrontSensor, intakeBackSensor;
+    SensorCollection armEncoder;
 
     //カメラ
     CameraServer camera;
@@ -71,8 +73,10 @@ public class Robot extends TimedRobot {
 
         //アームのモーター
         armMotor = new TalonSRX(Const.armMotor);
+        //アームのセンサー
         armMotor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
         armMotor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
+        armEncoder = new SensorCollection(armMotor);
 
         //IntakeBelt
         intakeBeltFrontMotor = new VictorSPX(Const.intakeBeltFrontMotor);
@@ -162,7 +166,7 @@ public class Robot extends TimedRobot {
 
         //サブクラスの生成
         armSensor = new ArmSensor(armMotor);
-        arm = new Arm(armMotor, armSensor);
+        arm = new Arm(armMotor, armEncoder, armSensor);
         drive = new Drive(driveLeftFrontMotor, driveRightFrontMotor);
         shooter = new Shooter(shooterRightMotor, shooterLeftMotor);
         intake = new Intake(intakeMotor);

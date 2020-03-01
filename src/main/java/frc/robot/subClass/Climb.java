@@ -70,7 +70,7 @@ public class Climb {
         //arm.ArmMove(Const.climbArmExtendSpeed);
 
         if(-Const.armParallelAngleRange < armAngle && armAngle < Const.armParallelAngleRange){
-            // Aｒｍ機構と合うようにスピードを調整
+            // Arｍ機構と合うようにスピードを調整
             arm.ArmMove(Const.climbArmExtendSpeed);
             setClimbMotorSpeed(Const.climbMotorExtendSpeed);
         }
