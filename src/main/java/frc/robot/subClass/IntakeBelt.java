@@ -17,8 +17,6 @@ public class IntakeBelt {
     }
 
     public void applyState(State state) {
-        System.out.println("intakesensorF" + getFrontSensor());
-        System.out.println("intakesensorB" + getBackSensor());
         switch (state.intakeBeltState) {
             case kIntake:
                 intake();
@@ -41,18 +39,22 @@ public class IntakeBelt {
     private void intake() {
         //ToDo:一個ずつ
         setSpeed(-1);
+
     }
 
     private void outtake() {
         //ToDo:一個ずつ
         setSpeed(1);
+   
     }
 
     private boolean getFrontSensor() {
+        //あったらfalse なかったらtrue
         return intakeFrontSensor.get();
     }
 
     private boolean getBackSensor() {
+        //あったらfalse なかったらtrue
         return intakeBackSensor.get();
     }
 }

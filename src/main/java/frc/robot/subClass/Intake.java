@@ -14,10 +14,10 @@ public class Intake {
     public void applyState(State state) {
         switch (state.intakeState) {
             case kouttake:
-                setSpeed(Const.outtakeSpeed);
+                setSpeed(-Const.outtakeSpeed);
                 break;
             case kIntake:
-                setSpeed(Const.intakeSpeed);
+                setSpeed(-Const.intakeSpeed);
                 break;
             case doNothing:
                 setSpeed(0);

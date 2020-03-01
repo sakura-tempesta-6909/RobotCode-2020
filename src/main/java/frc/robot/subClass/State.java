@@ -61,7 +61,7 @@ public class State {
         panelState = PanelState.p_DoNothing;
         //ControlMode
 
-        controlState = ControlState.m_Drive;
+        // controlState = ControlState.m_Drive;
 
         shooterAngle = 0;
 

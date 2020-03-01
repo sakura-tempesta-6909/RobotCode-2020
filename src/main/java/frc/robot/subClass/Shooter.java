@@ -17,9 +17,11 @@ public class Shooter {
                 setSpeed(state.shooterPIDSpeed);
                 break;
             case kintake:
+            System.out.println("shoointake");
                 setSpeedPersent(Const.shooterIntakeSpeed, -Const.shooterIntakeSpeed);
                 break;
             case kouttake:
+            System.out.print("shoooutake");
                 setSpeedPersent(Const.shooterOutTakeSpeed, -Const.shooterOutTakeSpeed);
                 break;
             case kmanual:
