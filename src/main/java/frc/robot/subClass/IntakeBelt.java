@@ -38,23 +38,24 @@ public class IntakeBelt {
 
     private void intake() {
         //ToDo:一個ずつ
-        setSpeed(-1);
-
+        if(is_BallFront() && !is_BallBack()) {
+            setSpeed(-1);
+        }
     }
 
     private void outtake() {
         //ToDo:一個ずつ
-        setSpeed(1);
-   
+        //無理では？(名推理)
+        setSpeed(1); 
     }
 
-    private boolean getFrontSensor() {
-        //あったらfalse なかったらtrue
-        return intakeFrontSensor.get();
+     //あったらtrue なかったらfalseを返す
+    private boolean is_BallFront() {
+        return !intakeFrontSensor.get();
     }
 
-    private boolean getBackSensor() {
-        //あったらfalse なかったらtrue
+    //あったらtrue なかったらfalseを返す
+    private boolean is_BallBack() {
         return intakeBackSensor.get();
     }
 }

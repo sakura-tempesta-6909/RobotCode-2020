@@ -36,7 +36,7 @@ public class Arm{
         SmartDashboard.putString("ArmState", state.armState.toString());
         SmartDashboard.putNumber("ArmMotorSpeed", state.armMotorSpeed);
 
-        switch(state.armState){
+        switch(state.armState) {
             //---------------------------------------------------------------
             //砲台の角度を基本状態に
             case k_Basic:
@@ -59,7 +59,7 @@ public class Arm{
             //砲台の角度を微調整 
             case k_LittleAaim:
                 state.armPID_ON = false;
-                ArmAaiming(state);
+                ArmAiming(state);
                 break;
             //---------------------------------------------------------------
             //砲台の角度を地面と平行に(PID) 
@@ -84,7 +84,7 @@ public class Arm{
 
     //--------------------------------------------------------------------------------
     //砲台の角度を微調整する（PID無し）
-    void ArmAaiming(State state){
+    void ArmAiming(State state){
 
         if(armSensor.getArmFrontSensor()){
             //------------------------------------------
