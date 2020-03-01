@@ -19,7 +19,6 @@ public class State {
     public DriveState driveState;
     public ClimbState climbState;
     public ArmState armState;
-    public ArmOutState armOutState;
     public ControlState controlState;
     public PanelState panelState;
 	public boolean armPID_ON;
@@ -55,7 +54,6 @@ public class State {
 
         //Arm
         armState = ArmState.k_Basic;
-        armOutState = ArmOutState.k_DoNothing;
         armMotorSpeed = 0;
         armPID_ON = false;
         setArmAngle = Const.armMinAngle;
@@ -93,7 +91,7 @@ public class State {
         armMotorSpeed = 0;
         armAngle = 0;
         climbSlideMotorSpeed = 0;
-        armState = ArmState.k_Aiming;
+        armState = ArmState.k_Basic;
         panelState = PanelState.p_DoNothing;
 
 
@@ -134,19 +132,13 @@ public class State {
         climbLeftSlide
     }
 
-    public enum ArmOutState {
-        k_ChangeBasic,
+    public enum ArmState {
+        k_Conserve,
         k_Shoot,
         k_Panel,
         k_LittleAaim,
         k_Parallel,
-        k_DoNothing
-    }
-
-    public enum ArmState {
-        k_Basic,           //基本状態（最も下を向いている）
-        k_Aiming,         //砲台の照準を合わせている状態
-        k_Maxup            //最も上を向いている状態
+        k_Basic
     }
 
     public enum PanelState {

@@ -6,11 +6,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class IntakeBelt {
 
-    private VictorSPX intakeBelt;
+    private VictorSPX intakeBeltFront, intakeBelfBack;
     private DigitalInput intakeFrontSensor, intakeBackSensor;
 
-    public IntakeBelt(VictorSPX intakeBelt, DigitalInput intakeFrontSensor, DigitalInput intakeBack) {
-        this.intakeBelt = intakeBelt;
+    public IntakeBelt(VictorSPX intakeBeltFront, VictorSPX intakeBeltBack, DigitalInput intakeFrontSensor, DigitalInput intakeBack) {
+        this.intakeBeltFront = intakeBeltFront;
+        this.intakeBelfBack = intakeBeltBack;
         this.intakeFrontSensor = intakeFrontSensor;
         this.intakeBackSensor = intakeBack;
     }
@@ -31,14 +32,17 @@ public class IntakeBelt {
     }
 
     private void setSpeed(double speed) {
-        intakeBelt.set(ControlMode.PercentOutput, speed);
+        intakeBeltFront.set(ControlMode.PercentOutput, speed);
+        intakeBelfBack.set(ControlMode.PercentOutput, speed);
     }
 
     private void intake() {
+        //ToDo:一個ずつ
         setSpeed(-1);
     }
 
     private void outtake() {
+        //ToDo:一個ずつ
         setSpeed(1);
     }
 

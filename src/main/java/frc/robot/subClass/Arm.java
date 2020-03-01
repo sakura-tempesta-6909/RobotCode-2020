@@ -33,12 +33,11 @@ public class Arm{
         state.armAngle = getArmNow(Encoder.getAnalogInRaw());
 
 
-        switch(state.armOutState){
+        switch(state.armState){
             //---------------------------------------------------------------
-            //砲台の角度を基本状態に
-            case k_ChangeBasic:
+            //砲台の角度を基本状態に 
+            case k_Conserve:
                 state.armPID_ON = false;
-                ArmChangeBasic();
                 break;
             //---------------------------------------------------------------
             //砲台の角度をセル発射用に(PID)
@@ -69,8 +68,9 @@ public class Arm{
                 break;
             //---------------------------------------------------------------
             //何もしない
-            case k_DoNothing:
+            case k_Basic:
                 state.armPID_ON = false;
+                ArmChangeBasic();
                 break;
             //---------------------------------------------------------------
         }
