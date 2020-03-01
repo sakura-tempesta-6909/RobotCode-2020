@@ -148,8 +148,11 @@ public class Robot extends TimedRobot {
         shooterRightMotor.setSensorPhase(true);
         shooterLeftMotor.setSensorPhase(true);
 
+        //Armの設定を初期化
+        armMotor.configFactoryDefault();
+
         //ArmのPID設定
-        shooterLeftMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+        shooterLeftMotor.configSelectedFeedbackSensor(FeedbackDevice.Analog,
                 Const.kArmPIDLoopIdx,
                 Const.kTimeoutMs);
 
@@ -161,6 +164,7 @@ public class Robot extends TimedRobot {
         armMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_ArmPosition.MaxIntegralAccumulator);
 
         armMotor.setSensorPhase(true);
+        armMotor.setInverted(true);
         /*
         初期値が確認できたら、削除予定
         ShooterLeft.configNominalOutputForward(0, Const.kTimeoutMs);

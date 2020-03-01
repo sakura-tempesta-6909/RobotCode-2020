@@ -93,9 +93,9 @@ public class Const {
 
     public static final double armMaxOffset = 0.13;
 
-    public final static Gains kGains_ArmPosition = new Gains(10, 0, 25, 0, 300, 1.00, 0);
+    public final static Gains kGains_ArmPosition = new Gains(8, 0.01, 10, 0, 300, 1.00, 0);
     public static final int kArmPIDLoopIdx = 0;
-
+    
     //目標角度（現在不明）
     public static final double armShootAngle = 30;
     public static final double armParallelAngle = 0;
@@ -103,4 +103,5 @@ public class Const {
 
 
     public static final double shooterPanelSpeed = 0.2;
+	
 }

@@ -131,10 +131,8 @@ public class Arm{
 
     //砲台のモーターを回すPID制御(位置をSetPoint()で決める・重力オフセットをSetFeedForward()で決める)
     public void ArmPIDMove(double TargetAngle, double NowAngle){
-
         Motor.set(ControlMode.Position, SetPoint(TargetAngle),
                   DemandType.ArbitraryFeedForward, SetFeedForward(NowAngle));
-
     }
 
     //--------------------------------------------------------------------------------
@@ -162,33 +160,21 @@ public class Arm{
     //現在の砲台の角度を計算(この関数上手く動いてくれない)
     //(角度の最大最小差分) ÷（エンコーダー値の最大最小差分) × (エンコーダー現在値 - 最小値) + (角度の最小値)
     private double getArmNow(int ArmNowPoint){
-
-        double NowAngle;
-        NowAngle = Const.armAngleDifference / Const.armPointDifference *
+        return Const.armAngleDifference / Const.armPointDifference *
                    (ArmNowPoint - Const.armMinPoint) + Const.armMinAngle;
-
-        return NowAngle;
     }
 
     //目標角度に合わせたPIDの目標値を計算
     //(目標角度 - 最小角度) ×（エンコーダー値の最大最小差分) ÷ (角度の最大最小差分) + (0からの差分)
     private double SetPoint(double TargetAngle){
-
-        double Targetpoint;
-        Targetpoint = (TargetAngle - Const.armMinAngle) * Const.armPointDifference /
+        return (TargetAngle - Const.armMinAngle) * Const.armPointDifference /
                        Const.armAngleDifference + Const.armMinPoint;
-
-        return  Targetpoint;
     }
 
     //目標角度に合わせた重力オフセットを計算
     //(地面と水平な時の重力オフセット) × (cos現在角度)
     private double SetFeedForward(double NowAngle){
-
-        double FeedForward;
-        FeedForward = Const.armMaxOffset * Math.cos(Math.toRadians(NowAngle));
-
-        return FeedForward;
+        return Const.armMaxOffset * Math.cos(Math.toRadians(NowAngle));
     }
 
     //--------------------------------------------------------------------------------------
