@@ -17,16 +17,16 @@ public class Shooter {
                 setSpeed(state.shooterPIDSpeed);
                 break;
             case kintake:
-                setSpeedPersent(Const.shooterIntakeSpeed, -Const.shooterIntakeSpeed);
+                setSpeedPercent(Const.shooterIntakeSpeed, -Const.shooterIntakeSpeed);
                 break;
             case kouttake:
-                setSpeedPersent(Const.shooterOutTakeSpeed, -Const.shooterOutTakeSpeed);
+                setSpeedPercent(Const.shooterOutTakeSpeed, -Const.shooterOutTakeSpeed);
                 break;
             case kmanual:
-                setSpeedPersent(state.shooterLeftSpeed, state.shooterRightSpeed);
+                setSpeedPercent(state.shooterLeftSpeed, state.shooterRightSpeed);
                 break;
             case doNothing:
-                setSpeedPersent(0, 0);
+                setSpeedPercent(0, 0);
                 break;
         }
     }
@@ -37,9 +37,9 @@ public class Shooter {
         shooterRight.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
     }
 
-    public void setSpeedPersent(double speedPersentLeft, double speedPersentRight) {
+    public void setSpeedPercent(double speedPercentLeft, double speedPercentRight) {
         //Rは正で出す
-        shooterLeft.set(ControlMode.PercentOutput, speedPersentLeft);
-        shooterRight.set(ControlMode.PercentOutput, speedPersentRight);
+        shooterLeft.set(ControlMode.PercentOutput, speedPercentLeft);
+        shooterRight.set(ControlMode.PercentOutput, speedPercentRight);
     }
 }

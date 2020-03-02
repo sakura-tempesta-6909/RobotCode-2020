@@ -39,13 +39,31 @@ public class IntakeBelt {
 
     private void intake(State state) {
         //ToDo:一個ずつ
-        //後ろにボールがある(5つ入ってる)なら動かさない
-        if(is_BallBack() && is_BallFront()) {is_preBallFront = is_BallFront(); setSpeed(0, 0); state.is_IntakeFull = true; return;}
-        //直前までボールがある(1個分回収してない)かつ今ボールがない(回収した)ならボールゲット、ストップ
-        if(is_preBallFront && !is_BallFront()) { is_preBallFront = is_BallFront(); setSpeed(-1, 0); ballget = true; return;}
-        if(is_BallFront()) {is_preBallFront = true; ballget = false;}
-        if(ballget) {setSpeed(-1, 0); return;}
-        
+        //ボールがある＝回収中or満タン
+        if(is_BallFront()) {
+            is_preBallFront = true;
+            ballget = false;
+            if(is_BallBack()) {
+                //前後にボールあれば満タン
+                setSpeed(0, 0);
+                state.is_IntakeFull = true;
+                return;
+            }
+        } else {
+            //ボールなし＝回収済みorゼロ個
+            if(is_preBallFront) {
+                //直前ボールあり(回収中)&&現在ボールなし(回収済)ならボールゲット、後ろストップ
+                setSpeed(-1, 0);
+                ballget = true;
+            }
+            is_preBallFront = false;
+        }
+
+        if(ballget) {
+            //ボール1~4個
+            setSpeed(-1, 0);
+            return;
+        }
 
         setSpeed(-1, -1);
         is_preBallFront = is_BallFront();
@@ -53,20 +71,18 @@ public class IntakeBelt {
     }
 
     private void outtake() {
-        //ToDo:一個ずつ
-        //無理では？(名推理)
-        setSpeed(1, 1); 
+        setSpeed(1, 1);
     }
 
      //あったらtrue なかったらfalseを返す
     private boolean is_BallFront() {
-        System.out.println("ballfornt");
+        System.out.println("ballFront");
         return !intakeFrontSensor.get();
     }
 
     //あったらtrue なかったらfalseを返す
     private boolean is_BallBack() {
-        System.out.println("ballback");
+        System.out.println("ballBack");
         return !intakeBackSensor.get();
     }
 }

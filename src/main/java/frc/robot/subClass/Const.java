@@ -62,7 +62,7 @@ public class Const {
     public static final int climbSlideMotor = 16;
     public static final double climbMotorExtendSpeed = 0.6725;
     public static final double climbMotorShrinkSpeed = -0.20;
-    public static final double armMotorShrinkSpeed = -0.05;
+    public static final double armMotorShrinkSpeed = 0;
     public static final double unLockAngle = 30;
     public static final double lockAngle = 0;
     public static final double slideMotorRight = 0.30;

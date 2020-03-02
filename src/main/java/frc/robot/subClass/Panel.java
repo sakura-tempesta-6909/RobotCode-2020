@@ -20,7 +20,7 @@ public class Panel {
         switch (state.panelState) {
 
             case p_ManualRot:
-                shooter.setSpeedPersent(state.panelManualSpeed, state.panelManualSpeed);
+                shooter.setSpeedPercent(state.panelManualSpeed, state.panelManualSpeed);
                 break;
 
             //色合わせ　青<->赤、黄<->緑
@@ -76,9 +76,9 @@ public class Panel {
     private void AlignPanelTo(ColorCode c) {
 
         if (DetectedColor() == c) {
-            shooter.setSpeedPersent(0, 0);
+            shooter.setSpeedPercent(0, 0);
         } else {
-            shooter.setSpeedPersent(Const.shooterPanelSpeed, Const.shooterPanelSpeed);
+            shooter.setSpeedPercent(Const.shooterPanelSpeed, Const.shooterPanelSpeed);
         }
 
     }

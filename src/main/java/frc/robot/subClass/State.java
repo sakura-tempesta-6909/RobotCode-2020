@@ -23,7 +23,7 @@ public class State {
     public PanelState panelState;
     public boolean armPID_ON;
     
-    //ボールを5個ゲットしたか　Initで不変
+    //ボールを5個ゲットしたか
     public boolean is_IntakeFull;
 
     public State() {
@@ -44,6 +44,7 @@ public class State {
 
         //Intake
         intakeState = IntakeState.doNothing;
+        is_IntakeFull = false;
 
         //IntakeBeltState
         intakeBeltState = IntakeBeltState.doNothing;
@@ -138,10 +139,10 @@ public class State {
         k_Conserve,
         k_Shoot,
         k_Panel,
-        k_LittleAim,
+        k_Adjust,
         k_Parallel,
         k_Basic,
-        k_Shrink,
+        k_Manual,
         k_DoNothing
     }
 

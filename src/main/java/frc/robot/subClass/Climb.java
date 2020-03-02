@@ -77,7 +77,7 @@ public class Climb {
         if(-Const.armParallelAngleRange < armAngle){
             // Arｍ機構と合うようにスピードを調整
             System.out.println("parallel");
-            state.armState = State.ArmState.k_LittleAim;
+            state.armState = State.ArmState.k_Adjust;
             state.armMotorSpeed = arm.SetFeedForward(armAngle) + Const.climbArmExtendSpeed;
             setClimbMotorSpeed(Const.climbMotorExtendSpeed);
         }
@@ -90,7 +90,8 @@ public class Climb {
         if(armAngle > Const.armParallelAngleRange) {
             unlockServo();
             //Armの角度変更
-            state.armState = State.ArmState.k_Shrink;
+            state.armState = State.ArmState.k_Manual;
+            state.armMotorSpeed = Const.armMotorShrinkSpeed;
             setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
         } else if(-Const.armParallelAngleRange <= armAngle && armAngle <= Const.armParallelAngleRange) {
             //アームの速さを任意でセットする関数をArmにつくる
@@ -101,7 +102,7 @@ public class Climb {
             //機構破壊防止のためClimbが下がりすぎたら上げる。
             unlockServo();
             //アームの速さを任意でセットする関数をArmにつくる
-            state.armState = State.ArmState.k_LittleAim;
+            state.armState = State.ArmState.k_Adjust;
             state.armMotorSpeed = Const.climbArmExtendSpeed;
             setClimbMotorSpeed(Const.climbMotorExtendSpeed);
         }

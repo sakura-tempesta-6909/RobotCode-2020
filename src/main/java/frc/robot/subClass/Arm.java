@@ -54,10 +54,10 @@ public class Arm{
                 state.setArmAngle = Const.armPanelAngle;
                 break;
             //---------------------------------------------------------------
-            //砲台の角度を微調整 
-            case k_LittleAim:
+            //砲台の角度を微調整 正か負のみ
+            case k_Adjust:
                 state.armPID_ON = false;
-                armAJust(state);
+                armAdjust(state);
                 break;
             //---------------------------------------------------------------
             //砲台の角度を地面と平行に(PID) 
@@ -67,9 +67,9 @@ public class Arm{
                 break;
             //---------------------------------------------------------------
             //Climbで縮める
-            case k_Shrink:
+            case k_Manual:
                 state.armPID_ON = false;
-                ArmShrink();
+                ArmMove(state.armMotorSpeed);
                 break;
             //---------------------------------------------------------------
             //何もしない
@@ -90,9 +90,8 @@ public class Arm{
     }
 
     //--------------------------------------------------------------------------------
-    //砲台の角度を微調整する（PID無し）
-    void armAJust(State state){
-
+    //砲台の角度を微調整する（PID無し）正か負のみ
+    void armAdjust(State state){
         if(armSensor.getArmFrontSensor()){
             //------------------------------------------
             //角度が初期状態（-30度）
@@ -105,7 +104,7 @@ public class Arm{
             //------------------------------------------
             //角度が最も上（80度）
             if(state.armMotorSpeed < 0){
-                //Lowspeedで下げると下がらないので少し早め
+                //LowSpeedで下げると下がらないので少し早め
                 ArmMove(Const.ArmHighDownSpeed);
             } else {
                 ArmMove(0);
@@ -125,10 +124,6 @@ public class Arm{
             
         }
 
-    }
-
-    private void ArmShrink() {
-        ArmMove(Const.armMotorShrinkSpeed);
     }
 
     //--------------------------------------------------------------------------------

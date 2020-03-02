@@ -389,10 +389,10 @@ public class Robot extends TimedRobot {
                         state.armState = State.ArmState.k_Shoot;
                         state.setArmAngle = Const.armShootAngle;
                     } else if (Util.deadbandCheck(operator.getX(GenericHID.Hand.kLeft))) {
-                        //砲台の角度を手動で調節
+                        //砲台の角度を手動で調節, 正か負のみ
                         state.driveState = State.DriveState.kdoNothing;
                         state.shooterState = State.ShooterState.doNothing;
-                        state.armState = State.ArmState.k_LittleAim;
+                        state.armState = State.ArmState.k_Adjust;
                         state.armMotorSpeed = operator.getX(GenericHID.Hand.kLeft);
                     } else {
                         state.shooterState = State.ShooterState.doNothing;
