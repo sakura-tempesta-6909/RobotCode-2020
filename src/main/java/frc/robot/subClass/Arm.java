@@ -152,6 +152,9 @@ public class Arm{
                 ArmMove(Const.ArmLowDownSpeed);
             }
         }
+        if(armSensor.getArmFrontSensor()){
+            System.out.println("pushedddddddd");
+        }
     }
     
     //---------------------------------------------------------------------

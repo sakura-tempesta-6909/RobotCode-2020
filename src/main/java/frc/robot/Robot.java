@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -91,8 +92,8 @@ public class Robot extends TimedRobot {
         intakeBeltBackMotor = new VictorSPX(Const.intakeBeltBackMotor);
         intakeMotor = new VictorSPX(Const.IntakeMotorPort);
 
-        //IntakeBeltのフォローの設定
-        intakeBeltBackMotor.follow(intakeBeltFrontMotor);
+        //IntakeBeltのフォローの設定　※しない
+        //intakeBeltBackMotor.follow(intakeBeltFrontMotor);
 
         //Climb Motor
         climbMotor = new TalonSRX(Const.climbMotorPort);
@@ -254,7 +255,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-
         //状態初期化
         state.stateInit();
 

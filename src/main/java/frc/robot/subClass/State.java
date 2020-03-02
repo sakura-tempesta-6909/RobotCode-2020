@@ -21,7 +21,10 @@ public class State {
     public ArmState armState;
     public ControlState controlState;
     public PanelState panelState;
-	public boolean armPID_ON;
+    public boolean armPID_ON;
+    
+    //ボールを5個ゲットしたか　Initで不変
+    public boolean is_IntakeFull;
 
     public State() {
         stateInit();

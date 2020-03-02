@@ -38,19 +38,20 @@ public class Const {
 
 
     //Shooter
-    public static final int shooterLeftMotor = 4;
-    public static final int shooterRightMotor = 5;
+    //この二つ逆かもしれない
+    public static final int shooterLeftMotor = 5;
+    public static final int shooterRightMotor = 4;
     public static final int shooterMotorMaxOutput = 100000;
     public static final int kSlotIdx = 0;
     public static final int kPIDLoopIdx = 0;
     public static final int kTimeoutMs = 30;
     public final static Gains kGains_Velocit = new Gains(0.01, 0.000005, 0, 1023.0 / 7200.0, 300, 1.00, 20000000);
     public final static double shooterOutTakeSpeed = -0.2;
-    public final static double shooterIntakeSpeed = 0.18;
+    public final static double shooterIntakeSpeed = 0.1575;
 
 
     //Intake
-    public final static double intakeSpeed = 0.8;
+    public final static double intakeSpeed = 0.7;
     public final static double outtakeSpeed = -0.6;
     public final static int intakeBeltFrontMotor = 11;
     public final static int intakeBeltBackMotor = 15;
@@ -95,7 +96,7 @@ public class Const {
 
     public final static Gains kGains_ArmPosition = new Gains(8, 0.01, 10, 0, 300, 1.00, 0);
     public static final int kArmPIDLoopIdx = 0;
-    
+
     //目標角度（現在不明）
     public static final double armShootAngle = 30;
     public static final double armParallelAngle = 0;

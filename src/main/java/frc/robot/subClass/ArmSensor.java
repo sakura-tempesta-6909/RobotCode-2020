@@ -9,11 +9,12 @@ public class ArmSensor {
         this.armMotor = armMotor;
     }
 
-
+    //押されてたらtrue 
     public boolean getArmFrontSensor() {
         return armMotor.isFwdLimitSwitchClosed() == 1;
     }
 
+    //押されてたらtrue
     public boolean getArmBackSensor() {
         return armMotor.isRevLimitSwitchClosed() == 1;
     }
