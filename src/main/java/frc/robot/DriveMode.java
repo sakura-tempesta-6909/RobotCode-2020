@@ -8,21 +8,22 @@ public class DriveMode {
     Intake intake;
     IntakeBelt intakeBelt;
     Shooter shooter;
-    XboxController driver, operator;
+    Arm arm;
 
-    DriveMode(Drive drive, Intake intake, IntakeBelt intakeBelt, Shooter shooter, Controller controller) {
+    DriveMode(Drive drive, Intake intake, IntakeBelt intakeBelt, Shooter shooter, Arm arm) {
         this.drive = drive;
         this.intake = intake;
         this.intakeBelt = intakeBelt;
         this.shooter = shooter;
-        this.driver = controller.driver;
-        this.operator = controller.operator;
+        this.arm = arm;
     }
 
     public void applyMode(State state) {
-            drive.applyState(state);
-            intake.applyState(state);
-            intakeBelt.applyState(state);
-            shooter.applyState(state);
+        drive.applyState(state);
+        arm.applyState(state);
+        intake.applyState(state);
+        intakeBelt.applyState(state);
+        shooter.applyState(state);
+        
     }
 }

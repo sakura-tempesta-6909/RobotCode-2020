@@ -66,7 +66,6 @@ public class State {
 
         // controlState = ControlState.m_Drive;
 
-        shooterAngle = 0;
 
 
     }

@@ -44,7 +44,7 @@ public class Const {
     public static final int kSlotIdx = 0;
     public static final int kPIDLoopIdx = 0;
     public static final int kTimeoutMs = 30;
-    public final static Gains kGains_Velocit = new Gains(0.01, 0.000005, 0, 1023.0 / 7200.0, 300, 1.00, 20000000);
+    public final static Gains kGains_Velocit = new Gains(0.01, 0.000005, 0, 1023.0 / 7200.0, 300, 1.00, 20000000.0);
     public final static double shooterOutTakeSpeed = -0.2;
     public final static double shooterIntakeSpeed = 0.1575;
 
@@ -61,14 +61,13 @@ public class Const {
     public static final int climbServoPort = 9;
     public static final int climbSlideMotor = 16;
     public static final double climbMotorExtendSpeed = 0.30;
-    public static final double armMotorAdvanceSpeed = 0.15;
     public static final double climbMotorShrinkSpeed = -0.30;
     public static final double armMotorShrinkSpeed = -0.15;
     public static final double unLockAngle = 30;
     public static final double lockAngle = 0;
     public static final double slideMotorRight = 0.30;
     public static final double slideMotorLeft = -0.30;
-    public static final double climbArmExtendSpeed = 0;
+    public static final double climbArmExtendSpeed = 0.16;
     public static final double climbArmShrinkSpeed = 0;
     public static final double armParallelAngleRange = 10;
 
@@ -93,7 +92,7 @@ public class Const {
 
     public static final double armMaxOffset = 0.13;
 
-    public final static Gains kGains_ArmPosition = new Gains(8, 0.01, 10, 0, 300, 1.00, 0);
+    public final static Gains kGains_ArmPosition = new Gains(8, 0.01, 10, 0, (int)(0.5*1025/8), 1.00, 0.15*1023/0.01);
     public static final int kArmPIDLoopIdx = 0;
 
     //目標角度（現在不明）

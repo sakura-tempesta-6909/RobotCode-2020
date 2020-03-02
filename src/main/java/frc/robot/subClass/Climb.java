@@ -28,6 +28,7 @@ public class Climb {
         switch (state.climbState) {
 
             case doNothing:
+                lockServo();
                 break;
             case climbExtend:
                 climbExtend(state.armAngle);
@@ -65,7 +66,7 @@ public class Climb {
     private void climbExtend(double armAngle) {
         unlockServo();
         //Armの角度変更
-        arm.ArmMove(Const.climbArmExtendSpeed);
+        arm.ArmPIDMove(Const.armPanelAngle, armAngle);
 
         if(-Const.armParallelAngleRange < armAngle && armAngle < Const.armParallelAngleRange){
             // Arｍ機構と合うようにスピードを調整

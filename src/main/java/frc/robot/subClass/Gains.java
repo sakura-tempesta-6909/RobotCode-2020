@@ -10,9 +10,9 @@ public class Gains {
     public final double kF;
     public final int kIzone;
     public final double kPeakOutput;
-    public final int MaxIntegralAccumulator;
+    public final double MaxIntegralAccumulator;
 
-    public Gains(double _kP, double _kI, double _kD, double _kF, int _kIzone, double _kPeakOutput, int _MaxIntegralAccumulator) {
+    public Gains(double _kP, double _kI, double _kD, double _kF, int _kIzone, double _kPeakOutput, Double _MaxIntegralAccumulator) {
         kP = _kP;
         kI = _kI;
         kD = _kD;

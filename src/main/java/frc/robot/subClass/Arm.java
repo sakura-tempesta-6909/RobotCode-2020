@@ -33,9 +33,7 @@ public class Arm{
     public void applyState(State state){
         
         state.armAngle = getArmNow(Encoder.getAnalogInRaw());
-        System.out.println("ArmState" + state.armState);
-        System.out.println("ArmAngle" + state.armAngle);
-
+       
         switch(state.armState) {
             //---------------------------------------------------------------
             //砲台の角度を基本状態に

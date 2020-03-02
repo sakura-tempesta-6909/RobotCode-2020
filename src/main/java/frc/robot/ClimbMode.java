@@ -18,8 +18,8 @@ public class ClimbMode {
     }
 
     public void applyMode(State state) {
-            drive.applyState(state);
-            climb.applyState(state);
-            arm.applyState(state);
+        drive.applyState(state);
+        arm.applyState(state);
+        climb.applyState(state);
     }
 }
