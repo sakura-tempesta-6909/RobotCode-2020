@@ -276,7 +276,7 @@ public class Robot extends TimedRobot {
             Util.sendConsole("Mode", "DriveMode");
         }
 
-        switch(state.controlState) {
+        switch (state.controlState) {
             case m_Climb:
                 //Drive
                 state.driveState = State.DriveState.kLow;
@@ -320,7 +320,7 @@ public class Robot extends TimedRobot {
                 if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
                     //ボールを取り込む
                     state.intakeState = State.IntakeState.kIntake;
-                   state.intakeBeltState = State.IntakeBeltState.kIntake;
+                    state.intakeBeltState = State.IntakeBeltState.kIntake;
                     state.shooterState = State.ShooterState.kintake;
                 } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //ボールを出す
@@ -337,7 +337,7 @@ public class Robot extends TimedRobot {
                 break;
 
             case m_PanelRotation:
-                 //もう一度ボタンが押されたら切り替え
+                //もう一度ボタンが押されたら切り替え
                 if (operator.getBackButton()) {
                     if (operator.getXButton()) {
                         //赤に合わせる
@@ -369,7 +369,7 @@ public class Robot extends TimedRobot {
 
             case m_ShootingBall:
                 state.armState = State.ArmState.k_Conserve;
-                    if (operator.getBumper(GenericHID.Hand.kLeft)) {
+                if (operator.getBumper(GenericHID.Hand.kLeft)) {
                     if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                         //ボールを飛ばす
                         state.shooterState = State.ShooterState.kshoot;
@@ -403,8 +403,8 @@ public class Robot extends TimedRobot {
                         state.intakeBeltState = State.IntakeBeltState.kouttake;
                     }*/
                     shootingBallMode.applyMode(state);
-                } 
-                break;            
+                }
+                break;
         }
         
 
