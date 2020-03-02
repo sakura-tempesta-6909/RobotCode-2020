@@ -13,7 +13,7 @@ public class Intake {
 
     public void applyState(State state) {
         switch (state.intakeState) {
-            case kouttake:
+            case kOuttake:
                 setSpeed(-Const.outtakeSpeed);
                 break;
             case kIntake:

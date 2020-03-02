@@ -32,7 +32,7 @@ public class Arm{
     //出力処理
     public void applyState(State state){
         
-        state.armAngle = getArmNow(Encoder.getAnalogInRaw());
+        state.armAngle = getArmNow();
        
         switch(state.armState) {
             //---------------------------------------------------------------
@@ -55,9 +55,9 @@ public class Arm{
                 break;
             //---------------------------------------------------------------
             //砲台の角度を微調整 
-            case k_LittleAaim:
+            case k_LittleAim:
                 state.armPID_ON = false;
-                ArmAiming(state);
+                armAJust(state);
                 break;
             //---------------------------------------------------------------
             //砲台の角度を地面と平行に(PID) 
@@ -66,12 +66,21 @@ public class Arm{
                 state.setArmAngle = Const.armParallelAngle;
                 break;
             //---------------------------------------------------------------
+            //Climbで縮める
+            case k_Shrink:
+                state.armPID_ON = false;
+                ArmShrink();
+                break;
+            //---------------------------------------------------------------
             //何もしない
             case k_Conserve:
                 state.armPID_ON = false;
                 ArmStop(state.armAngle);
                 break;
             //---------------------------------------------------------------
+            case k_DoNothing:
+                state.armPID_ON = false;
+                ArmMove(0);
         }
         
         //PIDがONの時、設定した角度までPID制御
@@ -82,13 +91,15 @@ public class Arm{
 
     //--------------------------------------------------------------------------------
     //砲台の角度を微調整する（PID無し）
-    void ArmAiming(State state){
+    void armAJust(State state){
 
         if(armSensor.getArmFrontSensor()){
             //------------------------------------------
             //角度が初期状態（-30度）
             if(state.armMotorSpeed > 0){
                ArmMove(Const.ArmBasicUpSpeed);
+            }else {
+                ArmMove(0);
             }
         }else if(armSensor.getArmBackSensor()){
             //------------------------------------------
@@ -96,12 +107,15 @@ public class Arm{
             if(state.armMotorSpeed < 0){
                 //Lowspeedで下げると下がらないので少し早め
                 ArmMove(Const.ArmHighDownSpeed);
+            } else {
+                ArmMove(0);
             }
         }else{
             //------------------------------------------
             //角度が-30度～80度
             if(state.armMotorSpeed > 0){
-                ArmMove(Const.ArmBasicUpSpeed);     
+                System.out.println("armUp!!!");
+                ArmMove(state.armMotorSpeed);
             }else if(state.armMotorSpeed < 0){
                 ArmMove(Const.ArmLowDownSpeed);  
             }else{
@@ -113,9 +127,13 @@ public class Arm{
 
     }
 
+    private void ArmShrink() {
+        ArmMove(Const.armMotorShrinkSpeed);
+    }
+
     //--------------------------------------------------------------------------------
     //砲台のモーターを回す制御(速度をsetSpeedで決める)
-    public void ArmMove(double setSpeed){
+    private void ArmMove(double setSpeed){
         Motor.set(ControlMode.PercentOutput, setSpeed);
         SmartDashboard.putNumber("setSpeedMove",setSpeed);
     }
@@ -137,8 +155,7 @@ public class Arm{
     
     //砲台を初期状態にする     
     void ArmChangeBasic(double NowAngle){
-        if(!armSensor.getArmFrontSensor()){      
-            System.out.println("armFrontSensor is open");         
+        if(!armSensor.getArmFrontSensor()){
             //角度下限認識スイッチが反応したら何も起こらない
             //角度下限認識スイッチが反応してなかったら、回す
             if(NowAngle > Const.ArmDownBorderAngle){
@@ -152,7 +169,6 @@ public class Arm{
             }
         } else {
             ArmMove(0);
-            System.out.println("armFrontSensor is closed");
         }
     }
     
@@ -161,9 +177,10 @@ public class Arm{
 
     //現在の砲台の角度を計算(この関数上手く動いてくれない)
     //(角度の最大最小差分) ÷（エンコーダー値の最大最小差分) × (エンコーダー現在値 - 最小値) + (角度の最小値)
-    private double getArmNow(int ArmNowPoint){
+    public double getArmNow(){
+
         return Const.armAngleDifference / Const.armPointDifference *
-                   (ArmNowPoint - Const.armMinPoint) + Const.armMinAngle;
+                   (Encoder.getAnalogInRaw() - Const.armMinPoint) + Const.armMinAngle;
     }
 
     //目標角度に合わせたPIDの目標値を計算
@@ -175,7 +192,7 @@ public class Arm{
 
     //目標角度に合わせた重力オフセットを計算
     //(地面と水平な時の重力オフセット) × (cos現在角度)
-    private double SetFeedForward(double NowAngle){
+    public double SetFeedForward(double NowAngle){
         return Const.armMaxOffset * Math.cos(Math.toRadians(NowAngle));
     }
 

@@ -1,9 +1,6 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.SensorCollection;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -82,8 +79,8 @@ public class Robot extends TimedRobot {
         //アームのモーター
         armMotor = new TalonSRX(Const.armMotor);
         //アームのセンサー
-        armMotor.configForwardLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen);
-        armMotor.configReverseLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen);
+        armMotor.configForwardLimitSwitchSource(LimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen);
+        armMotor.configReverseLimitSwitchSource(LimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen);
         armEncoder = new SensorCollection(armMotor);
 
         //IntakeBelt
@@ -196,7 +193,7 @@ public class Robot extends TimedRobot {
         driveMode = new DriveMode(drive, intake, intakeBelt, shooter, arm);
         panelRotationMode = new PanelRotationMode(drive, panel, controller);
         shootingBallMode = new ShootingBallMode(drive, shooter, arm, intakeBelt, intake);
-        climbMode = new ClimbMode(drive, arm, climb, controller);
+        climbMode = new ClimbMode(drive, arm, climb);
     }
 
     @Override
@@ -254,6 +251,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+
         //状態初期化
         state.stateInit();
 
@@ -284,7 +282,7 @@ public class Robot extends TimedRobot {
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
                 //Climb
-
+                state.armState = State.ArmState.k_Conserve;
                 if (operator.getYButton()) {
                     //クライムの棒を伸ばす
                     state.climbState = State.ClimbState.climbExtend;
@@ -308,6 +306,8 @@ public class Robot extends TimedRobot {
                 } else {
                     state.climbState = State.ClimbState.doNothing;
                 }
+                climb.changeState(state);
+
                 climbMode.applyMode(state);
                 break;
 
@@ -324,8 +324,8 @@ public class Robot extends TimedRobot {
                     state.shooterState = State.ShooterState.kintake;
                 } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //ボールを出す
-                    state.intakeState = State.IntakeState.kouttake;
-                    state.intakeBeltState = State.IntakeBeltState.kouttake;
+                    state.intakeState = State.IntakeState.kOuttake;
+                    state.intakeBeltState = State.IntakeBeltState.kOuttake;
                     state.shooterState = State.ShooterState.kouttake;
                 } else {
                     //インテイクは何もしない
@@ -375,7 +375,7 @@ public class Robot extends TimedRobot {
                         state.shooterState = State.ShooterState.kshoot;
                         state.shooterPIDSpeed = operator.getTriggerAxis(GenericHID.Hand.kRight);
                         state.driveState = State.DriveState.kdoNothing;
-                        state.intakeBeltState = State.IntakeBeltState.kouttake;
+                        state.intakeBeltState = State.IntakeBeltState.kOuttake;
                     } else if (Util.deadbandCheck(driver.getX(GenericHID.Hand.kLeft))) {
                         //ドライブを少し動かす
                         state.shooterState = State.ShooterState.doNothing;
@@ -392,7 +392,7 @@ public class Robot extends TimedRobot {
                         //砲台の角度を手動で調節
                         state.driveState = State.DriveState.kdoNothing;
                         state.shooterState = State.ShooterState.doNothing;
-                        state.armState = State.ArmState.k_LittleAaim;
+                        state.armState = State.ArmState.k_LittleAim;
                         state.armMotorSpeed = operator.getX(GenericHID.Hand.kLeft);
                     } else {
                         state.shooterState = State.ShooterState.doNothing;
@@ -406,8 +406,6 @@ public class Robot extends TimedRobot {
                 }
                 break;
         }
-        
-
         /*
         driveMode.applyMode(state);
         shootingBallMode.applyMode(state);

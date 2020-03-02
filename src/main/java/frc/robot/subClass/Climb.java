@@ -24,14 +24,18 @@ public class Climb {
         this.arm = arm;
     }
 
-    public void applyState(State state) {
-        switch (state.climbState) {
+    public void changeState(State state) {
+        state.armAngle = arm.getArmNow();
+        System.out.println(state.climbState);
 
+        switch (state.climbState) {
             case doNothing:
                 lockServo();
+                setClimbMotorSpeed(0);
                 break;
             case climbExtend:
-                climbExtend(state.armAngle);
+                System.out.println("climbExtending");
+                climbExtend(state.armAngle, state);
                 break;
 
             case climbShrink:
@@ -39,9 +43,9 @@ public class Climb {
                 lockTimer.reset();
                 lockTimer.start();
                 if (lockTimer.get() > 0.3) {
-                    climbShrink(state.armAngle);
+                    climbShrink(state.armAngle, state);
                 }
-                climbShrink(state.armAngle);
+                climbShrink(state.armAngle, state);
                 break;
 
             case climbLock:
@@ -60,41 +64,45 @@ public class Climb {
         }
     }
 
-
+    public void applyState(State state) {}
 
      // クライムを伸ばす
-    private void climbExtend(double armAngle) {
+    private void climbExtend(double armAngle, State state) {
         unlockServo();
+        if(armAngle <= -Const.armParallelAngleRange) {
         //Armの角度変更
-        arm.ArmPIDMove(Const.armPanelAngle, armAngle);
-
-        if(-Const.armParallelAngleRange < armAngle && armAngle < Const.armParallelAngleRange){
+        state.armState = State.ArmState.k_Parallel;
+        }
+        System.out.println(armAngle);
+        if(-Const.armParallelAngleRange < armAngle){
             // Arｍ機構と合うようにスピードを調整
-            arm.ArmMove(Const.climbArmExtendSpeed);
+            System.out.println("parallel");
+            state.armState = State.ArmState.k_LittleAim;
+            state.armMotorSpeed = arm.SetFeedForward(armAngle) + Const.climbArmExtendSpeed;
             setClimbMotorSpeed(Const.climbMotorExtendSpeed);
         }
-
-
-
 
     }
 
     // クライムを縮める
-    private void climbShrink(double armAngle) {
+    private void climbShrink(double armAngle, State state) {
 
         if(armAngle > Const.armParallelAngleRange) {
             unlockServo();
             //Armの角度変更
-            arm.ArmMove(Const.climbArmShrinkSpeed);
+            state.armState = State.ArmState.k_Shrink;
             setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
         } else if(-Const.armParallelAngleRange <= armAngle && armAngle <= Const.armParallelAngleRange) {
-            arm.ArmMove(0);
-            setClimbMotorSpeed(0);
+            //アームの速さを任意でセットする関数をArmにつくる
+            state.armState = State.ArmState.k_Conserve;
+            setClimbMotorSpeed(-0.1);
             lockServo();
         }else if(armAngle < Const.armParallelAngleRange) {
             //機構破壊防止のためClimbが下がりすぎたら上げる。
             unlockServo();
-            arm.ArmMove(Const.climbArmExtendSpeed);
+            //アームの速さを任意でセットする関数をArmにつくる
+            state.armState = State.ArmState.k_LittleAim;
+            state.armMotorSpeed = Const.climbArmExtendSpeed;
             setClimbMotorSpeed(Const.climbMotorExtendSpeed);
         }
 
@@ -122,11 +130,12 @@ public class Climb {
     }
 
     private void setSlideMotorSpeed(double speed) {
-        slideMotor.set(ControlMode.Velocity, speed);
+        slideMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    private void setClimbMotorSpeed(double speed) {
-        climbMotor.set(ControlMode.Velocity, speed);
+    public void setClimbMotorSpeed(double speed) {
+        System.out.println("climb motor" + speed);
+        climbMotor.set(ControlMode.PercentOutput, speed);
     }
 
 

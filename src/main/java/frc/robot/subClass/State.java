@@ -116,12 +116,12 @@ public class State {
     }
     public enum IntakeState {
         kIntake,
-        kouttake,
+        kOuttake,
         doNothing
     }
     public enum IntakeBeltState {
         kIntake,
-        kouttake,
+        kOuttake,
         doNothing
     }
 
@@ -138,9 +138,11 @@ public class State {
         k_Conserve,
         k_Shoot,
         k_Panel,
-        k_LittleAaim,
+        k_LittleAim,
         k_Parallel,
-        k_Basic
+        k_Basic,
+        k_Shrink,
+        k_DoNothing
     }
 
     public enum PanelState {

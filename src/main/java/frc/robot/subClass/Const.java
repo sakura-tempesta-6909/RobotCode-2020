@@ -60,15 +60,17 @@ public class Const {
     public static final int climbMotorPort = 7;
     public static final int climbServoPort = 9;
     public static final int climbSlideMotor = 16;
-    public static final double climbMotorExtendSpeed = 0.30;
-    public static final double climbMotorShrinkSpeed = -0.30;
-    public static final double armMotorShrinkSpeed = -0.15;
+    public static final double climbMotorExtendSpeed = 0.6725;
+    public static final double climbMotorShrinkSpeed = -0.20;
+    public static final double armMotorShrinkSpeed = -0.05;
     public static final double unLockAngle = 30;
     public static final double lockAngle = 0;
     public static final double slideMotorRight = 0.30;
     public static final double slideMotorLeft = -0.30;
-    public static final double climbArmExtendSpeed = 0.16;
-    public static final double climbArmShrinkSpeed = 0;
+
+    //Offset is included
+    public static final double climbArmExtendSpeed = 0.2075;
+    public static final double climbArmShrinkSpeed = -0.1;
     public static final double armParallelAngleRange = 10;
 
 

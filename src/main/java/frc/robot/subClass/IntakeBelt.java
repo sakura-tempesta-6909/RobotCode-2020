@@ -22,7 +22,7 @@ public class IntakeBelt {
             case kIntake:
                 intake(state);
                 break;
-            case kouttake:
+            case kOuttake:
                 outtake();
                 Util.sendConsole("outtake", "out");
                 break;
