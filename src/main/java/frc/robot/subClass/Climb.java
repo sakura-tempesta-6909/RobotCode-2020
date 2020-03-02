@@ -20,7 +20,7 @@ public class Climb {
         this.climbServo = climbServo;
         this.slideMotor = climbSlideMotor;
         this.lockTimer = new Timer();
-       
+
         this.arm = arm;
     }
 
@@ -35,17 +35,11 @@ public class Climb {
                 break;
             case climbExtend:
                 System.out.println("climbExtending");
-                climbExtend(state.armAngle, state);
+                climbExtend(state);
                 break;
 
             case climbShrink:
-                // ここ、if文の意味ないし、マイループreset and startする。0.3秒は長い気もする。
-                lockTimer.reset();
-                lockTimer.start();
-                if (lockTimer.get() > 0.3) {
-                    climbShrink(state.armAngle, state);
-                }
-                climbShrink(state.armAngle, state);
+                climbShrink(state);
                 break;
 
             case climbLock:
@@ -64,17 +58,19 @@ public class Climb {
         }
     }
 
-    public void applyState(State state) {}
+    public void applyState(State state) {
+    }
 
-     // クライムを伸ばす
-    private void climbExtend(double armAngle, State state) {
+    // クライムを伸ばす
+    private void climbExtend(State state) {
+        double armAngle = state.armAngle;
         unlockServo();
-        if(armAngle <= -Const.armParallelAngleRange) {
-        //Armの角度変更
-        state.armState = State.ArmState.k_Parallel;
+        if (armAngle <= -Const.armParallelAngleRange) {
+            //Armの角度変更
+            state.armState = State.ArmState.k_Parallel;
         }
         System.out.println(armAngle);
-        if(-Const.armParallelAngleRange < armAngle){
+        if (-Const.armParallelAngleRange < armAngle) {
             // Arｍ機構と合うようにスピードを調整
             System.out.println("parallel");
             state.armState = State.ArmState.k_Adjust;
@@ -85,26 +81,26 @@ public class Climb {
     }
 
     // クライムを縮める
-    private void climbShrink(double armAngle, State state) {
-
-        if(armAngle > Const.armParallelAngleRange) {
+    private void climbShrink(State state) {
+        double armAngle = state.armAngle;
+        if (armAngle > Const.armParallelAngleRange) {
             unlockServo();
             //Armの角度変更
             state.armState = State.ArmState.k_Manual;
             state.armMotorSpeed = Const.armMotorShrinkSpeed;
             setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
-        } else if(-Const.armParallelAngleRange <= armAngle && armAngle <= Const.armParallelAngleRange) {
+        } else if (-Const.armParallelAngleRange <= armAngle && armAngle <= Const.armParallelAngleRange) {
             //アームの速さを任意でセットする関数をArmにつくる
             state.armState = State.ArmState.k_Conserve;
-            setClimbMotorSpeed(-0.1);
+            setClimbMotorSpeed(0);
             lockServo();
-        }else if(armAngle < Const.armParallelAngleRange) {
+        } else if (armAngle < Const.armParallelAngleRange) {
             //機構破壊防止のためClimbが下がりすぎたら上げる。
             unlockServo();
             //アームの速さを任意でセットする関数をArmにつくる
-            state.armState = State.ArmState.k_Adjust;
+            state.armState = State.ArmState.k_Manual;
             state.armMotorSpeed = Const.climbArmExtendSpeed;
-            setClimbMotorSpeed(Const.climbMotorExtendSpeed);
+            setClimbMotorSpeed(0);
         }
 
 
