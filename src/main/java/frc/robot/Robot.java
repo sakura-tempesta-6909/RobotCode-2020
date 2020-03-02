@@ -83,8 +83,8 @@ public class Robot extends TimedRobot {
         //アームのモーター
         armMotor = new TalonSRX(Const.armMotor);
         //アームのセンサー
-        armMotor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
-        armMotor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
+        armMotor.configForwardLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen);
+        armMotor.configReverseLimitSwitchSource(LimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen);
         armEncoder = new SensorCollection(armMotor);
 
         //IntakeBelt
@@ -406,11 +406,20 @@ public class Robot extends TimedRobot {
             }
         }
 
+        drive.applyState(state);
+        climb.applyState(state);
+        arm.applyState(state);
+        intake.applyState(state);
+        intakeBelt.applyState(state);
+        shooter.applyState(state);
+        panel.applyState(state);
+
+        /*
         driveMode.applyMode(state);
         shootingBallMode.applyMode(state);
         panelRotationMode.applyMode(state);
         climbMode.applyMode(state);   
-        
+        */
 
     }
 

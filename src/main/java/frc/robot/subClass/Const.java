@@ -38,7 +38,6 @@ public class Const {
 
 
     //Shooter
-    //この二つ逆かもしれない
     public static final int shooterLeftMotor = 5;
     public static final int shooterRightMotor = 4;
     public static final int shooterMotorMaxOutput = 100000;

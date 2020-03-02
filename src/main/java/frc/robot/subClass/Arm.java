@@ -33,8 +33,8 @@ public class Arm{
     public void applyState(State state){
         
         state.armAngle = getArmNow(Encoder.getAnalogInRaw());
-        SmartDashboard.putString("ArmState", state.armState.toString());
-        SmartDashboard.putNumber("ArmMotorSpeed", state.armMotorSpeed);
+        System.out.println("ArmState" + state.armState);
+        System.out.println("ArmAngle" + state.armAngle);
 
         switch(state.armState) {
             //---------------------------------------------------------------
@@ -77,7 +77,7 @@ public class Arm{
         }
         
         //PIDがONの時、設定した角度までPID制御
-        if(state.armPID_ON == true){
+        if(state.armPID_ON){
             ArmPIDMove(state.setArmAngle, state.armAngle);
         }
     }
@@ -139,7 +139,8 @@ public class Arm{
     
     //砲台を初期状態にする     
     void ArmChangeBasic(double NowAngle){
-        if(!armSensor.getArmFrontSensor()){               
+        if(!armSensor.getArmFrontSensor()){      
+            System.out.println("armFrontSensor is not pushedddddddd");         
             //角度下限認識スイッチが反応したら何も起こらない
             //角度下限認識スイッチが反応してなかったら、回す
             if(NowAngle > Const.ArmDownBorderAngle){
@@ -151,9 +152,9 @@ public class Arm{
                 SmartDashboard.putNumber("Low", NowAngle);
                 ArmMove(Const.ArmLowDownSpeed);
             }
-        }
-        if(armSensor.getArmFrontSensor()){
-            System.out.println("pushedddddddd");
+        } else {
+            ArmMove(0);
+            System.out.println("armFrontSensor is pushedddddddd");
         }
     }
     
