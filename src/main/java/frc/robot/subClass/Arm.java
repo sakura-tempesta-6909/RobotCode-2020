@@ -140,7 +140,7 @@ public class Arm{
     //砲台を初期状態にする     
     void ArmChangeBasic(double NowAngle){
         if(!armSensor.getArmFrontSensor()){      
-            System.out.println("armFrontSensor is not pushedddddddd");         
+            System.out.println("armFrontSensor is open");         
             //角度下限認識スイッチが反応したら何も起こらない
             //角度下限認識スイッチが反応してなかったら、回す
             if(NowAngle > Const.ArmDownBorderAngle){
@@ -154,7 +154,7 @@ public class Arm{
             }
         } else {
             ArmMove(0);
-            System.out.println("armFrontSensor is pushedddddddd");
+            System.out.println("armFrontSensor is closed");
         }
     }
     

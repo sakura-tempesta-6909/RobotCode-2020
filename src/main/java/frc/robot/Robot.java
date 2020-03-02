@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
         armMotor.configFactoryDefault();
 
         //ArmのPID設定
-        shooterLeftMotor.configSelectedFeedbackSensor(FeedbackDevice.Analog,
+        armMotor.configSelectedFeedbackSensor(FeedbackDevice.Analog,
                 Const.kArmPIDLoopIdx,
                 Const.kTimeoutMs);
 
