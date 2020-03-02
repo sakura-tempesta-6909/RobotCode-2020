@@ -264,7 +264,7 @@ public class Robot extends TimedRobot {
             //コントロールパネル回転モードへ切り替え
             state.controlState = State.ControlState.m_PanelRotation;
             Util.sendConsole("Mode", "PanelRotationMode");
-        } else if (driver.getStartButton()) {
+        } else if (operator.getStartButton()) {
             //クライムモードへ切り替え
             state.controlState = State.ControlState.m_Climb;
             Util.sendConsole("Mode", "ClimbMode");

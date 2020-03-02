@@ -22,7 +22,7 @@ public class State {
     public ControlState controlState;
     public PanelState panelState;
     public boolean armPID_ON;
-    
+
     //ボールを5個ゲットしたか
     public boolean is_IntakeFull;
 
@@ -68,7 +68,6 @@ public class State {
         // controlState = ControlState.m_Drive;
 
 
-
     }
 
     public void changeState() {
@@ -99,15 +98,18 @@ public class State {
 
 
     }
+
     public enum ControlState {
         m_ShootingBall, m_PanelRotation, m_Climb, m_Drive
 
     }
+
     public enum DriveState {
         kManual,
         kLow,
         kdoNothing
     }
+
     public enum ShooterState {
         kshoot,
         kintake,
@@ -115,11 +117,13 @@ public class State {
         doNothing,
         kouttake
     }
+
     public enum IntakeState {
         kIntake,
         kOuttake,
         doNothing
     }
+
     public enum IntakeBeltState {
         kIntake,
         kOuttake,

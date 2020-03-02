@@ -12,6 +12,7 @@ public class Panel {
     ColorCode colorOutput = ColorCode.inRange;
     //construction
     Shooter shooter;
+
     public Panel(Shooter shooter) {
         this.shooter = shooter;
     }

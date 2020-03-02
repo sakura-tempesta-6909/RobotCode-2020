@@ -23,6 +23,6 @@ public class ShootingBallMode {
         intake.applyState(state);
         intakeBelt.applyState(state);
         shooter.applyState(state);
-        
+
     }
 }
