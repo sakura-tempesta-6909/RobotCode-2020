@@ -1,5 +1,6 @@
 package frc.robot.subClass;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -16,13 +17,13 @@ public class Util {
         return Math.abs(value) > Const.Deadband;
     }
 
-    //カラーセンサー
 
     public static void sendConsole(String key, String text) {
         System.out.println(key + ":" + text);
         SmartDashboard.putString(key, text);
     }
 
+    //カラーセンサー
     private static ColorCode selectColorAction(Color DCImport, int p) {
         double r = DCImport.red;
         double g = DCImport.green;

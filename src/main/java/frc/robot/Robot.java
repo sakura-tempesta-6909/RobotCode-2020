@@ -191,7 +191,7 @@ public class Robot extends TimedRobot {
 
         //モードのクラスの生成
         driveMode = new DriveMode(drive, intake, intakeBelt, shooter, arm);
-        panelRotationMode = new PanelRotationMode(drive, panel, controller);
+        panelRotationMode = new PanelRotationMode(drive, panel, arm);
         shootingBallMode = new ShootingBallMode(drive, shooter, arm, intakeBelt, intake);
         climbMode = new ClimbMode(drive, arm, climb);
     }
@@ -249,6 +249,10 @@ public class Robot extends TimedRobot {
          */
     }
 
+    public  void  teleopInit() {
+        state.controlMode = State.ControlMode.m_Drive;
+    }
+
     @Override
     public void teleopPeriodic() {
 
@@ -256,25 +260,66 @@ public class Robot extends TimedRobot {
         state.stateInit();
 
         //Mode Change
-        if (operator.getBumper(GenericHID.Hand.kLeft)) {
-            //ボール発射モードへ切り替え
-            state.controlState = State.ControlState.m_ShootingBall;
-            Util.sendConsole("Mode", "ShootingBallMode");
-        } else if (operator.getBackButton()) {
-            //コントロールパネル回転モードへ切り替え
-            state.controlState = State.ControlState.m_PanelRotation;
-            Util.sendConsole("Mode", "PanelRotationMode");
-        } else if (operator.getStartButton()) {
-            //クライムモードへ切り替え
-            state.controlState = State.ControlState.m_Climb;
-            Util.sendConsole("Mode", "ClimbMode");
-        } else {
-            state.controlState = State.ControlState.m_Drive;
-            state.armState = State.ArmState.k_Basic;
-            Util.sendConsole("Mode", "DriveMode");
-        }
+        state.changeMode(controller);
 
-        switch (state.controlState) {
+        switch (state.controlMode) {
+            case m_Drive:
+                //ほかに関係なくドライブ
+                state.driveState = State.DriveState.kManual;
+                state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
+                state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
+
+                if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
+                    //D LT ボールを取り込む
+                    state.intakeState = State.IntakeState.kIntake;
+                    state.intakeBeltState = State.IntakeBeltState.kIntake;
+                    state.shooterState = State.ShooterState.kintake;
+                } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
+                    //D RT ボールを出す
+                    state.intakeState = State.IntakeState.kOuttake;
+                    state.intakeBeltState = State.IntakeBeltState.kOuttake;
+                    state.shooterState = State.ShooterState.kouttake;
+                } else if (driver.getBumper(GenericHID.Hand.kRight)) {
+                    //D RB アームを平行（パネルくぐり）
+                    state.armState = State.ArmState.k_Parallel;
+                }
+                if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))) {
+                    //O LT 砲台の角度をゴールへ調節する
+                    state.armState = State.ArmState.k_Shoot;
+                }
+
+                driveMode.applyMode(state);
+                break;
+
+            case m_ShootingBall:
+                state.armState = State.ArmState.k_Conserve;
+                state.driveState = State.DriveState.kdoNothing;
+                if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
+                    //O RT ボールを飛ばす
+                    state.shooterState = State.ShooterState.kshoot;
+                    state.shooterPIDSpeed = -operator.getTriggerAxis(GenericHID.Hand.kRight);
+                    state.intakeBeltState = State.IntakeBeltState.kOuttake;
+                } else if (Util.deadbandCheck(driver.getX(GenericHID.Hand.kLeft))) {
+                    //D Stick ドライブを少し動かす
+                    state.driveState = State.DriveState.kLow;
+                    state.driveRotateSpeed = driver.getX(GenericHID.Hand.kLeft);
+                    state.driveStraightSpeed = driver.getY(GenericHID.Hand.kRight);
+                } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))) {
+                    //O LT 砲台の角度をゴールへ調節する
+                    state.armState = State.ArmState.k_Shoot;
+                    state.setArmAngle = Const.armShootAngle;
+                } else if (Util.deadbandCheck(operator.getX(GenericHID.Hand.kLeft))) {
+                    //O LStick X 砲台の角度を手動で調節, 正か負のみ
+                    state.armState = State.ArmState.k_Adjust;
+                    state.armMotorSpeed = operator.getX(GenericHID.Hand.kLeft);
+                }
+                    /*if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))&&Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
+                        state.intakeBeltState = State.IntakeBeltState.kouttake;
+                    }*/
+                shootingBallMode.applyMode(state);
+
+                break;
+
             case m_Climb:
                 //Drive
                 state.driveState = State.DriveState.kLow;
@@ -284,126 +329,64 @@ public class Robot extends TimedRobot {
                 //Climb
                 state.armState = State.ArmState.k_Conserve;
                 if (operator.getYButton()) {
-                    //クライムの棒を伸ばす
+                    //O Y クライムの棒を伸ばす
                     state.climbState = State.ClimbState.climbExtend;
+                    state.climbExtendAdjustSpeed = -operator.getY(GenericHID.Hand.kRight)/10;
                 } else if (operator.getBButton()) {
-                    //クライムの棒を縮める
+                    //O B クライムする
                     state.climbState = State.ClimbState.climbShrink;
-                } else if (operator.getBumper(GenericHID.Hand.kLeft)) {
-                    //左に移動
-                    state.climbState = State.ClimbState.climbLeftSlide;
-                } else if (operator.getBumper(GenericHID.Hand.kRight)) {
-                    //右に移動
-                    state.climbState = State.ClimbState.climbRightSlide;
-                } else if (operator.getStartButton()) {
-                    //クライムの棒をロック
+                } else if(Util.deadbandCheck(operator.getX(GenericHID.Hand.kLeft))) {
+                    //O LStick X スライド
+                    state.climbState =  State.ClimbState.climbSlide;
+                    /*if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
+                        //O LT 高出力でスライド
+                        state.climbSlideMotorSpeed = -operator.getX(GenericHID.Hand.kLeft);
+                        System.out.println("Highhhhhhhhhhhhhhhhhhhhhhhh");
+                    }else */{
+                        //1/2の出力でスライド
+                        state.climbSlideMotorSpeed = -operator.getX(GenericHID.Hand.kLeft) / 2;
+                    }
+                } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
+                    //O RT クライムの棒をロック
                     state.climbState = State.ClimbState.climbLock;
-                } else if (operator.getBackButton()) {
-                    //ドライブモードへ切り替え
-                    state.controlState = State.ControlState.m_Drive;
-                    state.climbState = State.ClimbState.doNothing;
-                    Util.sendConsole("Mode", "DriveMode");
-                } else {
-                    state.climbState = State.ClimbState.doNothing;
+                } else if (operator.getAButton()) {
+                    //O A(仮) Climb Motorだけ縮める
+                    state.climbState = State.ClimbState.climbMotorOnlyShrink;
+                } else if (operator.getXButton()) {
+                    //O X（仮）　Climb　Motorだけ伸ばす
+                    state.climbState = State.ClimbState.climbMotorOnlyExtend;
                 }
+
+
                 climb.changeState(state);
 
                 climbMode.applyMode(state);
                 break;
 
-            case m_Drive:
-                //ほかに関係なくドライブ
-                state.driveState = State.DriveState.kManual;
-                state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
-                state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
-
-                if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
-                    //ボールを取り込む
-                    state.intakeState = State.IntakeState.kIntake;
-                    state.intakeBeltState = State.IntakeBeltState.kIntake;
-                    state.shooterState = State.ShooterState.kintake;
-                } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
-                    //ボールを出す
-                    state.intakeState = State.IntakeState.kOuttake;
-                    state.intakeBeltState = State.IntakeBeltState.kOuttake;
-                    state.shooterState = State.ShooterState.kouttake;
-                } else {
-                    //インテイクは何もしない
-                    state.intakeState = State.IntakeState.doNothing;
-                    state.intakeBeltState = State.IntakeBeltState.doNothing;
-                    state.shooterState = State.ShooterState.doNothing;
-                }
-                driveMode.applyMode(state);
-                break;
-
             case m_PanelRotation:
-                //もう一度ボタンが押されたら切り替え
-                if (operator.getBackButton()) {
-                    if (operator.getXButton()) {
-                        //赤に合わせる
+                state.armState = State.ArmState.k_Panel;
+                    if (driver.getXButton()) {
+                        //D X 赤に合わせる
                         state.panelState = State.PanelState.p_toRed;
-                    } else if (operator.getYButton()) {
-                        //緑に合わせる
+                    } else if (driver.getYButton()) {
+                        //D Y 緑に合わせる
                         state.panelState = State.PanelState.p_toGreen;
-                    } else if (operator.getAButton()) {
-                        //青に合わせる
+                    } else if (driver.getBButton()) {
+                        //D B 青に合わせる
                         state.panelState = State.PanelState.p_toBlue;
-                    } else if (operator.getBButton()) {
-                        //黄色に合わせる
+                    } else if (driver.getAButton()) {
+                        //D A 黄色に合わせる
                         state.panelState = State.PanelState.p_toYellow;
-                    } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))) {
-                        //手動右回転
+                    } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
+                        //D LT 手動左回転
                         state.panelState = State.PanelState.p_ManualRot;
-                        state.panelManualSpeed = -operator.getTriggerAxis(GenericHID.Hand.kLeft);
-                    } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
-                        //手動左回転
+                        state.panelManualSpeed = -Const.panelRotateSpeed;
+                    } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
+                        //D RT 手動右回転
                         state.panelState = State.PanelState.p_ManualRot;
-                        state.panelManualSpeed = operator.getTriggerAxis(GenericHID.Hand.kRight);
-                    } else {
-                        //何もなし
-                        state.panelState = State.PanelState.p_DoNothing;
+                        state.panelManualSpeed = Const.panelRotateSpeed;
                     }
-                }
                 panelRotationMode.applyMode(state);
-                break;
-
-            case m_ShootingBall:
-                state.armState = State.ArmState.k_Conserve;
-                if (operator.getBumper(GenericHID.Hand.kLeft)) {
-                    if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
-                        //ボールを飛ばす
-                        state.shooterState = State.ShooterState.kshoot;
-                        state.shooterPIDSpeed = operator.getTriggerAxis(GenericHID.Hand.kRight);
-                        state.driveState = State.DriveState.kdoNothing;
-                        state.intakeBeltState = State.IntakeBeltState.kOuttake;
-                    } else if (Util.deadbandCheck(driver.getX(GenericHID.Hand.kLeft))) {
-                        //ドライブを少し動かす
-                        state.shooterState = State.ShooterState.doNothing;
-                        state.driveState = State.DriveState.kLow;
-                        state.driveRotateSpeed = driver.getX(GenericHID.Hand.kLeft);
-                        state.driveStraightSpeed = driver.getY(GenericHID.Hand.kRight);
-                    } else if (operator.getBButton()) {
-                        //砲台の角度をゴールへ調節する
-                        state.driveState = State.DriveState.kdoNothing;
-                        state.shooterState = State.ShooterState.doNothing;
-                        state.armState = State.ArmState.k_Shoot;
-                        state.setArmAngle = Const.armShootAngle;
-                    } else if (Util.deadbandCheck(operator.getX(GenericHID.Hand.kLeft))) {
-                        //砲台の角度を手動で調節, 正か負のみ
-                        state.driveState = State.DriveState.kdoNothing;
-                        state.shooterState = State.ShooterState.doNothing;
-                        state.armState = State.ArmState.k_Adjust;
-                        state.armMotorSpeed = operator.getX(GenericHID.Hand.kLeft);
-                    } else {
-                        state.shooterState = State.ShooterState.doNothing;
-                        state.driveState = State.DriveState.kdoNothing;
-                        state.intakeBeltState = State.IntakeBeltState.doNothing;
-                    }
-                    /*if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))&&Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
-                        state.intakeBeltState = State.IntakeBeltState.kouttake;
-                    }*/
-                    shootingBallMode.applyMode(state);
-                }
                 break;
         }
         /*

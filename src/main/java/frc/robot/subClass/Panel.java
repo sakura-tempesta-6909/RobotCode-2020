@@ -42,7 +42,7 @@ public class Panel {
                 break;
 
             case p_DoNothing:
-                //shooter.setSpeed(0);
+                shooter.setSpeedPercent(0, 0);
                 break;
         }
 

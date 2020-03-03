@@ -6,18 +6,19 @@ import frc.robot.subClass.*;
 public class PanelRotationMode {
     Drive drive;
     Panel panel;
-    XboxController driver, operator;
+    Arm arm;
 
-    PanelRotationMode(Drive drive, Panel panel, Controller controller) {
+    PanelRotationMode(Drive drive, Panel panel, Arm arm) {
         this.drive = drive;
         this.panel = panel;
-        this.driver = controller.driver;
-        this.operator = controller.operator;
+        this.arm = arm;
     }
+
 
     public void applyMode(State state) {
         drive.applyState(state);
         panel.applyState(state);
+        arm.applyState(state);
     }
 
 }

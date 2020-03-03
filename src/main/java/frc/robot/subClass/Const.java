@@ -46,7 +46,7 @@ public class Const {
     public static final int kTimeoutMs = 30;
     public final static Gains kGains_Velocit = new Gains(0.01, 0.000005, 0, 1023.0 / 7200.0, 300, 1.00, 20000000.0);
     public final static double shooterOutTakeSpeed = -0.2;
-    public final static double shooterIntakeSpeed = 0.1575;
+    public final static double shooterIntakeSpeed = 0.155;
 
 
     //Intake
@@ -56,22 +56,25 @@ public class Const {
     public final static int intakeBeltBackMotor = 15;
 
 
-    //Climb
+    //Climb Port
     public static final int climbMotorPort = 7;
     public static final int climbServoPort = 9;
     public static final int climbSlideMotor = 16;
-    public static final double climbMotorExtendSpeed = 0.6725;
-    public static final double climbMotorShrinkSpeed = -0.20;
-    public static final double armMotorShrinkSpeed = 0;
+
+    //Servo Angle for Climb Lock
     public static final double unLockAngle = 30;
     public static final double lockAngle = 0;
-    public static final double slideMotorRight = 0.30;
-    public static final double slideMotorLeft = -0.30;
 
-    //Offset is included
-    public static final double climbArmExtendSpeed = 0.2075;
-    public static final double climbArmShrinkSpeed = -0.1;
+    //ArmRange for Clim
     public static final double armParallelAngleRange = 10;
+
+    //Climb Extend Speed
+    public static final double climbMotorExtendSpeed = 0.675;
+    public static final double climbArmExtendSpeed = 0.21; //Offset is included
+    //Climb Shrink Speed
+    public static final double climbMotorShrinkSpeed = -0.55;
+    public static final double armMotorShrinkSpeed = -0.5;
+
 
 
     //ARM
@@ -98,11 +101,15 @@ public class Const {
     public static final int kArmPIDLoopIdx = 0;
 
     //目標角度（現在不明）
-    public static final double armShootAngle = 30;
+    public static final double armShootAngle = 0;
     public static final double armParallelAngle = 0;
-    public static final double armPanelAngle = 0;
+    public static final double armPanelPoint = 362;
+    public static final double armPanelAngle = (armPanelPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
 
 
     public static final double shooterPanelSpeed = 0.2;
+
+    //Panel
+    public static double panelRotateSpeed = 0.2;
 
 }
