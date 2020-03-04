@@ -46,7 +46,7 @@ public class Const {
     public static final int kTimeoutMs = 30;
     public final static Gains kGains_Velocit = new Gains(0.01, 0.000005, 0, 1023.0 / 7200.0, 300, 1.00, 20000000.0);
     public final static double shooterOutTakeSpeed = -0.2;
-    public final static double shooterIntakeSpeed = 0.155;
+    public final static double shooterIntakeSpeed = 0.165;
 
 
     //Intake
@@ -90,7 +90,7 @@ public class Const {
     public static final double armMaxAngle = 80;
     public static final double armMinAngle = -30;
     public static final double armMaxPoint = 500;
-    public static final double armMinPoint = 166;
+    public static final double armMinPoint = 170;
 
     public static final double armAngleDifference = armMaxAngle - armMinAngle;
     public static final double armPointDifference = armMaxPoint - armMinPoint;
@@ -101,9 +101,10 @@ public class Const {
     public static final int kArmPIDLoopIdx = 0;
 
     //目標角度（現在不明）
-    public static final double armShootAngle = 0;
+    public static final double armShootPoint = 492;
+    public static final double armShootAngle = (armShootPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
     public static final double armParallelAngle = 0;
-    public static final double armPanelPoint = 362;
+    public static final double armPanelPoint = 359;
     public static final double armPanelAngle = (armPanelPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
 
 

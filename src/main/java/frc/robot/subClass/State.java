@@ -109,6 +109,7 @@ public class State {
     public enum DriveState {
         kManual,
         kLow,
+        kSuperLow,
         kdoNothing
     }
 
