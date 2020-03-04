@@ -107,9 +107,7 @@ public class Const {
     public static final double armPanelAngle = (armPanelPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
 
 
-    public static final double shooterPanelSpeed = 0.2;
 
-    //Panel
-    public static double panelRotateSpeed = 0.2;
+    public static final double shooterPanelSpeed = 0.2;
 
 }

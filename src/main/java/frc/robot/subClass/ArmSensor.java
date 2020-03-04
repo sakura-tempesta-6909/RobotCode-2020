@@ -11,13 +11,13 @@ public class ArmSensor {
 
     //押されてたらtrue 
     public boolean getArmFrontSensor() {
-        //Hardで逆につけてしまった
+        //ハード側で逆につけてしまった
         return armMotor.isRevLimitSwitchClosed() == 1;
     }
 
     //押されてたらtrue
     public boolean getArmBackSensor() {
-        //Hardで逆につけてしまった
+        //ハード側で逆につけてしまった
         return armMotor.isFwdLimitSwitchClosed() == 1;
     }
 }

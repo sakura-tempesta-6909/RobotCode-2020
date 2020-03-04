@@ -5,20 +5,20 @@ import frc.robot.subClass.*;
 
 public class PanelRotationMode {
     Drive drive;
-    Panel panel;
+    Shooter shooter;
     Arm arm;
 
-    PanelRotationMode(Drive drive, Panel panel, Arm arm) {
+    PanelRotationMode(Drive drive, Shooter shooter, Arm arm) {
         this.drive = drive;
-        this.panel = panel;
+        this.shooter = shooter;
         this.arm = arm;
     }
 
 
     public void applyMode(State state) {
         drive.applyState(state);
-        panel.applyState(state);
         arm.applyState(state);
+        shooter.applyState(state);
     }
 
 }

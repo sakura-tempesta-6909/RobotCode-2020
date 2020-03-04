@@ -185,13 +185,13 @@ public class Robot extends TimedRobot {
         shooter = new Shooter(shooterRightMotor, shooterLeftMotor);
         intake = new Intake(intakeMotor);
         intakeBelt = new IntakeBelt(intakeBeltFrontMotor, intakeBeltBackMotor, intakeFrontSensor, intakeBackSensor);
-        panel = new Panel(shooter);
+        panel = new Panel();
         state = new State();
         climb = new Climb(climbMotor, climbServo, slideMotor, arm);
 
         //モードのクラスの生成
         driveMode = new DriveMode(drive, intake, intakeBelt, shooter, arm);
-        panelRotationMode = new PanelRotationMode(drive, panel, arm);
+        panelRotationMode = new PanelRotationMode(drive, shooter, arm);
         shootingBallMode = new ShootingBallMode(drive, shooter, arm, intakeBelt, intake);
         climbMode = new ClimbMode(drive, arm, climb);
     }
@@ -344,7 +344,7 @@ public class Robot extends TimedRobot {
                         System.out.println("Highhhhhhhhhhhhhhhhhhhhhhhh");
                     }else */{
                         //1/2の出力でスライド
-                        state.climbSlideMotorSpeed = -operator.getX(GenericHID.Hand.kLeft) / 2;
+                        // state.climbSlideMotorSpeed = -operator.getX(GenericHID.Hand.kLeft) / 2;
                     }
                 } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT クライムの棒をロック
@@ -380,12 +380,13 @@ public class Robot extends TimedRobot {
                     } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
                         //D LT 手動左回転
                         state.panelState = State.PanelState.p_ManualRot;
-                        state.panelManualSpeed = -Const.panelRotateSpeed;
+                        state.panelManualSpeed = -Const.shooterPanelSpeed;
                     } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
                         //D RT 手動右回転
                         state.panelState = State.PanelState.p_ManualRot;
-                        state.panelManualSpeed = Const.panelRotateSpeed;
+                        state.panelManualSpeed = Const.shooterPanelSpeed;
                     }
+                panel.changeState(state);
                 panelRotationMode.applyMode(state);
                 break;
         }

@@ -10,42 +10,39 @@ public class Panel {
     final static I2C.Port i2cPort = I2C.Port.kOnboard;
     final static ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     ColorCode colorOutput = ColorCode.inRange;
-    //construction
-    Shooter shooter;
 
-    public Panel(Shooter shooter) {
-        this.shooter = shooter;
-    }
+    public Panel() {}
 
-    public void applyState(State state) {
+    public void changeState(State state) {
         switch (state.panelState) {
 
             case p_ManualRot:
-                shooter.setSpeedPercent(state.panelManualSpeed, state.panelManualSpeed);
+                state.shooterState = State.ShooterState.kmanual;
+                state.shooterLeftSpeed = state.shooterRightSpeed = state.panelManualSpeed;
                 break;
 
             //色合わせ　青<->赤、黄<->緑
             case p_toBlue:
-                AlignPanelTo(ColorCode.red);
+                AlignPanelTo(ColorCode.red, state);
                 break;
 
             case p_toYellow:
-                AlignPanelTo(ColorCode.green);
+                AlignPanelTo(ColorCode.green, state);
                 break;
 
             case p_toRed:
-                AlignPanelTo(ColorCode.blue);
+                AlignPanelTo(ColorCode.blue, state);
                 break;
 
             case p_toGreen:
-                AlignPanelTo(ColorCode.yellow);
+                AlignPanelTo(ColorCode.yellow, state);
                 break;
 
             case p_DoNothing:
-                shooter.setSpeedPercent(0, 0);
+                state.shooterState = State.ShooterState.kmanual;
+                state.shooterLeftSpeed = state.shooterRightSpeed = 0;
                 break;
         }
-
     }
 
     //DetectedColor(ロボット側のカラーセンサーの目標値　青<->赤、黄<->緑)　で呼び出す
@@ -74,12 +71,14 @@ public class Panel {
     }
     //
 
-    private void AlignPanelTo(ColorCode c) {
+    private void AlignPanelTo(ColorCode c, State state) {
 
         if (DetectedColor() == c) {
-            shooter.setSpeedPercent(0, 0);
+            state.shooterState = State.ShooterState.kmanual;
+            state.shooterLeftSpeed = state.shooterRightSpeed = 0;
         } else {
-            shooter.setSpeedPercent(Const.shooterPanelSpeed, Const.shooterPanelSpeed);
+            state.shooterState = State.ShooterState.kmanual;
+            state.shooterLeftSpeed = state.shooterRightSpeed = state.panelManualSpeed;
         }
 
     }

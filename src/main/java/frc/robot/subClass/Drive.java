@@ -21,9 +21,7 @@ public class Drive extends DifferentialDrive {
             case kdoNothing:
                 setSpeed(0, 0);
                 break;
-
         }
-
     }
 
     public void setSpeed(double straightSpeed, double rotateSpeed) {
