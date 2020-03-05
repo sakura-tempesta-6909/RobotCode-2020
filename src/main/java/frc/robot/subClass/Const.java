@@ -86,8 +86,13 @@ public class Const {
     public static final double armParallelAngle = 0;
     public static final double armPanelPoint = 359;
     public static final double armPanelAngle = (armPanelPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
+    public static final double armShootInitialPoint = 383; //377~390
+    public static final double armShootInitialAngle = (armShootInitialPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
+
 
     //PANEL
     public static final double shooterPanelSpeed = 0.2;
+
+
 
 }

@@ -5,13 +5,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.*;
 import frc.robot.subClass.*;
+import frc.robot.subClass.Controller;
 
 //TalonSRX&VictorSPXのライブラリー
 
@@ -46,7 +42,7 @@ public class Robot extends TimedRobot {
     SensorCollection armEncoder;
 
     //カメラ
-    CameraServer camera;
+    CameraServer driveCamera, armCamera;
 
     //SubClass
     Drive drive;
@@ -60,6 +56,9 @@ public class Robot extends TimedRobot {
     //モード
     PanelRotationMode panelRotationMode;
     ClimbMode climbMode;
+
+    //Autonomous
+    Timer autonomousTimer;
 
     @Override
     public void robotInit() {
@@ -99,8 +98,10 @@ public class Robot extends TimedRobot {
         controller = new Controller(driver, operator);
 
         //cameraの初期化
-        camera = CameraServer.getInstance();
-        camera.startAutomaticCapture();
+        driveCamera = CameraServer.getInstance();
+        armCamera = CameraServer.getInstance();
+        driveCamera.startAutomaticCapture("drive", 0);
+        armCamera.startAutomaticCapture("arm", 1);
 
         //ドライブモーターの初期化
         driveRightFrontMotor = new WPI_TalonSRX(Const.DriveRightFrontPort);
@@ -183,6 +184,8 @@ public class Robot extends TimedRobot {
         intakeBelt = new IntakeBelt(intakeBeltFrontMotor, intakeBeltBackMotor, intakeFrontSensor, intakeBackSensor);
         state = new State();
 
+
+
         //モードのクラスの生成
         panelRotationMode = new PanelRotationMode();
         climbMode = new ClimbMode(arm, climbMotor, climbServo, slideMotor);
@@ -195,41 +198,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-
-        /*
-        driveLeftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
-        driveRightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,0,0);
-
-        driveLeftFront.setSensorPhase(true);
-        driveRightFront.setSensorPhase(true);
-
-        driveRightFront.setInverted(false);
-        driveLeftFront.setInverted(false);
-
-        driveLeftFront.configNominalOutputForward(0,0);
-        driveLeftFront.configNominalOutputReverse(0,0);
-        driveLeftFront.configPeakOutputForward(1,0);
-        driveLeftFront.configPeakOutputReverse(-1,0);
-
-        driveRightFront.configNominalOutputForward(0,0);
-        driveRightFront.configNominalOutputReverse(0,0);
-        driveRightFront.configPeakOutputForward(1,0);
-        driveRightFront.configPeakOutputReverse(-1,0);
-
-        driveLeftFront.configAllowableClosedloopError(0,0,0);
-
-        driveRightFront.configAllowableClosedloopError(0,0,0);
-        driveLeftFront.config_kF(0,0.0,0);
-        driveLeftFront.config_kP(0,0.15,0);
-        driveLeftFront.config_kI(0,0.0,0);
-        driveLeftFront.config_kD(0,1.0,0);
-
-        driveRightFront.config_kF(0,0.0,0);
-        driveRightFront.config_kP(0,0.15,0);
-        driveRightFront.config_kI(0,0.0,0);
-        driveRightFront.config_kD(0,1.0,0);
-        */
-
+        autonomousTimer.reset();
+        autonomousTimer.start();
     }
 
     @Override
@@ -289,13 +259,13 @@ public class Robot extends TimedRobot {
                 break;
 
             case m_ShootingBall:
-                //調整しない限り動かない
+                //Armは調整しない限り動かない
                 state.armState = State.ArmState.k_Conserve;
 
                 //D Stick ドライブを少し動かす
                 state.driveState = State.DriveState.kLow;
-                state.driveRotateSpeed = driver.getX(GenericHID.Hand.kLeft);
-                state.driveStraightSpeed = driver.getY(GenericHID.Hand.kRight);
+                state.driveStraightSpeed = -driver.getY(GenericHID.Hand.kLeft);
+                state.driveRotateSpeed = driver.getX(GenericHID.Hand.kRight);
 
                 if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT ボールを飛ばす
@@ -306,7 +276,12 @@ public class Robot extends TimedRobot {
                     //O LT 砲台の角度をゴールへ調節する(ロボットが真下にある時)
                     state.armState = State.ArmState.k_Shoot;
                     state.setArmAngle = Const.armShootBelowAngle;
-                } else if (Util.deadbandCheck(operator.getY(GenericHID.Hand.kLeft))) {
+                } else if(operator.getYButton()) {
+                    //O Y（仮）　法大の角度調節（InitialLineにあるとき）
+                    state.armState = State.ArmState.k_Shoot;
+                    state.setArmAngle = Const.armShootInitialAngle;
+                }
+                else if (Util.deadbandCheck(operator.getY(GenericHID.Hand.kLeft))) {
                     //O LStick Y 砲台の角度を手動で調節, 正か負のみ
                     state.armState = State.ArmState.k_Adjust;
                     state.armMotorSpeed = -operator.getY(GenericHID.Hand.kLeft);

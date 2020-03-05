@@ -47,6 +47,7 @@ public class IntakeBelt {
                 //前後にボールあれば満タン
                 setSpeed(0, 0);
                 state.is_IntakeFull = true;
+                System.out.println("   Intake Fulllllll   ");
                 return;
             }
         } else {
