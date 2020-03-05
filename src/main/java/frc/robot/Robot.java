@@ -129,18 +129,18 @@ public class Robot extends TimedRobot {
         shooterRightMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
                 Const.kPIDLoopIdx,
                 Const.kTimeoutMs);
-        shooterLeftMotor.config_kF(Const.kPIDLoopIdx, Const.kGains_Velocit.kF, Const.kTimeoutMs);
-        shooterLeftMotor.config_kP(Const.kPIDLoopIdx, Const.kGains_Velocit.kP, Const.kTimeoutMs);
-        shooterLeftMotor.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
-        shooterLeftMotor.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
+        shooterLeftMotor.config_kF(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kF, Const.kTimeoutMs);
+        shooterLeftMotor.config_kP(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kP, Const.kTimeoutMs);
+        shooterLeftMotor.config_kI(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kI, Const.kTimeoutMs);
+        shooterLeftMotor.config_kD(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kD, Const.kTimeoutMs);
 
-        shooterRightMotor.config_kF(Const.kPIDLoopIdx, Const.kGains_Velocit.kF, Const.kTimeoutMs);
-        shooterRightMotor.config_kP(Const.kPIDLoopIdx, Const.kGains_Velocit.kP, Const.kTimeoutMs);
-        shooterRightMotor.config_kI(Const.kPIDLoopIdx, Const.kGains_Velocit.kI, Const.kTimeoutMs);
-        shooterRightMotor.config_kD(Const.kPIDLoopIdx, Const.kGains_Velocit.kD, Const.kTimeoutMs);
+        shooterRightMotor.config_kF(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kF, Const.kTimeoutMs);
+        shooterRightMotor.config_kP(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kP, Const.kTimeoutMs);
+        shooterRightMotor.config_kI(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kI, Const.kTimeoutMs);
+        shooterRightMotor.config_kD(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kD, Const.kTimeoutMs);
 
-        shooterLeftMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_Velocit.MaxIntegralAccumulator);
-        shooterRightMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_Velocit.MaxIntegralAccumulator);
+        shooterLeftMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.MaxIntegralAccumulator);
+        shooterRightMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.MaxIntegralAccumulator);
 
         shooterRightMotor.setSensorPhase(true);
         shooterLeftMotor.setSensorPhase(true);
@@ -292,22 +292,23 @@ public class Robot extends TimedRobot {
                 break;
 
             case m_ShootingBall:
+                //調整しない限り動かない
                 state.armState = State.ArmState.k_Conserve;
-                state.driveState = State.DriveState.kdoNothing;
+
+                //D Stick ドライブを少し動かす
+                state.driveState = State.DriveState.kLow;
+                state.driveRotateSpeed = driver.getX(GenericHID.Hand.kLeft);
+                state.driveStraightSpeed = driver.getY(GenericHID.Hand.kRight);
+
                 if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT ボールを飛ばす
                     state.shooterState = State.ShooterState.kshoot;
                     state.shooterPIDSpeed = -operator.getTriggerAxis(GenericHID.Hand.kRight);
                     state.intakeBeltState = State.IntakeBeltState.kOuttake;
-                } else if (Util.deadbandCheck(driver.getX(GenericHID.Hand.kLeft))) {
-                    //D Stick ドライブを少し動かす
-                    state.driveState = State.DriveState.kLow;
-                    state.driveRotateSpeed = driver.getX(GenericHID.Hand.kLeft);
-                    state.driveStraightSpeed = driver.getY(GenericHID.Hand.kRight);
                 } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))) {
-                    //O LT 砲台の角度をゴールへ調節する
+                    //O LT 砲台の角度をゴールへ調節する(ロボットが真下にある時)
                     state.armState = State.ArmState.k_Shoot;
-                    state.setArmAngle = Const.armShootAngle;
+                    state.setArmAngle = Const.armShootBelowAngle;
                 } else if (Util.deadbandCheck(operator.getY(GenericHID.Hand.kLeft))) {
                     //O LStick Y 砲台の角度を手動で調節, 正か負のみ
                     state.armState = State.ArmState.k_Adjust;

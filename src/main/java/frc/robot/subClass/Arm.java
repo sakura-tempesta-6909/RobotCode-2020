@@ -46,7 +46,7 @@ public class Arm {
             //砲台の角度をセル発射用に(PID)
             case k_Shoot:
                 state.armPID_ON = true;
-                state.setArmAngle = Const.armShootAngle;
+                state.setArmAngle = Const.armShootBelowAngle;
                 break;
             //---------------------------------------------------------------
             //砲台の角度をパネル回転用に(PID)
