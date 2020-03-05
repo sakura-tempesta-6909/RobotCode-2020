@@ -54,15 +54,11 @@ public class Robot extends TimedRobot {
     Shooter shooter;
     Intake intake;
     IntakeBelt intakeBelt;
-    Climb climb;
     Arm arm;
     ArmSensor armSensor;
-    Panel panel;
 
     //モード
     PanelRotationMode panelRotationMode;
-    ShootingBallMode shootingBallMode;
-    DriveMode driveMode;
     ClimbMode climbMode;
 
     @Override
@@ -185,15 +181,11 @@ public class Robot extends TimedRobot {
         shooter = new Shooter(shooterRightMotor, shooterLeftMotor);
         intake = new Intake(intakeMotor);
         intakeBelt = new IntakeBelt(intakeBeltFrontMotor, intakeBeltBackMotor, intakeFrontSensor, intakeBackSensor);
-        panel = new Panel();
         state = new State();
-        climb = new Climb(climbMotor, climbServo, slideMotor, arm);
 
         //モードのクラスの生成
-        driveMode = new DriveMode(drive, intake, intakeBelt, shooter, arm);
-        panelRotationMode = new PanelRotationMode(drive, shooter, arm);
-        shootingBallMode = new ShootingBallMode(drive, shooter, arm, intakeBelt, intake);
-        climbMode = new ClimbMode(drive, arm, climb);
+        panelRotationMode = new PanelRotationMode();
+        climbMode = new ClimbMode(arm, climbMotor, climbServo, slideMotor);
     }
 
     @Override
@@ -288,7 +280,12 @@ public class Robot extends TimedRobot {
                     state.armState = State.ArmState.k_Shoot;
                 }
 
-                driveMode.applyMode(state);
+                drive.applyState(state);
+                arm.applyState(state);
+                intake.applyState(state);
+                intakeBelt.applyState(state);
+                shooter.applyState(state);
+
                 break;
 
             case m_ShootingBall:
@@ -317,7 +314,12 @@ public class Robot extends TimedRobot {
                     /*if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))&&Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
                         state.intakeBeltState = State.IntakeBeltState.kouttake;
                     }*/
-                shootingBallMode.applyMode(state);
+
+                drive.applyState(state);
+                arm.applyState(state);
+                intake.applyState(state);
+                intakeBelt.applyState(state);
+                shooter.applyState(state);
 
                 break;
 
@@ -326,6 +328,9 @@ public class Robot extends TimedRobot {
                 state.driveState = State.DriveState.kLow;
                 state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
+
+                //Arm（仮）
+                state.armAngle = arm.getArmNow();
 
                 //Climb
                 state.armState = State.ArmState.k_Conserve;
@@ -357,11 +362,10 @@ public class Robot extends TimedRobot {
                     //O X（仮）　Climb　Motorだけ伸ばす
                     state.climbState = State.ClimbState.climbMotorOnlyExtend;
                 }
+                climbMode.changeState(state);
 
-
-                climb.changeState(state);
-
-                climbMode.applyMode(state);
+                drive.applyState(state);
+                arm.applyState(state);
                 break;
 
             case m_PanelRotation:
@@ -393,8 +397,12 @@ public class Robot extends TimedRobot {
                         state.panelState = State.PanelState.p_ManualRot;
                         state.panelManualSpeed = Const.shooterPanelSpeed;
                     }
-                panel.changeState(state);
-                panelRotationMode.applyMode(state);
+                panelRotationMode.changeState(state);
+
+                drive.applyState(state);
+                arm.applyState(state);
+                shooter.applyState(state);
+
                 break;
         }
         /*
