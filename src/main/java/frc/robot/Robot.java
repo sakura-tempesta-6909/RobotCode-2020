@@ -348,7 +348,11 @@ public class Robot extends TimedRobot {
 
             case m_PanelRotation:
                 //Drive
-                state.driveState = State.DriveState.kSuperLow;
+                if(driver.getBumper(GenericHID.Hand.kRight) || driver.getBumper(GenericHID.Hand.kLeft)) {
+                    state.driveState = State.DriveState.kSuperLow;
+                } else {
+                    state.driveState = State.DriveState.kLow;
+                }
                 state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
  
