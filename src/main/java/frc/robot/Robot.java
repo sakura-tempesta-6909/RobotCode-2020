@@ -90,6 +90,9 @@ public class Robot extends TimedRobot {
         climbMotor = new TalonSRX(Const.climbMotorPort);
         climbServo = new Servo(Const.climbServoPort);
         slideMotor = new TalonSRX(Const.climbSlideMotor);
+        //魔法の煙を出さないように
+        slideMotor.configContinuousCurrentLimit(12);
+        slideMotor.enableCurrentLimit(true);
 
         //コントローラーの初期化
         operator = new XboxController(Const.OperateControllerPort);

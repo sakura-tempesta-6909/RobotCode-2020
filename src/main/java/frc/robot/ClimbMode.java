@@ -131,10 +131,11 @@ public class ClimbMode {
 
     private void setSlideMotorSpeed(double speed) {
         slideMotor.set(ControlMode.PercentOutput, speed);
+        System.out.println("slideMotorCurrent(Out):"+slideMotor.getStatorCurrent());
+        System.out.println("slideMotorCurrent(In):"+slideMotor.getSupplyCurrent());
     }
 
     public void setClimbMotorSpeed(double speed) {
-        System.out.println("climb motor" + speed);
         climbMotor.set(ControlMode.PercentOutput, speed);
     }
 
