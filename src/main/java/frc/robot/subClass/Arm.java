@@ -43,27 +43,16 @@ public class Arm {
                 ArmChangeBasic(state.armAngle);
                 break;
             //---------------------------------------------------------------
-            //砲台の角度をセル発射用に(PID)
-            case k_Shoot:
+            //砲台の角度をPIDで制御
+            case k_PID:
                 state.armPID_ON = true;
-                break;
-            //---------------------------------------------------------------
-            //砲台の角度をパネル回転用に(PID)
-            case k_Panel:
-                state.armPID_ON = true;
-                state.setArmAngle = Const.armPanelAngle;
+                ArmPIDMove(state.setArmAngle, state.armAngle);
                 break;
             //---------------------------------------------------------------
             //砲台の角度を微調整 正か負のみ
             case k_Adjust:
                 state.armPID_ON = false;
                 armAdjust(state);
-                break;
-            //---------------------------------------------------------------
-            //砲台の角度を地面と平行に(PID) 
-            case k_Parallel:
-                state.armPID_ON = true;
-                state.setArmAngle = Const.armParallelAngle;
                 break;
             //---------------------------------------------------------------
             //Climbで縮める

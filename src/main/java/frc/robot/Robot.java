@@ -207,6 +207,24 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+        state.stateInit();
+
+        if(autonomousTimer.get() < 5) {
+            state.armState = State.ArmState.k_PID;
+            state.setArmAngle = Const.armShootInitiationAngle;
+        } else if(autonomousTimer.get() <15) {
+            state.armState = State.ArmState.k_Conserve;
+            state.shooterState = State.ShooterState.kshoot;
+            state.intakeBeltState = State.IntakeBeltState.kOuttake;
+        }
+
+
+        drive.applyState(state);
+        arm.applyState(state);
+        shooter.applyState(state);
+        intake.applyState(state);
+        intakeBelt.applyState(state);
+
         /*
         double targetPositionRotations = Util.deadbandProcessing(_joy.getY()) * 10.0 * 4096;
         driveLeftFront.set(ControlMode.Position, targetPositionRotations);
@@ -246,11 +264,8 @@ public class Robot extends TimedRobot {
                     state.shooterState = State.ShooterState.kouttake;
                 } else if (driver.getBumper(GenericHID.Hand.kRight)) {
                     //D RB アームを平行（パネルくぐり）
-                    state.armState = State.ArmState.k_Parallel;
-                }
-                if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))) {
-                    //O LT 砲台の角度をゴールへ調節する
-                    state.armState = State.ArmState.k_Shoot;
+                    state.armState = State.ArmState.k_PID;
+                    state.setArmAngle = Const.armParallelAngle;
                 }
 
                 drive.applyState(state);
@@ -273,16 +288,15 @@ public class Robot extends TimedRobot {
                 if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT ボールを飛ばす
                     state.shooterState = State.ShooterState.kshoot;
-                    state.shooterPIDSpeed = -operator.getTriggerAxis(GenericHID.Hand.kRight);
                     state.intakeBeltState = State.IntakeBeltState.kOuttake;
                 } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))) {
                     //O LT 砲台の角度をゴールへ調節する(ロボットが真下にある時)
-                    state.armState = State.ArmState.k_Shoot;
+                    state.armState = State.ArmState.k_PID;
                     state.setArmAngle = Const.armShootBelowAngle;
                 } else if(operator.getYButton()) {
                     //O Y（仮）　法大の角度調節（InitialLineにあるとき）
-                    state.armState = State.ArmState.k_Shoot;
-                    state.setArmAngle = Const.armShootInitialAngle;
+                    state.armState = State.ArmState.k_PID;
+                    state.setArmAngle = Const.armShootInitiationAngle;
                 }
                 else if (Util.deadbandCheck(operator.getY(GenericHID.Hand.kLeft))) {
                     //O LStick Y 砲台の角度を手動で調節, 正か負のみ
@@ -328,7 +342,7 @@ public class Robot extends TimedRobot {
                         System.out.println("Highhhhhhhhhhhhhhhhhhhhhhhh");
                     }else */{
                         //1/2の出力でスライド
-                        state.climbSlideMotorSpeed = -operator.getX(GenericHID.Hand.kLeft) / 2;
+                        state.climbSlideMotorSpeed = operator.getX(GenericHID.Hand.kLeft) / 2;
                     }
                 } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT クライムの棒をロック
@@ -357,7 +371,8 @@ public class Robot extends TimedRobot {
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
  
                 //Panel
-                state.armState = State.ArmState.k_Panel;
+                state.armState = State.ArmState.k_PID;
+                state.setArmAngle = Const.armPanelAngle;
                     if (driver.getXButton()) {
                         //D X 赤に合わせる
                         state.panelState = State.PanelState.p_toRed;

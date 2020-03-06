@@ -90,7 +90,8 @@ public class ClimbMode {
 
         if (armAngle <= -Const.armParallelAngleRange) {
             //Armの角度変更
-            state.armState = State.ArmState.k_Parallel;
+            state.armState = State.ArmState.k_PID;
+            state.setArmAngle = Const.armParallelAngle;
             n_extendReverse = 0;
             unlockServo();
         }

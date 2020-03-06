@@ -145,10 +145,8 @@ public class State {
 
     public enum ArmState {
         k_Conserve,
-        k_Shoot,
-        k_Panel,
         k_Adjust,
-        k_Parallel,
+        k_PID,
         k_Basic,
         k_Manual,
         k_DoNothing
