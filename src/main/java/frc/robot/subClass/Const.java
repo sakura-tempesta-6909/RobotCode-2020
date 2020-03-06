@@ -91,7 +91,8 @@ public class Const {
 
 
     //PANEL
-    public static final double shooterPanelSpeed = 0.2;
+    public static final double shooterPanelManualSpeed = 0.2;
+    public static final double shooterPanelAutoSpeed = 0.15;
 
 
 

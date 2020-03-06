@@ -80,7 +80,7 @@ public class PanelRotationMode {
             state.shooterLeftSpeed = state.shooterRightSpeed = 0;
         } else {
             state.shooterState = State.ShooterState.kmanual;
-            state.shooterLeftSpeed = state.shooterRightSpeed = state.panelManualSpeed;
+            state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelManualSpeed;
         }
 
     }
