@@ -1,6 +1,7 @@
 package frc.robot.subClass;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class State {
 
@@ -21,7 +22,6 @@ public class State {
     public ArmState armState;
     public ControlMode controlMode = ControlMode.m_Drive;
     public PanelState panelState;
-    public boolean armPID_ON;
 
     public double climbExtendAdjustSpeed;
 
@@ -62,7 +62,6 @@ public class State {
         //Arm
         armState = ArmState.k_Basic;
         armMotorSpeed = 0;
-        armPID_ON = false;
         setArmAngle = Const.armMinAngle;
 
         //panel
@@ -74,16 +73,16 @@ public class State {
 
     }
 
-    public void changeMode(Controller controller) {
+    public void changeMode(XboxController driver, XboxController operator) {
         switch (controlMode) {
             case m_Drive:
-                if (controller.operator.getBumper(GenericHID.Hand.kLeft)) {
+                if (operator.getBumper(GenericHID.Hand.kLeft)) {
                     //ボール発射モードへ切り替え
                     controlMode = ControlMode.m_ShootingBall;
-                } else if (controller.driver.getBackButton()) {
+                } else if (driver.getBackButton()) {
                     //コントロールパネル回転モードへ切り替え
                     controlMode = ControlMode.m_PanelRotation;
-                } else if (controller.operator.getBackButton()) {
+                } else if (operator.getBackButton()) {
                     //クライムモードへ切り替え
                     controlMode = ControlMode.m_Climb;
                 }
@@ -92,7 +91,7 @@ public class State {
             case m_Climb:
             case m_ShootingBall:
             case m_PanelRotation:
-                if(controller.driver.getStartButton() || controller.operator.getStartButton()) {
+                if(driver.getStartButton() || operator.getStartButton()) {
                     controlMode = ControlMode.m_Drive;
                 }
                 break;

@@ -25,7 +25,6 @@ public class Arm {
     public Arm(TalonSRX ArmMotor, SensorCollection ArmEncoder, ArmSensor armSensor) {
         this.Motor = ArmMotor;
         this.Encoder = ArmEncoder;
-
         this.armSensor = armSensor;
     }
 
@@ -33,48 +32,37 @@ public class Arm {
     //出力処理
     public void applyState(State state) {
         SmartDashboard.putNumber("armpoint", Encoder.getAnalogInRaw());
-        state.armAngle = getArmNow();
 
         switch (state.armState) {
             //---------------------------------------------------------------
             //砲台の角度を基本状態に
             case k_Basic:
-                state.armPID_ON = false;
                 ArmChangeBasic(state.armAngle);
                 break;
             //---------------------------------------------------------------
             //砲台の角度をPIDで制御
             case k_PID:
-                state.armPID_ON = true;
                 ArmPIDMove(state.setArmAngle, state.armAngle);
                 break;
             //---------------------------------------------------------------
             //砲台の角度を微調整 正か負のみ
             case k_Adjust:
-                state.armPID_ON = false;
                 armAdjust(state);
                 break;
             //---------------------------------------------------------------
-            //Climbで縮める
+            //手動操作
             case k_Manual:
-                state.armPID_ON = false;
                 ArmMove(state.armMotorSpeed);
                 break;
             //---------------------------------------------------------------
-            //何もしない
+            //維持する
             case k_Conserve:
-                state.armPID_ON = false;
                 ArmStop(state.armAngle);
                 break;
             //---------------------------------------------------------------
+            //何もしない
             case k_DoNothing:
-                state.armPID_ON = false;
                 ArmMove(0);
-        }
-
-        //PIDがONの時、設定した角度までPID制御
-        if (state.armPID_ON) {
-            ArmPIDMove(state.setArmAngle, state.armAngle);
         }
     }
 
