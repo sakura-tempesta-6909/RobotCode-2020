@@ -18,7 +18,7 @@ public class Drive extends DifferentialDrive {
                 break;
             case kLow:
                 //クライム・シュートモード時の速さ
-                setSpeed(state.driveStraightSpeed *0.6, state.driveRotateSpeed *0.6);
+                setSpeed(state.driveStraightSpeed *0.6, state.driveRotateSpeed *0.7);
                 break;
             case kManual:
                 //ドライブモード時の速さ

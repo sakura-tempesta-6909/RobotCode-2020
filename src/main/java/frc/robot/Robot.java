@@ -103,8 +103,8 @@ public class Robot extends TimedRobot {
         //cameraの初期化
         driveCamera = CameraServer.getInstance();
         armCamera = CameraServer.getInstance();
-        driveCamera.startAutomaticCapture("drive", 0);
-        armCamera.startAutomaticCapture("arm", 1);
+        driveCamera.startAutomaticCapture("drive", 1);
+        armCamera.startAutomaticCapture("arm", 0);
 
         //ドライブモーターの初期化
         driveRightFrontMotor = new WPI_TalonSRX(Const.DriveRightFrontPort);

@@ -56,8 +56,15 @@ public class ClimbMode {
                 break;
 
             case climbMotorOnlyExtend:
-                unlockServo();
-                setClimbMotorSpeed(0.4);
+                if(n_extendReverse > 2) {
+                    unlockServo();
+                    System.out.println("climbextending:" + n_extendReverse);
+                    setClimbMotorSpeed(0.4);
+                } else {
+                    lockServo();
+                    setClimbMotorSpeed(-1);
+                    n_extendReverse++;
+                }
                 break;
 
             case climbMotorOnlyShrink:
@@ -69,10 +76,12 @@ public class ClimbMode {
     // クライムを伸ばす
     private void climbExtend(State state) {
         double armAngle = state.armAngle;
-        unlockServo();
+
         if (armAngle <= -Const.armParallelAngleRange) {
             //Armの角度変更
             state.armState = State.ArmState.k_Parallel;
+            n_extendReverse = 0;
+            unlockServo();
         }
         System.out.println(armAngle);
         if (-Const.armParallelAngleRange < armAngle) {
@@ -80,10 +89,12 @@ public class ClimbMode {
             state.armState = State.ArmState.k_Adjust;
             state.armMotorSpeed = arm.SetFeedForward(armAngle) + Const.climbArmExtendSpeed + state.climbExtendAdjustSpeed;
             System.out.println(state.armMotorSpeed);
-            if(n_extendReverse > 3) {
-                System.out.println("climbextending");
+            if(n_extendReverse > 2) {
+                unlockServo();
+                System.out.println("climbextending:" + n_extendReverse);
                 setClimbMotorSpeed(Const.climbMotorExtendSpeed);
             } else {
+                lockServo();
                 setClimbMotorSpeed(-1);
                 n_extendReverse++;
             }
