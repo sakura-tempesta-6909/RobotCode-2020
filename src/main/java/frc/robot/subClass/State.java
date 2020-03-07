@@ -110,7 +110,8 @@ public class State {
         kManual,
         kLow,
         kSuperLow,
-        kdoNothing
+        kdoNothing,
+        kMiddleLow
     }
 
     public enum ShooterState {

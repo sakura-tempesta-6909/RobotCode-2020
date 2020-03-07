@@ -13,8 +13,12 @@ public class Drive extends DifferentialDrive {
 
         switch (state.driveState) {
             case kSuperLow:
-                //パネル回転モード時の速さ
+                //パネル回転時の速さ
                 setSpeed(state.driveStraightSpeed * 0.28, state.driveRotateSpeed *0.7);
+                break;
+            case kMiddleLow:
+                //パネル回転の調整時の速さ
+                setSpeed(state.driveStraightSpeed * 0.4, state.driveRotateSpeed *0.7);
                 break;
             case kLow:
                 //クライム・シュートモード時の速さ

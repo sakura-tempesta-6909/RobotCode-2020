@@ -21,6 +21,37 @@ public class PanelRotationMode {
     boolean is_PanelColorHasChanged;
 
     public void changeState(State state) {
+
+        is_PanelColorHasChanged = preColor != DetectedColor();
+        preColor = DetectedColor();
+        System.out.println("PanelColor:" + preColor);
+
+        if(!is_panelRotatingTimerStart) {
+            panelRotatingTimer.reset();
+            panelRotatingTimer.start();
+            is_panelRotatingTimerStart = true;
+        }
+
+        if(panelRotatingTimer.hasElapsed(0.3)) {
+            //0.3s経つまで変わらなければ回ってない
+            is_panelRotating = false;
+            //色が変われば回り始めたかも
+            is_panelRotatingTimerStart = !is_PanelColorHasChanged;
+        } else {
+            if(is_PanelColorHasChanged) {
+                //0.3s以内に変われば回ってる、タイマーリセット
+                is_panelRotating = true;
+                is_panelRotatingTimerStart = false;
+            }
+            //0.3s以内に変わらないなら回っているかどうかわからないので放置
+        }
+
+        if(is_panelRotating) {
+            state.driveState = State.DriveState.kSuperLow;
+        } else {
+            state.driveState = State.DriveState.kMiddleLow;
+        }
+
         switch (state.panelState) {
             case p_ManualRot:
                 state.shooterState = State.ShooterState.kmanual;
@@ -47,30 +78,9 @@ public class PanelRotationMode {
 
             case p_DoNothing:
                 is_panelRotatingTimerStart = false;
+                state.driveState = State.DriveState.kLow;
                 break;
         }
-
-        is_PanelColorHasChanged = preColor != DetectedColor();
-        preColor = DetectedColor();
-        System.out.println("PanelColor:" + preColor);
-
-        if(!is_panelRotatingTimerStart) {
-            panelRotatingTimer.reset();
-            panelRotatingTimer.start();
-            is_panelRotatingTimerStart = true;
-        }
-
-        if(panelRotatingTimer.hasElapsed(0.3)) {
-            is_panelRotating = false;
-            if(is_PanelColorHasChanged) is_panelRotatingTimerStart = false;
-        } else {
-            if(is_PanelColorHasChanged) {
-                is_panelRotating = true;
-                is_panelRotatingTimerStart = false;
-            }
-        }
-
-
     }
 
     //DetectedColor(ロボット側のカラーセンサーの目標値　青<->赤、黄<->緑)　で呼び出す
