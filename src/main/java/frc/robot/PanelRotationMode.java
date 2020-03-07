@@ -3,6 +3,7 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subClass.*;
 
@@ -13,14 +14,18 @@ public class PanelRotationMode {
     final static ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     ColorCode colorOutput = ColorCode.inRange;
 
-    PanelRotationMode() {}
-
+    Timer panelRotatingTimer = new Timer();
+    boolean is_panelRotatingTimerStart = false;
+    ColorCode preColor;
+    boolean is_panelRotating = false;
+    boolean is_PanelColorHasChanged;
 
     public void changeState(State state) {
         switch (state.panelState) {
             case p_ManualRot:
                 state.shooterState = State.ShooterState.kmanual;
                 state.shooterLeftSpeed = state.shooterRightSpeed = state.panelManualSpeed;
+                is_panelRotatingTimerStart = false;
                 break;
 
             //色合わせ　青<->赤、黄<->緑
@@ -41,10 +46,31 @@ public class PanelRotationMode {
                 break;
 
             case p_DoNothing:
-                state.shooterState = State.ShooterState.kmanual;
-                state.shooterLeftSpeed = state.shooterRightSpeed = 0;
+                is_panelRotatingTimerStart = false;
                 break;
         }
+
+        is_PanelColorHasChanged = preColor != DetectedColor();
+        preColor = DetectedColor();
+        System.out.println("PanelColor:" + preColor);
+
+        if(!is_panelRotatingTimerStart) {
+            panelRotatingTimer.reset();
+            panelRotatingTimer.start();
+            is_panelRotatingTimerStart = true;
+        }
+
+        if(panelRotatingTimer.hasElapsed(0.3)) {
+            is_panelRotating = false;
+            if(is_PanelColorHasChanged) is_panelRotatingTimerStart = false;
+        } else {
+            if(is_PanelColorHasChanged) {
+                is_panelRotating = true;
+                is_panelRotatingTimerStart = false;
+            }
+        }
+
+
     }
 
     //DetectedColor(ロボット側のカラーセンサーの目標値　青<->赤、黄<->緑)　で呼び出す
@@ -82,10 +108,6 @@ public class PanelRotationMode {
             state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelManualSpeed;
         }
 
-    }
-
-    private boolean is_PanelRotating() {
-        return false;
     }
 
     public enum ColorCode {

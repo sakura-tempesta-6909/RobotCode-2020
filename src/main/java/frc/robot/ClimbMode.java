@@ -64,7 +64,7 @@ public class ClimbMode {
                     lockTimer.start();
                     is_LockTimerStart = true;
                 }
-                if (lockTimer.get() > 0.4) {
+                if (lockTimer.hasElapsed(0.4)) {
                     //実質0.08s
                     if (n_extendReverse > 3) {
                         lockServo();
@@ -106,7 +106,7 @@ public class ClimbMode {
                 lockTimer.start();
                 is_LockTimerStart = true;
             }
-            if (lockTimer.get() > 0.4) {
+            if (lockTimer.hasElapsed(0.4)) {
                 //実質0.08s
                 if (n_extendReverse > 3) {
                     lockServo();
