@@ -13,7 +13,7 @@ public class ClimbMode {
     private TalonSRX climbMotor;
     private Servo climbServo;
     private TalonSRX slideMotor;
-    private Timer lockTimer;
+    private Timer lockTimer, slideTimer;
     private boolean is_LockTimerStart;
 
     private int n_extendReverse;
@@ -23,6 +23,7 @@ public class ClimbMode {
         this.climbServo = climbServo;
         this.slideMotor = climbSlideMotor;
         this.lockTimer = new Timer();
+        this.slideTimer = new Timer();
 
         this.arm = arm;
     }
@@ -63,10 +64,10 @@ public class ClimbMode {
                     lockTimer.start();
                     is_LockTimerStart = true;
                 }
-                if (lockTimer.get() > 0.5) {
+                if (lockTimer.get() > 0.4) {
+                    //実質0.08s
                     if (n_extendReverse > 3) {
                         lockServo();
-                        System.out.println("climbextending:" + n_extendReverse);
                         setClimbMotorSpeed(Const.climbMotorExtendSpeed);
                     } else {
                         lockServo();
@@ -100,16 +101,15 @@ public class ClimbMode {
             // Arｍ機構と合うようにスピードを調整
             state.armState = State.ArmState.k_Adjust;
             state.armMotorSpeed = arm.SetFeedForward(armAngle) + Const.climbArmExtendSpeed + state.climbExtendAdjustSpeed;
-            System.out.println(state.armMotorSpeed);
             if (!is_LockTimerStart) {
                 lockTimer.reset();
                 lockTimer.start();
                 is_LockTimerStart = true;
             }
-            if (lockTimer.get() > 0.5) {
+            if (lockTimer.get() > 0.4) {
+                //実質0.08s
                 if (n_extendReverse > 3) {
                     lockServo();
-                    System.out.println("climbextending:" + n_extendReverse);
                     setClimbMotorSpeed(Const.climbMotorExtendSpeed);
                 } else {
                     lockServo();
@@ -124,14 +124,10 @@ public class ClimbMode {
 
     // クライムを縮める
     private void climbShrink(State state) {
-        if (state.armAngle > Const.armParallelAngleRange) {
             lockServo();
             //Armの角度変更
-            state.armState = State.ArmState.k_Manual;
-            state.armMotorSpeed = 0;
+            state.armState = State.ArmState.k_DoNothing;
             setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
-        }
-
     }
 
     // クライムをアンロックする
@@ -146,10 +142,16 @@ public class ClimbMode {
 
 
     private void setSlideMotorSpeed(double speed) {
-        slideMotor.set(ControlMode.PercentOutput, speed);
-        if(slideMotor.getStatorCurrent() > 25) {
-            slideMotor.set(ControlMode.PercentOutput, 0);
+        if(slideMotor.getStatorCurrent() > 30) {
+            slideTimer.reset();
+            slideTimer.start();
         }
+        if(slideTimer.get() < 0.3) {
+            //クールダウン
+            speed = 0;
+        }
+
+        slideMotor.set(ControlMode.PercentOutput, speed);
         System.out.println("slideMotorCurrent(Out):" + slideMotor.getStatorCurrent());
         System.out.println("slideMotorCurrent(In):" + slideMotor.getSupplyCurrent());
     }

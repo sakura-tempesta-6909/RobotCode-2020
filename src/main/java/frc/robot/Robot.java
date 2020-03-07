@@ -15,7 +15,6 @@ public class Robot extends TimedRobot {
     //コントローラー
     //とりあえず、XboxController2つ
     XboxController driver, operator;
-    Joystick joystick;
 
     //DriveMotor
     WPI_TalonSRX driveRightFrontMotor, driveLeftFrontMotor;
@@ -24,7 +23,9 @@ public class Robot extends TimedRobot {
     //ShooterMotor
     TalonSRX shooterLeftMotor, shooterRightMotor;
 
+    //ArmMotor
     TalonSRX armMotor;
+
     //IntakeMotor
     VictorSPX intakeBeltFrontMotor, intakeBeltBackMotor;
     VictorSPX intakeMotor;
@@ -33,7 +34,6 @@ public class Robot extends TimedRobot {
     TalonSRX climbMotor;
     Servo climbServo;
     TalonSRX slideMotor;
-
 
     //センサー
     DigitalInput intakeFrontSensor, intakeBackSensor;
@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
 
     //Autonomous
     Timer autonomousTimer;
+    String gameData;
 
     @Override
     public void robotInit() {
@@ -95,7 +96,6 @@ public class Robot extends TimedRobot {
         //コントローラーの初期化
         operator = new XboxController(Const.OperateControllerPort);
         driver = new XboxController(Const.DriveControllerPort);
-        //joystick = new Joystick(Const.JoystickPort);
 
         //cameraの初期化
         driveCamera = CameraServer.getInstance();
@@ -197,30 +197,52 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        autonomousTimer = new Timer();
         autonomousTimer.reset();
         autonomousTimer.start();
+        gameData = DriverStation.getInstance().getGameSpecificMessage();
     }
 
     @Override
     public void autonomousPeriodic() {
         state.stateInit();
 
-        if(autonomousTimer.get() < 5) {
-            state.armState = State.ArmState.k_PID;
-            state.setArmAngle = Const.armShootInitiationAngle;
-        } else if(autonomousTimer.get() < 15) {
-            state.armState = State.ArmState.k_Conserve;
-            state.shooterState = State.ShooterState.kshoot;
-            state.intakeBeltState = State.IntakeBeltState.kOuttake;
+        switch (gameData) {
+            case "L":
+                //パワーポートの左にあるとき
+                System.out.println("LLLLLLLLLLLLLLL");
+                break;
+
+            default:
+                //パワーポートの目の前にあるとき
+                if (autonomousTimer.get() < 2) {
+                    state.armState = State.ArmState.k_PID;
+                    state.setArmAngle = Const.armShootInitiationAngle;
+                } else if (autonomousTimer.get() < 4) {
+                    state.armState = State.ArmState.k_Conserve;
+                    state.shooterState = State.ShooterState.kshoot;
+                    state.intakeBeltState = State.IntakeBeltState.kOuttake;
+                } else if (autonomousTimer.get() < 6) {
+                    state.armState = State.ArmState.k_Basic;
+                    state.driveStraightSpeed = -0.6;
+                } else if(autonomousTimer.get() <= 15) {
+                    state.armState = State.ArmState.k_Basic;
+                }
+                break;
         }
 
-
-
-        /*
+         /*
         double targetPositionRotations = Util.deadbandProcessing(_joy.getY()) * 10.0 * 4096;
         driveLeftFront.set(ControlMode.Position, targetPositionRotations);
         driveRightFront.set(ControlMode.Position, targetPositionRotations);
          */
+
+        drive.applyState(state);
+        arm.applyState(state);
+        shooter.applyState(state);
+        intake.applyState(state);
+        intakeBelt.applyState(state);
+
     }
 
     public  void  teleopInit() {
@@ -239,7 +261,12 @@ public class Robot extends TimedRobot {
         switch (state.controlMode) {
             case m_Drive:
                 //ほかに関係なくドライブ
-                state.driveState = State.DriveState.kManual;
+                if(driver.getBumper(GenericHID.Hand.kLeft)) {
+                    //D LBで低速モード
+                    state.driveState = State.DriveState.kLow;
+                } else {
+                    state.driveState = State.DriveState.kManual;
+                }
                 state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 

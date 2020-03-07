@@ -71,7 +71,6 @@ public class PanelRotationMode {
         }
         return ColorCode.inRange;
     }
-    //
 
     private void AlignPanelTo(ColorCode c, State state) {
 
@@ -83,6 +82,10 @@ public class PanelRotationMode {
             state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelManualSpeed;
         }
 
+    }
+
+    private boolean is_PanelRotating() {
+        return false;
     }
 
     public enum ColorCode {

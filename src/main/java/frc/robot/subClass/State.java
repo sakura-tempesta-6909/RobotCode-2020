@@ -36,6 +36,7 @@ public class State {
 
         //DriveのStateを初期化
         driveState = DriveState.kManual;
+        driveStraightSpeed = 0;
         driveRotateSpeed = 0;
 
         //Shooter
