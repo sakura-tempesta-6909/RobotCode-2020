@@ -55,10 +55,10 @@ public class Const {
     //ArmAngle Range for Climb
     public static final double armParallelAngleRange = 10;
     //Climb Extend Speed
-    public static final double climbMotorExtendSpeed = 0.675;
+    public static final double climbMotorExtendSpeed = 0.8;
     public static final double climbArmExtendSpeed = 0.21; //Offset is included
     //Climb Shrink Speed
-    public static final double climbMotorShrinkSpeed = -0.55;
+    public static final double climbMotorShrinkSpeed = -1;
     //Armは全力脱力タイムズ
 
     //ARM
@@ -70,8 +70,8 @@ public class Const {
     //アームの可動域(角度と抵抗の値)
     public static final double armMaxAngle = 80;
     public static final double armMinAngle = -30;
-    public static final double armMaxPoint = 500;
-    public static final double armMinPoint = 170;
+    public static final double armMaxPoint = 506;//500
+    public static final double armMinPoint = 165;//170
     //for Calculating Offset
     public static final double armAngleDifference = armMaxAngle - armMinAngle;
     public static final double armPointDifference = armMaxPoint - armMinPoint;
@@ -81,12 +81,12 @@ public class Const {
     public static final int kArmPIDLoopIdx = 0;
 
     //目標角度
-    public static final double armShootBelowPoint = 492;
+    public static final double armShootBelowPoint = armMinPoint + 327;
     public static final double armShootBelowAngle = (armShootBelowPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
     public static final double armParallelAngle = 0;
-    public static final double armPanelPoint = 365;
+    public static final double armPanelPoint = armMinPoint + 200;
     public static final double armPanelAngle = (armPanelPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
-    public static final double armShootInitiationPoint = 368;
+    public static final double armShootInitiationPoint = armMinPoint + 203;
     public static final double armShootInitiationAngle = (armShootInitiationPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
 
 

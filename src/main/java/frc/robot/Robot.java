@@ -73,8 +73,8 @@ public class Robot extends TimedRobot {
         //アームのモーター
         armMotor = new TalonSRX(Const.armMotor);
         //アームのセンサー
-        armMotor.configForwardLimitSwitchSource(LimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen);
-        armMotor.configReverseLimitSwitchSource(LimitSwitchSource.RemoteCANifier, LimitSwitchNormal.NormallyOpen);
+        armMotor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
+        armMotor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen);
         armEncoder = new SensorCollection(armMotor);
 
         //IntakeBelt
@@ -338,32 +338,30 @@ public class Robot extends TimedRobot {
                 //Climb
                 state.armState = State.ArmState.k_Conserve;
                 if (operator.getYButton()) {
-                    //O Y クライムの棒を伸ばす
-                    state.climbState = State.ClimbState.climbExtend;
-                    state.climbExtendAdjustSpeed = -operator.getY(GenericHID.Hand.kRight)/10;
+                    //O Y アームを上げる
+                    state.climbArmState = State.ClimbArmState.climbExtend;
+                    state.climbExtendAdjustSpeed = -operator.getY(GenericHID.Hand.kLeft) / 3.5;
                 } else if (operator.getBButton()) {
                     //O B クライムする
-                    state.climbState = State.ClimbState.climbShrink;
-                } else if(Util.deadbandCheck(operator.getX(GenericHID.Hand.kLeft))) {
-                    //O LStick X スライド
-                    state.climbState =  State.ClimbState.climbSlide;
+                    state.climbArmState = State.ClimbArmState.climbShrink;
+                } else if(Util.deadbandCheck(operator.getX(GenericHID.Hand.kRight))) {
+                    //O RStick X スライド
+                    state.climbArmState =  State.ClimbArmState.climbSlide;
                     /*if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
                         //O LT 高出力でスライド
                         state.climbSlideMotorSpeed = -operator.getX(GenericHID.Hand.kLeft);
                         System.out.println("Highhhhhhhhhhhhhhhhhhhhhhhh");
                     }else */{
                         //1/2の出力でスライド
-                        state.climbSlideMotorSpeed = operator.getX(GenericHID.Hand.kLeft) / 2;
+                        state.climbSlideMotorSpeed = operator.getX(GenericHID.Hand.kRight) / 2;
                     }
-                } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
-                    //O RT クライムの棒をロック
-                    state.climbState = State.ClimbState.climbLock;
-                } else if (operator.getAButton()) {
-                    //O A(仮) Climb Motorだけ縮める
-                    state.climbState = State.ClimbState.climbMotorOnlyShrink;
-                } else if (operator.getXButton()) {
-                    //O X（仮）　Climb　Motorだけ伸ばす
-                    state.climbState = State.ClimbState.climbMotorOnlyExtend;
+                }
+                if (operator.getBumper(GenericHID.Hand.kRight)) {
+                    //O RB Climb Motorだけ縮める
+                    state.climbWireState = State.ClimbWireState.climbMotorOnlyShrink;
+                } else if (operator.getBumper(GenericHID.Hand.kLeft)) {
+                    //O LB Climb　Motorだけ伸ばす
+                    state.climbWireState = State.ClimbWireState.climbMotorOnlyExtend;
                 }
                 climbMode.changeState(state);
                 break;

@@ -24,14 +24,14 @@ public class ClimbMode {
         this.slideMotor = climbSlideMotor;
         this.lockTimer = new Timer();
         this.slideTimer = new Timer();
-
+        slideTimer.start();
         this.arm = arm;
     }
 
     public void changeState(State state) {
-        System.out.println(state.climbState);
+        System.out.println(state.climbArmState);
 
-        switch (state.climbState) {
+        switch (state.climbArmState) {
             case doNothing:
                 lockServo();
                 setClimbMotorSpeed(0);
@@ -40,8 +40,8 @@ public class ClimbMode {
                 is_LockTimerStart = false;
                 break;
             case climbExtend:
-                System.out.println("climbExtending");
-                climbExtend(state);
+                //伸ばさない
+                climbArmUp(state);
                 break;
 
             case climbShrink:
@@ -57,69 +57,73 @@ public class ClimbMode {
                 lockServo();
                 setSlideMotorSpeed(state.climbSlideMotorSpeed);
                 break;
+        }
 
+        switch (state.climbWireState) {
+            case doNothing:
+                break;
             case climbMotorOnlyExtend:
                 if (!is_LockTimerStart) {
                     lockTimer.reset();
                     lockTimer.start();
                     is_LockTimerStart = true;
                 }
-                if (lockTimer.hasElapsed(0.4)) {
-                    //実質0.08s
-                    if (n_extendReverse > 3) {
-                        lockServo();
+                if (lockTimer.get() > 0.4) {
+                    //実質0.04s
+                    if (n_extendReverse > 1) {
+                        unlockServo();
                         setClimbMotorSpeed(Const.climbMotorExtendSpeed);
                     } else {
-                        lockServo();
+                        unlockServo();
                         setClimbMotorSpeed(-1);
                         n_extendReverse++;
                     }
                 } else {
-                    lockServo();
+                    unlockServo();
                 }
                 break;
 
             case climbMotorOnlyShrink:
                 lockServo();
-                setClimbMotorSpeed(-0.3);
+                setClimbMotorSpeed(-0.5);
+                break;
         }
     }
 
-    // クライムを伸ばす
-    private void climbExtend(State state) {
+    //アームを上げる
+    private void climbArmUp(State state) {
         double armAngle = state.armAngle;
 
-        if (armAngle <= -Const.armParallelAngleRange) {
-            //Armの角度変更
+        if(armAngle < 0) {
             state.armState = State.ArmState.k_PID;
-            state.setArmAngle = Const.armParallelAngle;
-            n_extendReverse = 0;
-            unlockServo();
-        }
-        System.out.println(armAngle);
-        if (-Const.armParallelAngleRange < armAngle) {
+            state.setArmAngle = 15;
+        }else {
             // Arｍ機構と合うようにスピードを調整
             state.armState = State.ArmState.k_Adjust;
             state.armMotorSpeed = arm.SetFeedForward(armAngle) + Const.climbArmExtendSpeed + state.climbExtendAdjustSpeed;
+            System.out.println("armMotorSpeed" + state.armMotorSpeed);
+        }
+            /*
             if (!is_LockTimerStart) {
                 lockTimer.reset();
                 lockTimer.start();
                 is_LockTimerStart = true;
             }
-            if (lockTimer.hasElapsed(0.4)) {
-                //実質0.08s
-                if (n_extendReverse > 3) {
-                    lockServo();
+            if (lockTimer.get() > 0.4) {
+                //実質0.04s
+                if (n_extendReverse > 1) {
+                    unlockServo();
                     setClimbMotorSpeed(Const.climbMotorExtendSpeed);
                 } else {
-                    lockServo();
+                    unlockServo();
                     setClimbMotorSpeed(-1);
                     n_extendReverse++;
                 }
             } else {
-                lockServo();
+                unlockServo();
             }
-        }
+             */
+
     }
 
     // クライムを縮める
@@ -153,7 +157,6 @@ public class ClimbMode {
 
         slideMotor.set(ControlMode.PercentOutput, speed);
         System.out.println("slideMotorCurrent(Out):" + slideMotor.getStatorCurrent());
-        System.out.println("slideMotorCurrent(In):" + slideMotor.getSupplyCurrent());
     }
 
     public void setClimbMotorSpeed(double speed) {

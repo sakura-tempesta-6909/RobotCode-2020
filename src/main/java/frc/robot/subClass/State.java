@@ -18,7 +18,8 @@ public class State {
     public IntakeState intakeState;
     public IntakeBeltState intakeBeltState;
     public DriveState driveState;
-    public ClimbState climbState;
+    public ClimbArmState climbArmState;
+    public ClimbWireState climbWireState;
     public ArmState armState;
     public ControlMode controlMode = ControlMode.m_Drive;
     public PanelState panelState;
@@ -53,7 +54,8 @@ public class State {
         intakeBeltState = IntakeBeltState.doNothing;
 
         //Climb
-        climbState = ClimbState.doNothing;
+        climbArmState = ClimbArmState.doNothing;
+        climbWireState = ClimbWireState.doNothing;
         hangingMotorSpeed = 0;
         armMotorSpeed = 0;
         armAngle = 0;
@@ -78,13 +80,13 @@ public class State {
         switch (controlMode) {
             case m_Drive:
                 if (operator.getBumper(GenericHID.Hand.kLeft)) {
-                    //ボール発射モードへ切り替え
+                    //O LB ボール発射モードへ切り替え
                     controlMode = ControlMode.m_ShootingBall;
                 } else if (driver.getBackButton()) {
-                    //コントロールパネル回転モードへ切り替え
+                    //D Back コントロールパネル回転モードへ切り替え
                     controlMode = ControlMode.m_PanelRotation;
                 } else if (operator.getBackButton()) {
-                    //クライムモードへ切り替え
+                    //O Backクライムモードへ切り替え
                     controlMode = ControlMode.m_Climb;
                 }
                 break;
@@ -93,6 +95,7 @@ public class State {
             case m_ShootingBall:
             case m_PanelRotation:
                 if(driver.getStartButton() || operator.getStartButton()) {
+                    //D or O Start
                     controlMode = ControlMode.m_Drive;
                 }
                 break;
@@ -134,12 +137,16 @@ public class State {
         doNothing
     }
 
-    public enum ClimbState {
+    public enum ClimbArmState {
         doNothing,
         climbExtend,
         climbShrink,
         climbLock,
-        climbSlide,
+        climbSlide
+    }
+
+    public enum ClimbWireState {
+        doNothing,
         climbMotorOnlyExtend,
         climbMotorOnlyShrink
     }

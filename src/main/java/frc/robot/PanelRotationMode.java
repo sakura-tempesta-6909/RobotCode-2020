@@ -32,7 +32,7 @@ public class PanelRotationMode {
             is_panelRotatingTimerStart = true;
         }
 
-        if(panelRotatingTimer.hasElapsed(0.3)) {
+        if(panelRotatingTimer.get() > 0.3) {
             //0.3s経つまで変わらなければ回ってない
             is_panelRotating = false;
             //色が変われば回り始めたかも
