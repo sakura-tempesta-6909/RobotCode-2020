@@ -80,30 +80,7 @@ public class State {
     }
 
     public void changeMode(XboxController driver, XboxController operator) {
-        switch (controlMode) {
-            case m_Drive:
-                if (operator.getBumper(GenericHID.Hand.kLeft)) {
-                    //O LB ボール発射モードへ切り替え
-                    controlMode = ControlMode.m_ShootingBall;
-                } else if (driver.getBackButton()) {
-                    //D Back コントロールパネル回転モードへ切り替え
-                    controlMode = ControlMode.m_PanelRotation;
-                } else if (operator.getBackButton()) {
-                    //O Backクライムモードへ切り替え
-                    controlMode = ControlMode.m_Climb;
-                }
-                break;
 
-            case m_Climb:
-            case m_ShootingBall:
-            case m_PanelRotation:
-                if(driver.getStartButton() || operator.getStartButton()) {
-                    //D or O Start ドライブモードへ
-                    controlMode = ControlMode.m_Drive;
-                }
-                break;
-        }
-        Util.sendConsole("Mode", controlMode.toString());
 
     }
 
