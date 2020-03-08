@@ -39,6 +39,8 @@ public class Robot extends TimedRobot {
     DigitalInput intakeFrontSensor, intakeBackSensor;
     SensorCollection armEncoder;
     Servo colorSensorServo;
+    Timer servoTimer;
+    boolean servoTimerStarted;
 
     //カメラ
     CameraServer driveCamera, armCamera;
@@ -80,6 +82,7 @@ public class Robot extends TimedRobot {
 
         //カラーセンサーのサーボ
         colorSensorServo = new Servo(Const.colorSensorServoPort);
+        servoTimer = new Timer();
 
         //IntakeBelt
         intakeBeltFrontMotor = new VictorSPX(Const.intakeBeltFrontMotor);
@@ -209,6 +212,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
+
         state.stateInit();
 
         switch (gameData) {
@@ -251,10 +255,14 @@ public class Robot extends TimedRobot {
 
     public  void  teleopInit() {
         state.controlMode = State.ControlMode.m_Drive;
+        panelRotationMode.contractServo();
     }
 
     @Override
     public void teleopPeriodic() {
+
+        System.out.println("leftSpeed" + shooterLeftMotor.getSelectedSensorVelocity());
+        System.out.println("RightSpeed" + shooterRightMotor.getSelectedSensorVelocity());
 
         //状態初期化
         state.stateInit();
@@ -286,12 +294,20 @@ public class Robot extends TimedRobot {
                 if(driver.getStartButton() || operator.getStartButton()) {
                     //D or O Start ドライブモードへ
                     panelRotationMode.contractServo();
-                    if(colorSensorServo.getAngle()<5){
+                    if(!servoTimerStarted){
+                        servoTimer.reset();
+                        servoTimer.start();
+                        servoTimerStarted = true;
+                    }
+                    System.out.println(colorSensorServo.getAngle());
+                    if(servoTimer.get() > 1){
                         state.controlMode = State.ControlMode.m_Drive;
+                        servoTimerStarted = false;
                     }
                 }
                 break;
         }
+        System.out.println(colorSensorServo.getAngle());
         Util.sendConsole("Mode", state.controlMode.toString());
 
         switch (state.controlMode) {
@@ -405,22 +421,21 @@ public class Robot extends TimedRobot {
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
                 //Arm
-
-                state.armState = State.ArmState.k_PID;
-                state.armSetAngle = Const.armPanelAngle;
+                    state.armState = State.ArmState.k_PID;
+                    state.armSetAngle = Const.armPanelAngle;
 
                     if (driver.getXButton()) {
-                        //D X 赤に合わせる
-                        state.panelState = State.PanelState.p_toRed;
-                    } else if (driver.getYButton()) {
-                        //D Y 緑に合わせる
-                        state.panelState = State.PanelState.p_toGreen;
-                    } else if (driver.getBButton()) {
-                        //D B 青に合わせる
+                        //D X 青に合わせる
                         state.panelState = State.PanelState.p_toBlue;
-                    } else if (driver.getAButton()) {
-                        //D A 黄色に合わせる
+                    } else if (driver.getYButton()) {
+                        //D Y 黄に合わせる
                         state.panelState = State.PanelState.p_toYellow;
+                    } else if (driver.getBButton()) {
+                        //D B 赤に合わせる
+                        state.panelState = State.PanelState.p_toRed;
+                    } else if (driver.getAButton()) {
+                        //D A 緑に合わせる
+                        state.panelState = State.PanelState.p_toGreen;
                     } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
                         //D LT 手動左回転
                         state.panelState = State.PanelState.p_ManualRot;

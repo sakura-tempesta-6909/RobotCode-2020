@@ -41,7 +41,7 @@ public class Const {
     public static final int kSlotIdx = 0;
     public static final int kPIDLoopIdx = 0;
     public static final int kTimeoutMs = 30;
-    public final static Gains kGains_ShooterVelocity = new Gains(0.01, 0.000005, 0, 1023.0 / 7200.0, 300, 1.00, 20000000.0);
+    public final static Gains kGains_ShooterVelocity = new Gains(0.01, 0.00005, 0, 0, 300, 1.00, 1023/0.00005);
     //In&Outtake
     public final static double shooterIntakeSpeed = 0.165;
     public final static double shooterOutTakeSpeed = -0.2;
@@ -86,15 +86,15 @@ public class Const {
     public static final double armShootBelowPoint = armMinPoint + 327;
     public static final double armShootBelowAngle = (armShootBelowPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
     public static final double armParallelAngle = 0;
-    public static final double armPanelPoint = armMinPoint + 200;
+    public static final double armPanelPoint = armMinPoint + 186;
     public static final double armPanelAngle = (armPanelPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
     public static final double armShootInitiationPoint = armMinPoint + 203;
     public static final double armShootInitiationAngle = (armShootInitiationPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
 
 
     //PANEL
-    public static final double shooterPanelManualSpeed = 0.25;
-    public static final double shooterPanelAutoSpeed = 0.15;
+    public static final double shooterPanelManualSpeed = 0.10;
+    public static final double shooterPanelAutoSpeed = 0.03;
 
 
 

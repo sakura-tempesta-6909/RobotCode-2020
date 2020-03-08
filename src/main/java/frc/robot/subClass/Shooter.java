@@ -14,7 +14,7 @@ public class Shooter {
     public void applyState(State state) {
         switch (state.shooterState) {
             case kShoot:
-                setSpeed(1.0);
+                setSpeed(-1.0, 1.0);
                 break;
             case kIntake:
                 setSpeedPercent(Const.shooterIntakeSpeed, -Const.shooterIntakeSpeed);
@@ -23,18 +23,21 @@ public class Shooter {
                 setSpeedPercent(Const.shooterOutTakeSpeed, -Const.shooterOutTakeSpeed);
                 break;
             case kManual:
-                setSpeedPercent(state.shooterLeftSpeed, state.shooterRightSpeed);
+                setSpeed(state.shooterLeftSpeed, state.shooterRightSpeed);
                 break;
             case doNothing:
-                setSpeedPercent(0, 0);
+                setSpeed(0, 0);
+                shooterLeft.setIntegralAccumulator(0);
+                shooterRight.setIntegralAccumulator(0);
                 break;
         }
     }
 
-    public void setSpeed(double speed) {
-        double targetVelocity_UnitsPer100ms = speed * Const.shooterMotorMaxOutput;
-        shooterLeft.set(ControlMode.Velocity, -targetVelocity_UnitsPer100ms);
-        shooterRight.set(ControlMode.Velocity, targetVelocity_UnitsPer100ms);
+    public void setSpeed(double leftSpeed, double rightSpeed) {
+        double targetLeftVelocity_UnitsPer100ms = leftSpeed * Const.shooterMotorMaxOutput;
+        double targetRightVelocity_UnitsPer100ms = rightSpeed * Const.shooterMotorMaxOutput;
+        shooterLeft.set(ControlMode.Velocity, targetLeftVelocity_UnitsPer100ms);
+        shooterRight.set(ControlMode.Velocity, targetRightVelocity_UnitsPer100ms);
     }
 
     public void setSpeedPercent(double speedPercentLeft, double speedPercentRight) {

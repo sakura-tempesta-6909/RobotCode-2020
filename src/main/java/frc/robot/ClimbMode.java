@@ -33,11 +33,8 @@ public class ClimbMode {
 
         switch (state.climbArmState) {
             case doNothing:
-                unlockServo();
                 setClimbMotorSpeed(0);
                 setSlideMotorSpeed(0);
-                n_extendReverse = 0;
-                is_LockTimerStart = false;
                 break;
             case climbExtend:
                 //伸ばさない
@@ -57,6 +54,8 @@ public class ClimbMode {
 
         switch (state.climbWireState) {
             case doNothing:
+                n_extendReverse = 0;
+                is_LockTimerStart = false;
                 break;
             case climbMotorOnlyExtend:
                 if (!is_LockTimerStart) {

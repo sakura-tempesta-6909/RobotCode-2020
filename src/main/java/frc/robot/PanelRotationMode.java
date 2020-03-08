@@ -47,6 +47,7 @@ public class PanelRotationMode {
         } else {
             if(is_PanelColorHasChanged) {
                 //0.3s以内に変われば回ってる、タイマーリセット
+                System.out.println("ColorChange!");
                 is_panelRotating = true;
                 is_panelRotatingTimerStart = false;
             }
@@ -100,7 +101,7 @@ public class PanelRotationMode {
         double r = detectedColor.red;
         double g = detectedColor.green;
         double b = detectedColor.blue;
-        if (p < 80) {
+        if (p < 60) {
             return ColorCode.outOfRange;
         }
         if ((0.2 <= r && r < 0.4) && (0.45 <= g) && (b < 0.2)) {
@@ -121,11 +122,11 @@ public class PanelRotationMode {
     private void AlignPanelTo(ColorCode c, State state) {
         extendServo();
         if (DetectedColor() == c) {
-            state.shooterState = State.ShooterState.kManual;
-            state.shooterLeftSpeed = state.shooterRightSpeed = 0;
+            state.shooterState = State.ShooterState.doNothing;
+            state.shooterLeftSpeed = state.shooterRightSpeed = -0.01;
         } else {
             state.shooterState = State.ShooterState.kManual;
-            state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelManualSpeed;
+            state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelAutoSpeed;
         }
 
     }

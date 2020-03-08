@@ -79,11 +79,6 @@ public class State {
         panelManualSpeed = 0;
     }
 
-    public void changeMode(XboxController driver, XboxController operator) {
-
-
-    }
-
     public enum ControlMode {
         m_ShootingBall,
         m_PanelRotation,
@@ -95,7 +90,7 @@ public class State {
         kManual,
         kLow,
         kSuperLow,
-        kdoNothing,
+        kStop,
         kMiddleLow
     }
 

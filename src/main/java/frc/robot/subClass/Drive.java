@@ -18,18 +18,18 @@ public class Drive extends DifferentialDrive {
                 break;
             case kMiddleLow:
                 //パネル回転の調整時の速さ
-                setSpeed(state.driveStraightSpeed * 0.4, state.driveRotateSpeed *0.7);
+                setSpeed(state.driveStraightSpeed * 0.4, state.driveRotateSpeed *0.6);
                 break;
             case kLow:
                 //クライム・シュートモード時の速さ
-                setSpeed(state.driveStraightSpeed *0.6, state.driveRotateSpeed *0.7);
+                setSpeed(state.driveStraightSpeed *0.6, state.driveRotateSpeed *0.6);
                 break;
             case kManual:
                 //ドライブモード時の速さ
                 setSpeed(state.driveStraightSpeed, state.driveRotateSpeed);
                 break;
-            case kdoNothing:
-                setSpeed(0, 0);
+            case kStop:
+                stopMotor();
                 break;
         }
     }
