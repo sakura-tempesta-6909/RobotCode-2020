@@ -5,26 +5,35 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class State {
 
-
-    public double driveStraightSpeed, driveRotateSpeed;  //Driveの速度;
-    public double shooterLeftSpeed, shooterRightSpeed, shooterPIDSpeed;
-    public double hangingMotorSpeed;
-    public double armMotorSpeed;
-    public double armAngle;
-    public double setArmAngle;
-    public double climbSlideMotorSpeed;
+    //速度
+    //Drive
+    public double driveStraightSpeed, driveRotateSpeed;
+    //Shooter
+    public double shooterLeftSpeed, shooterRightSpeed;
+    public double shooterPIDSpeed;
     public double panelManualSpeed;
+    //Arm
+    public double armMotorSpeed;
+    //Climb
+    public double climbSlideMotorSpeed;
+    public double climbExtendAdjustSpeed;
+
+    //Arm Angle
+    public double armAngle;
+    public double armSetAngle;
+
+    //SubClass State
+    public DriveState driveState;
+    public ArmState armState;
     public ShooterState shooterState;
     public IntakeState intakeState;
     public IntakeBeltState intakeBeltState;
-    public DriveState driveState;
     public ClimbArmState climbArmState;
     public ClimbWireState climbWireState;
-    public ArmState armState;
-    public ControlMode controlMode = ControlMode.m_Drive;
     public PanelState panelState;
 
-    public double climbExtendAdjustSpeed;
+    //Control Mode
+    public ControlMode controlMode = ControlMode.m_Drive;
 
     //ボールを5個ゲットしたか
     public boolean is_IntakeFull;
@@ -35,7 +44,7 @@ public class State {
 
     public void stateInit() {
 
-        //DriveのStateを初期化
+        //Drive
         driveState = DriveState.kManual;
         driveStraightSpeed = 0;
         driveRotateSpeed = 0;
@@ -56,24 +65,18 @@ public class State {
         //Climb
         climbArmState = ClimbArmState.doNothing;
         climbWireState = ClimbWireState.doNothing;
-        hangingMotorSpeed = 0;
-        armMotorSpeed = 0;
-        armAngle = 0;
         climbSlideMotorSpeed = 0;
         climbExtendAdjustSpeed = 0;
 
         //Arm
         armState = ArmState.k_Basic;
         armMotorSpeed = 0;
-        setArmAngle = Const.armMinAngle;
+        armSetAngle = Const.armMinAngle;
+        armAngle = 0;
 
         //panel
         panelState = PanelState.p_DoNothing;
         panelManualSpeed = 0;
-        //ControlMode
-
-        // controlState = ControlState.m_Drive;
-
     }
 
     public void changeMode(XboxController driver, XboxController operator) {
@@ -95,7 +98,7 @@ public class State {
             case m_ShootingBall:
             case m_PanelRotation:
                 if(driver.getStartButton() || operator.getStartButton()) {
-                    //D or O Start
+                    //D or O Start ドライブモードへ
                     controlMode = ControlMode.m_Drive;
                 }
                 break;
@@ -105,8 +108,10 @@ public class State {
     }
 
     public enum ControlMode {
-        m_ShootingBall, m_PanelRotation, m_Climb, m_Drive
-
+        m_ShootingBall,
+        m_PanelRotation,
+        m_Climb,
+        m_Drive
     }
 
     public enum DriveState {
@@ -118,11 +123,11 @@ public class State {
     }
 
     public enum ShooterState {
-        kshoot,
-        kintake,
-        kmanual,
+        kShoot,
+        kIntake,
+        kManual,
         doNothing,
-        kouttake
+        kOuttake
     }
 
     public enum IntakeState {
@@ -141,14 +146,14 @@ public class State {
         doNothing,
         climbExtend,
         climbShrink,
-        climbLock,
         climbSlide
     }
 
     public enum ClimbWireState {
         doNothing,
         climbMotorOnlyExtend,
-        climbMotorOnlyShrink
+        climbMotorOnlyShrink,
+        climbLock
     }
 
     public enum ArmState {

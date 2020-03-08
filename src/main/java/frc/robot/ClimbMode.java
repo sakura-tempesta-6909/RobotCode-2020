@@ -33,7 +33,7 @@ public class ClimbMode {
 
         switch (state.climbArmState) {
             case doNothing:
-                lockServo();
+                unlockServo();
                 setClimbMotorSpeed(0);
                 setSlideMotorSpeed(0);
                 n_extendReverse = 0;
@@ -46,10 +46,6 @@ public class ClimbMode {
 
             case climbShrink:
                 climbShrink(state);
-                break;
-
-            case climbLock:
-                lockServo();
                 break;
 
             case climbSlide:
@@ -84,9 +80,12 @@ public class ClimbMode {
                 break;
 
             case climbMotorOnlyShrink:
-                lockServo();
+                unlockServo();
                 setClimbMotorSpeed(-0.5);
                 break;
+
+            case climbLock:
+                lockServo();
         }
     }
 
@@ -96,7 +95,7 @@ public class ClimbMode {
 
         if(armAngle < 0) {
             state.armState = State.ArmState.k_PID;
-            state.setArmAngle = 15;
+            state.armSetAngle = 15;
         }else {
             // Arｍ機構と合うようにスピードを調整
             state.armState = State.ArmState.k_Adjust;

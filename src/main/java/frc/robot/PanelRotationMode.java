@@ -3,6 +3,7 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subClass.*;
@@ -13,12 +14,18 @@ public class PanelRotationMode {
     final static I2C.Port i2cPort = I2C.Port.kOnboard;
     final static ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     ColorCode colorOutput = ColorCode.inRange;
+    Servo colorSensorServo;
+
 
     Timer panelRotatingTimer = new Timer();
     boolean is_panelRotatingTimerStart = false;
     ColorCode preColor;
     boolean is_panelRotating = false;
     boolean is_PanelColorHasChanged;
+
+    PanelRotationMode(Servo servo) {
+        this.colorSensorServo= servo;
+    }
 
     public void changeState(State state) {
 
@@ -48,13 +55,14 @@ public class PanelRotationMode {
 
         if(is_panelRotating) {
             state.driveState = State.DriveState.kSuperLow;
+            System.out.println("panelRotating!");
         } else {
             state.driveState = State.DriveState.kMiddleLow;
         }
 
         switch (state.panelState) {
             case p_ManualRot:
-                state.shooterState = State.ShooterState.kmanual;
+                state.shooterState = State.ShooterState.kManual;
                 state.shooterLeftSpeed = state.shooterRightSpeed = state.panelManualSpeed;
                 is_panelRotatingTimerStart = false;
                 break;
@@ -81,6 +89,14 @@ public class PanelRotationMode {
                 state.driveState = State.DriveState.kLow;
                 break;
         }
+
+        if(state.armAngle > 0) {
+            //Servo広げる
+            extendServo();
+        } else {
+            contractServo();
+        }
+        System.out.println("servoAngle" + colorSensorServo.getAngle());
     }
 
     //DetectedColor(ロボット側のカラーセンサーの目標値　青<->赤、黄<->緑)　で呼び出す
@@ -111,13 +127,21 @@ public class PanelRotationMode {
     private void AlignPanelTo(ColorCode c, State state) {
 
         if (DetectedColor() == c) {
-            state.shooterState = State.ShooterState.kmanual;
+            state.shooterState = State.ShooterState.kManual;
             state.shooterLeftSpeed = state.shooterRightSpeed = 0;
         } else {
-            state.shooterState = State.ShooterState.kmanual;
+            state.shooterState = State.ShooterState.kManual;
             state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelManualSpeed;
         }
 
+    }
+
+    public void extendServo() {
+        colorSensorServo.setAngle(180);
+    }
+
+    private void contractServo() {
+        colorSensorServo.setAngle(0);
     }
 
     public enum ColorCode {

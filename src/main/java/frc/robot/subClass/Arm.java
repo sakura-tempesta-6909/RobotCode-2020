@@ -42,7 +42,7 @@ public class Arm {
             //---------------------------------------------------------------
             //砲台の角度をPIDで制御
             case k_PID:
-                ArmPIDMove(state.setArmAngle, state.armAngle);
+                ArmPIDMove(state.armSetAngle, state.armAngle);
                 break;
             //---------------------------------------------------------------
             //砲台の角度を微調整 正か負のみ

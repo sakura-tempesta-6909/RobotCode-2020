@@ -29,6 +29,8 @@ public class Const {
     public static final int climbMotorPort = 7;
     public static final int climbServoPort = 9;
     public static final int climbSlideMotor = 16;
+    //Panel Port
+    public static final int colorSensorServoPort = 8;
 
     //Drive 加速度制限
     public static final double DriveFullSpeedTime = 0.5;
@@ -93,6 +95,7 @@ public class Const {
     //PANEL
     public static final double shooterPanelManualSpeed = 0.25;
     public static final double shooterPanelAutoSpeed = 0.15;
+
 
 
 

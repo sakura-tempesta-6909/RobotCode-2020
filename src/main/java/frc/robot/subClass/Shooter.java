@@ -13,16 +13,16 @@ public class Shooter {
 
     public void applyState(State state) {
         switch (state.shooterState) {
-            case kshoot:
+            case kShoot:
                 setSpeed(1.0);
                 break;
-            case kintake:
+            case kIntake:
                 setSpeedPercent(Const.shooterIntakeSpeed, -Const.shooterIntakeSpeed);
                 break;
-            case kouttake:
+            case kOuttake:
                 setSpeedPercent(Const.shooterOutTakeSpeed, -Const.shooterOutTakeSpeed);
                 break;
-            case kmanual:
+            case kManual:
                 setSpeedPercent(state.shooterLeftSpeed, state.shooterRightSpeed);
                 break;
             case doNothing:
