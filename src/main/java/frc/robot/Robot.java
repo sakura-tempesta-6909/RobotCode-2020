@@ -261,7 +261,38 @@ public class Robot extends TimedRobot {
         state.armAngle = arm.getArmNow();
 
         //Mode Change
-        state.changeMode(driver, operator);
+        switch (state.controlMode) {
+            case m_Drive:
+                if (operator.getBumper(GenericHID.Hand.kLeft)) {
+                    //O LB ボール発射モードへ切り替え
+                    state.controlMode = State.ControlMode.m_ShootingBall;
+                } else if (driver.getBackButton()) {
+                    //D Back コントロールパネル回転モードへ切り替え
+                    state.controlMode = State.ControlMode.m_PanelRotation;
+                } else if (operator.getBackButton()) {
+                    //O Backクライムモードへ切り替え
+                    state.controlMode = State.ControlMode.m_Climb;
+                }
+                break;
+
+            case m_Climb:
+            case m_ShootingBall:
+                if(driver.getStartButton() || operator.getStartButton()) {
+                    //D or O Start ドライブモードへ
+                    state.controlMode = State.ControlMode.m_Drive;
+                }
+                break;
+            case m_PanelRotation:
+                if(driver.getStartButton() || operator.getStartButton()) {
+                    //D or O Start ドライブモードへ
+                    panelRotationMode.contractServo();
+                    if(colorSensorServo.getAngle()<5){
+                        state.controlMode = State.ControlMode.m_Drive;
+                    }
+                }
+                break;
+        }
+        Util.sendConsole("Mode", state.controlMode.toString());
 
         switch (state.controlMode) {
             case m_Drive:
@@ -374,6 +405,7 @@ public class Robot extends TimedRobot {
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
                 //Arm
+
                 state.armState = State.ArmState.k_PID;
                 state.armSetAngle = Const.armPanelAngle;
 

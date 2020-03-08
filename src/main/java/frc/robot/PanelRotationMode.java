@@ -90,13 +90,7 @@ public class PanelRotationMode {
                 break;
         }
 
-        if(state.armAngle > 0) {
-            //Servo広げる
-            extendServo();
-        } else {
-            contractServo();
-        }
-        System.out.println("servoAngle" + colorSensorServo.getAngle());
+
     }
 
     //DetectedColor(ロボット側のカラーセンサーの目標値　青<->赤、黄<->緑)　で呼び出す
@@ -125,7 +119,7 @@ public class PanelRotationMode {
     }
 
     private void AlignPanelTo(ColorCode c, State state) {
-
+        extendServo();
         if (DetectedColor() == c) {
             state.shooterState = State.ShooterState.kManual;
             state.shooterLeftSpeed = state.shooterRightSpeed = 0;
@@ -140,7 +134,7 @@ public class PanelRotationMode {
         colorSensorServo.setAngle(180);
     }
 
-    private void contractServo() {
+    public void contractServo() {
         colorSensorServo.setAngle(0);
     }
 
