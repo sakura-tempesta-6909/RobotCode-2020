@@ -121,7 +121,8 @@ public class PanelRotationMode {
     private void AlignPanelTo(ColorCode c, State state) {
         extendServo();
 
-        ColorCode sc;
+        ColorCode sc = ColorCode.outOfRange;
+
         if (c == ColorCode.yellow) {
             sc = ColorCode.blue;
         }
