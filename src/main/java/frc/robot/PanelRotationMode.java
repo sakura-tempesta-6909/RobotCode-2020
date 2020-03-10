@@ -43,7 +43,9 @@ public class PanelRotationMode {
             //0.3s経つまで変わらなければ回ってない
             is_panelRotating = false;
             //色が変われば回り始めたかも
-            is_panelRotatingTimerStart = !is_PanelColorHasChanged;
+            if(is_PanelColorHasChanged) {
+                is_panelRotatingTimerStart = false;
+            }
         } else {
             if(is_PanelColorHasChanged) {
                 //0.3s以内に変われば回ってる、タイマーリセット
@@ -63,6 +65,7 @@ public class PanelRotationMode {
 
         switch (state.panelState) {
             case p_ManualRot:
+                state.driveState = State.DriveState.kMiddleLow;
                 state.shooterState = State.ShooterState.kManual;
                 state.shooterLeftSpeed = state.shooterRightSpeed = state.panelManualSpeed;
                 is_panelRotatingTimerStart = false;
@@ -121,9 +124,27 @@ public class PanelRotationMode {
 
     private void AlignPanelTo(ColorCode c, State state) {
         extendServo();
+
+        ColorCode sc = ColorCode.outOfRange;
+        if (c == ColorCode.yellow) {
+            sc = ColorCode.blue;
+        }
+        if(c == ColorCode.red){
+            sc = ColorCode.yellow;
+        }
+        if(c == ColorCode.green){
+            sc = ColorCode.red;
+        }
+        if(c == ColorCode.blue){
+            sc = ColorCode.green;
+        }
+
         if (DetectedColor() == c) {
-            state.shooterState = State.ShooterState.doNothing;
-            state.shooterLeftSpeed = state.shooterRightSpeed = -0.01;
+            state.shooterState = State.ShooterState.kManual;
+            state.shooterLeftSpeed = state.shooterRightSpeed = 0;
+        }else if (DetectedColor() == sc){
+            state.shooterState = State.ShooterState.kManual;
+            state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelSlowAutoSpeed;
         } else {
             state.shooterState = State.ShooterState.kManual;
             state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelAutoSpeed;
@@ -132,11 +153,11 @@ public class PanelRotationMode {
     }
 
     public void extendServo() {
-        colorSensorServo.setAngle(180);
+        colorSensorServo.setAngle(0);
     }
 
     public void contractServo() {
-        colorSensorServo.setAngle(0);
+        colorSensorServo.setAngle(170);
     }
 
     public enum ColorCode {

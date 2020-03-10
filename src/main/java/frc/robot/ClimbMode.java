@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
@@ -26,6 +27,8 @@ public class ClimbMode {
         this.slideTimer = new Timer();
         slideTimer.start();
         this.arm = arm;
+
+        climbMotor.setNeutralMode(NeutralMode.Brake);
     }
 
     public void changeState(State state) {
@@ -33,7 +36,6 @@ public class ClimbMode {
 
         switch (state.climbArmState) {
             case doNothing:
-                setClimbMotorSpeed(0);
                 setSlideMotorSpeed(0);
                 break;
             case climbExtend:
@@ -54,6 +56,7 @@ public class ClimbMode {
 
         switch (state.climbWireState) {
             case doNothing:
+                setClimbMotorSpeed(0);
                 n_extendReverse = 0;
                 is_LockTimerStart = false;
                 break;
@@ -63,7 +66,7 @@ public class ClimbMode {
                     lockTimer.start();
                     is_LockTimerStart = true;
                 }
-                if (lockTimer.get() > 0.4) {
+                if (lockTimer.get() > 0.25) {
                     //実質0.04s
                     if (n_extendReverse > 1) {
                         unlockServo();

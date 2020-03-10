@@ -22,6 +22,8 @@ public class Intake {
             case doNothing:
                 setSpeed(0);
                 break;
+            case kDrive:
+                setSpeed(0.20);
         }
     }
 

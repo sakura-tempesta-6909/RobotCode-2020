@@ -105,9 +105,9 @@ public class Robot extends TimedRobot {
         driver = new XboxController(Const.DriveControllerPort);
 
         //cameraの初期化
-        driveCamera = CameraServer.getInstance();
+        //driveCamera = CameraServer.getInstance();
         armCamera = CameraServer.getInstance();
-        driveCamera.startAutomaticCapture("drive", 1);
+        //driveCamera.startAutomaticCapture("drive", 1);
         armCamera.startAutomaticCapture("arm", 0);
 
         //ドライブモーターの初期化
@@ -208,6 +208,7 @@ public class Robot extends TimedRobot {
         autonomousTimer.reset();
         autonomousTimer.start();
         gameData = DriverStation.getInstance().getGameSpecificMessage();
+        panelRotationMode.contractServo();
     }
 
     @Override
@@ -219,22 +220,19 @@ public class Robot extends TimedRobot {
             case "L":
                 //パワーポートの左にあるとき
                 System.out.println("LLLLLLLLLLLLLLL");
-                break;
 
             default:
                 //パワーポートの目の前にあるとき
-                if (autonomousTimer.get() < 2) {
+                if (autonomousTimer.get() < 3) {
                     state.armState = State.ArmState.k_PID;
-                    state.armSetAngle = Const.armShootInitiationAngle;
-                } else if (autonomousTimer.get() < 4) {
+                    state.armSetAngle = 36.5;
+                } else if (autonomousTimer.get() < 6) {
                     state.armState = State.ArmState.k_Conserve;
                     state.shooterState = State.ShooterState.kShoot;
                     state.intakeBeltState = State.IntakeBeltState.kOuttake;
-                } else if (autonomousTimer.get() < 6) {
-                    state.armState = State.ArmState.k_Basic;
+                } else if (autonomousTimer.get() < 9) {
                     state.driveStraightSpeed = -0.6;
                 } else if(autonomousTimer.get() <= 15) {
-                    state.armState = State.ArmState.k_Basic;
                 }
                 break;
         }
@@ -288,6 +286,7 @@ public class Robot extends TimedRobot {
                 if(driver.getStartButton() || operator.getStartButton()) {
                     //D or O Start ドライブモードへ
                     state.controlMode = State.ControlMode.m_Drive;
+                    state.climbWireState = State.ClimbWireState.climbLock;
                 }
                 break;
             case m_PanelRotation:
@@ -322,6 +321,8 @@ public class Robot extends TimedRobot {
                 state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
+                state.intakeState = State.IntakeState.kDrive;
+
                 if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
                     //D LT ボールを取り込む
                     state.intakeState = State.IntakeState.kIntake;
@@ -336,6 +337,7 @@ public class Robot extends TimedRobot {
                     //D RB アームを平行（パネルくぐり）
                     state.armState = State.ArmState.k_PID;
                     state.armSetAngle = Const.armParallelAngle;
+                    state.intakeState = State.IntakeState.doNothing;
                 }
                 break;
 

@@ -105,7 +105,8 @@ public class State {
     public enum IntakeState {
         kIntake,
         kOuttake,
-        doNothing
+        doNothing,
+        kDrive
     }
 
     public enum IntakeBeltState {

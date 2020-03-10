@@ -65,15 +65,15 @@ public class Const {
 
     //ARM
     //定速で回すとき
-    public static final double ArmLowDownSpeed = -0.05;
-    public static final double ArmHighDownSpeed = -0.2;
-    public static final double ArmBasicUpSpeed = 0.4;
+    public static final double ArmLowDownSpeed = -0.08;//0.05
+    public static final double ArmHighDownSpeed = -0.17;//0.2
+    public static final double ArmBasicUpSpeed = 0.25;//0.4
     public static final double ArmDownBorderAngle = -5;
     //アームの可動域(角度と抵抗の値)
     public static final double armMaxAngle = 80;
     public static final double armMinAngle = -30;
-    public static final double armMaxPoint = 506;//500
-    public static final double armMinPoint = 165;//170
+    public static final double armMaxPoint = 506;
+    public static final double armMinPoint = 165;
     //for Calculating Offset
     public static final double armAngleDifference = armMaxAngle - armMinAngle;
     public static final double armPointDifference = armMaxPoint - armMinPoint;
@@ -83,10 +83,10 @@ public class Const {
     public static final int kArmPIDLoopIdx = 0;
 
     //目標角度
-    public static final double armShootBelowPoint = armMinPoint + 327;
+    public static final double armShootBelowPoint = armMinPoint + 330;
     public static final double armShootBelowAngle = (armShootBelowPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
     public static final double armParallelAngle = 0;
-    public static final double armPanelPoint = armMinPoint + 186;
+    public static final double armPanelPoint = armMinPoint + 188;
     public static final double armPanelAngle = (armPanelPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
     public static final double armShootInitiationPoint = armMinPoint + 203;
     public static final double armShootInitiationAngle = (armShootInitiationPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
@@ -95,8 +95,5 @@ public class Const {
     //PANEL
     public static final double shooterPanelManualSpeed = 0.10;
     public static final double shooterPanelAutoSpeed = 0.03;
-
-
-
-
+    public static final double shooterPanelSlowAutoSpeed = 0.015;
 }
