@@ -43,13 +43,10 @@ public class PanelRotationMode {
             //0.3s経つまで変わらなければ回ってない
             is_panelRotating = false;
             //色が変われば回り始めたかも
-            if(is_PanelColorHasChanged) {
-                is_panelRotatingTimerStart = false;
-            }
+            is_panelRotatingTimerStart = !is_PanelColorHasChanged;
         } else {
             if(is_PanelColorHasChanged) {
                 //0.3s以内に変われば回ってる、タイマーリセット
-                System.out.println("ColorChange!");
                 is_panelRotating = true;
                 is_panelRotatingTimerStart = false;
             }
@@ -65,7 +62,6 @@ public class PanelRotationMode {
 
         switch (state.panelState) {
             case p_ManualRot:
-                state.driveState = State.DriveState.kMiddleLow;
                 state.shooterState = State.ShooterState.kManual;
                 state.shooterLeftSpeed = state.shooterRightSpeed = state.panelManualSpeed;
                 is_panelRotatingTimerStart = false;
@@ -104,7 +100,7 @@ public class PanelRotationMode {
         double r = detectedColor.red;
         double g = detectedColor.green;
         double b = detectedColor.blue;
-        if (p < 60) {
+        if (p < 80) {
             return ColorCode.outOfRange;
         }
         if ((0.2 <= r && r < 0.4) && (0.45 <= g) && (b < 0.2)) {
@@ -125,7 +121,7 @@ public class PanelRotationMode {
     private void AlignPanelTo(ColorCode c, State state) {
         extendServo();
 
-        ColorCode sc = ColorCode.outOfRange;
+        ColorCode sc;
         if (c == ColorCode.yellow) {
             sc = ColorCode.blue;
         }
@@ -153,11 +149,11 @@ public class PanelRotationMode {
     }
 
     public void extendServo() {
-        colorSensorServo.setAngle(0);
+        colorSensorServo.setAngle(180);
     }
 
     public void contractServo() {
-        colorSensorServo.setAngle(170);
+        colorSensorServo.setAngle(0);
     }
 
     public enum ColorCode {
