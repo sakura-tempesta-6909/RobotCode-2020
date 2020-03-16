@@ -1,8 +1,5 @@
 package frc.robot.subClass;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-
 public class State {
 
     //速度
