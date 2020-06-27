@@ -1,72 +1,22 @@
 <?php
-$line=array(
-    'accessToken' => 'ypEkWW8dBr9U8gvlpL70XxNRQ7eT6bYWq32LH9AiEym6nAALjQw4J4JPrIx/d/X36Cr43odfxsHJZ1W/NCEeLHzADWp05cQzcuV13JgzT3XLJToLE2hvU+Yea+B21+Lozx8k2VN1Ry5sgHHNwEejZQdB04t89/1O/w1cDnyilFU=',
-    'channelSecret' => 'd014d0127d2426dbbacd4065a35b80bc'
-);
+    // Composerでインストールしたライブラリを一括読み込み
+    require_once __DIR__ . '/vendor/autoload.php';
 
-$request = file_get_contents("php://input");
-$json = json_decode($request,true);
+    // アクセストークンを使いCurlHTTPClientをインスタンス化
+    $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('ypEkWW8dBr9U8gvlpL70XxNRQ7eT6bYWq32LH9AiEym6nAALjQw4J4JPrIx/d/X36Cr43odfxsHJZ1W/NCEeLHzADWp05cQzcuV13JgzT3XLJToLE2hvU+Yea+B21+Lozx8k2VN1Ry5sgHHNwEejZQdB04t89/1O/w1cDnyilFU=');
 
-//SIGNATURE CHECK
-$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
-if($signature!==base64_encode(hash_hmac('sha256',$request,$line['channelSecret'],true))){
-    error_log('Signature check failed');
-    http_response_code(400);
-    exit(0);
-}
-//PASSED!
-$image_base="https://chart.apis.google.com/chart?cht=tx&chs=50&chl=";
+    //CurlHTTPClientとシークレットを使いLINEBotをインスタンス化
+    $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => 'd014d0127d2426dbbacd4065a35b80bc']);
 
-foreach($json['events'] as $e){
-    $tex = '';
-    switch($e['type']){
-        case 'message':
-        if($e['message']['type'] === 'text'){
-            switch($e['source']['type']){
-                case 'user':
-                $tex = $e['message']['text'];
-                break;
-                case 'room':    //「招待」を使ったトーク
-                case 'group':   //グループを作成したトーク
-                if(stripos($e['message']['text'],'t:') === 0){
-                    $tex = substr($e['message']['text'],2);
-                }
-                break;
-            }
-        }
-        break;
-    }
+    // LINE Messaging APIがリクエストに付与した署名を取得
+    $signature = $_SERVER["HTTP_" . \LINE\LINEBot\Constant\HTTPHeader::LINE_SIGNATURE];
 
-    $header = array(
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $line['accessToken']
-    );
+    //署名をチェックし、正当であればリクエストをパースし配列へ、不正であれば例外処理
+    $events = $bot->parseEventRequest(file_get_contents('php://input'), $signature);
 
-    //SEND IT!
-    if($tex !== ''){
-        $url = $image_base . urlencode('\displaystyle '.$tex);
-        $body = array(
-            'replyToken' => $e['replyToken'],
-            'messages' => array(
-                array(
-                    'type' => 'image',
-                    'originalContentUrl' => $url,
-                    'previewImageUrl' => $url
-                )
-            )
+    foreach ($events as $event) {
+        // メッセージを返信
+        $response = $bot->replyMessage(
+            $event->getReplyToken(), new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($event->getText())  
         );
-        $context = stream_context_create(array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => implode("\r\n",$header),
-                'content' => json_encode($body)
-            )
-        ));
-
-        $result = file_get_contents("https://api.line.me/v2/bot/message/reply",false,$context);
-         if (strpos($http_response_header[0], '200') === false) {
-            http_response_code(500);
-            error_log("Request failed: " . $result);
-        }
     }
-}
