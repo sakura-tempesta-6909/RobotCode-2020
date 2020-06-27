@@ -1,4 +1,8 @@
 <?php
+    
+http_response_code(200) ;
+    echo '200 {}';
+    
 $line=array(
     'accessToken' => 'ypEkWW8dBr9U8gvlpL70XxNRQ7eT6bYWq32LH9AiEym6nAALjQw4J4JPrIx/d/X36Cr43odfxsHJZ1W/NCEeLHzADWp05cQzcuV13JgzT3XLJToLE2hvU+Yea+B21+Lozx8k2VN1Ry5sgHHNwEejZQdB04t89/1O/w1cDnyilFU=',
     'channelSecret' => 'd014d0127d2426dbbacd4065a35b80bc'
@@ -72,4 +76,3 @@ foreach($json['events'] as $e){
     
 }
 
-echo $httpStatus . ' ' . $body;
