@@ -1,7 +1,7 @@
 <?php
     
-http_response_code(200) ;
-    echo '200 {}';
+http_response_code(200);
+echo '200 {}';
     
 $line=array(
     'accessToken' => 'ypEkWW8dBr9U8gvlpL70XxNRQ7eT6bYWq32LH9AiEym6nAALjQw4J4JPrIx/d/X36Cr43odfxsHJZ1W/NCEeLHzADWp05cQzcuV13JgzT3XLJToLE2hvU+Yea+B21+Lozx8k2VN1Ry5sgHHNwEejZQdB04t89/1O/w1cDnyilFU=',
@@ -15,7 +15,7 @@ $json = json_decode($request,true);
 $signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
 if($signature!==base64_encode(hash_hmac('sha256',$request,$line['channelSecret'],true))){
     error_log('Signature check failed');
-    http_response_code(400);
+    //http_response_code(400);
     exit(0);
 }
 //PASSED!
@@ -69,7 +69,7 @@ foreach($json['events'] as $e){
 
         $result = file_get_contents("https://api.line.me/v2/bot/message/reply",false,$context);
          if (strpos($http_response_header[0], '200') === false) {
-            http_response_code(500);
+            //http_response_code(500);
             error_log("Request failed: " . $result);
         }
     }
