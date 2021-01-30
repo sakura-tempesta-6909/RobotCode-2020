@@ -268,6 +268,9 @@ public class Robot extends TimedRobot {
         state.stateInit();
         state.armAngle = arm.getArmNow();
 
+        state.shooterLeftMotorSpeed = shooterLeftMotor.getSelectedSensorVelocity();
+        state.shooterRightMotorSpeed = shooterRightMotor.getSelectedSensorVelocity();
+
         //Mode Change
         switch (state.controlMode) {
             case m_Drive:
@@ -321,7 +324,6 @@ public class Robot extends TimedRobot {
                     state.driveState = State.DriveState.kManual;
                 }
 
-                state.driveState = State.DriveState.kLow;
                 state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
@@ -352,8 +354,6 @@ public class Robot extends TimedRobot {
                 state.driveState = State.DriveState.kLow;
                 state.driveStraightSpeed = -driver.getY(GenericHID.Hand.kLeft);
                 state.driveRotateSpeed = driver.getX(GenericHID.Hand.kRight);
-                state.shooterMotorSpeed = shooter.getMotorSpeed();
-                System.out.println("Speed:" + state.shooterMotorSpeed);
                 if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT ボールを飛ばす
                     state.shooterState = State.ShooterState.kShoot;

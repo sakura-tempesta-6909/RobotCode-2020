@@ -3,43 +3,36 @@ package frc.robot.subClass;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
 
 public class IntakeBelt {
 
     private VictorSPX intakeBeltFront, intakeBeltBack;
     private DigitalInput intakeFrontSensor, intakeBackSensor;
     private boolean is_preBallFront, ballGet;
-    //Shootの加速不足解消
-    private Timer timer;
-    private boolean is_TimerStart;
 
     public IntakeBelt(VictorSPX intakeBeltFront, VictorSPX intakeBeltBack, DigitalInput intakeFrontSensor, DigitalInput intakeBack) {
         this.intakeBeltFront = intakeBeltFront;
         this.intakeBeltBack = intakeBeltBack;
         this.intakeFrontSensor = intakeFrontSensor;
         this.intakeBackSensor = intakeBack;
-        timer = new Timer();
     }
 
     public void applyState(State state) {
 
         switch (state.intakeBeltState) {
             case kIntake:
-                is_TimerStart = false;
                 intake(state);
                 break;
             case kOuttake:
-                //if(!is_TimerStart) {timer.reset(); timer.start(); is_TimerStart = true;}
-                //if(timer.get() > 0.2) {
-                if (state.shooterMotorSpeed == 0.7) {
+                System.out.println("leftSpeedaaa" + state.shooterLeftMotorSpeed);
+                System.out.println("RightSpeedaaa" + state.shooterRightMotorSpeed);
+                if (state.shooterLeftMotorSpeed < -100000 && state.shooterRightMotorSpeed > 100000) {
                     outtake();
                 } else {
                     setSpeed(0, 0);
                 }
                 break;
             case doNothing:
-                is_TimerStart = false;
                 setSpeed(0, 0);
                 break;
         }
