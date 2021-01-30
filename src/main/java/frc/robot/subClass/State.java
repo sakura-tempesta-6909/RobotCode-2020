@@ -2,24 +2,38 @@ package frc.robot.subClass;
 
 public class State {
 
-
-    public double driveStraightSpeed, driveRotateSpeed;  //Driveの速度;
-    public double shooterLeftSpeed, shooterRightSpeed, shooterPIDSpeed;
-    public double hangingMotorSpeed;
-    public double canonMotorSpeed;
-    public double hangingServoAngle;
-    public double climbSlideMotorSpeed;
+    //速度
+    //Drive
+    public double driveStraightSpeed, driveRotateSpeed;
+    //Shooter
+    public double shooterLeftSpeed, shooterRightSpeed;
+    public double shooterPIDSpeed;
     public double panelManualSpeed;
-    public double shooterAngle;
+    //Arm
     public double armMotorSpeed;
+    //Climb
+    public double climbSlideMotorSpeed;
+    public double climbExtendAdjustSpeed;
+
+    //Arm Angle
+    public double armAngle;
+    public double armSetAngle;
+
+    //SubClass State
+    public DriveState driveState;
+    public ArmState armState;
     public ShooterState shooterState;
     public IntakeState intakeState;
     public IntakeBeltState intakeBeltState;
-    public DriveState driveState;
-    public ClimbState climbState;
-    public ArmState armState;
-    public ControlState controlState;
+    public ClimbArmState climbArmState;
+    public ClimbWireState climbWireState;
     public PanelState panelState;
+
+    //Control Mode
+    public ControlMode controlMode = ControlMode.m_Drive;
+
+    //ボールを5個ゲットしたか
+    public boolean is_IntakeFull;
 
     public State() {
         stateInit();
@@ -27,8 +41,9 @@ public class State {
 
     public void stateInit() {
 
-        //DriveのStateを初期化
+        //Drive
         driveState = DriveState.kManual;
+        driveStraightSpeed = 0;
         driveRotateSpeed = 0;
 
         //Shooter
@@ -39,99 +54,85 @@ public class State {
 
         //Intake
         intakeState = IntakeState.doNothing;
+        is_IntakeFull = false;
 
         //IntakeBeltState
         intakeBeltState = IntakeBeltState.doNothing;
 
         //Climb
-        climbState = ClimbState.doNothing;
-        hangingMotorSpeed = 0;
-        canonMotorSpeed = 0;
-        hangingServoAngle = 0;
+        climbArmState = ClimbArmState.doNothing;
+        climbWireState = ClimbWireState.doNothing;
         climbSlideMotorSpeed = 0;
+        climbExtendAdjustSpeed = 0;
 
         //Arm
         armState = ArmState.k_Basic;
         armMotorSpeed = 0;
+        armSetAngle = Const.armMinAngle;
+        armAngle = 0;
 
+        //panel
         panelState = PanelState.p_DoNothing;
-        //ContloalMode
-
-        controlState = ControlState.m_Drive;
-
-        shooterAngle = 0;
-
-
+        panelManualSpeed = 0;
     }
 
-    public void changeState() {
-
-        //DriveのStateを初期化
-        driveState = DriveState.kManual;
-        driveRotateSpeed = 0;
-
-        //Shooter
-        shooterState = ShooterState.doNothing;
-        shooterLeftSpeed = 0;
-        shooterRightSpeed = 0;
-        shooterPIDSpeed = 0;
-
-        //Intake
-        intakeState = IntakeState.doNothing;
-
-        //IntakeBeltState
-        intakeBeltState = IntakeBeltState.doNothing;
-        //Climb
-        climbState = ClimbState.doNothing;
-        hangingMotorSpeed = 0;
-        canonMotorSpeed = 0;
-        hangingServoAngle = 0;
-        climbSlideMotorSpeed = 0;
-        armState = ArmState.k_Aaiming;
-        panelState = PanelState.p_DoNothing;
-
-
+    public enum ControlMode {
+        m_ShootingBall,
+        m_PanelRotation,
+        m_Climb,
+        m_Drive
     }
-    public enum ControlState {
-        m_ShootingBall, m_PanelRotation, m_Climb, m_Drive
 
-    }
     public enum DriveState {
         kManual,
         kLow,
-        kdoNothing
+        kSuperLow,
+        kStop,
+        kMiddleLow
     }
+
     public enum ShooterState {
-        kshoot,
-        kintake,
-        kmanual,
+        kShoot,
+        kIntake,
+        kManual,
         doNothing,
-        kouttake
+        kOuttake
     }
+
     public enum IntakeState {
         kIntake,
-        kouttake,
-        doNothing
+        kOuttake,
+        doNothing,
+        kDrive
     }
+
     public enum IntakeBeltState {
         kIntake,
-        kouttake,
+        kOuttake,
         doNothing
     }
 
-    public enum ClimbState {
+    public enum ClimbArmState {
         doNothing,
         climbExtend,
         climbShrink,
-        climbLock,
-        climbRightSlide,
-        climbLeftSlide
+        climbSlide
+    }
+
+    public enum ClimbWireState {
+        doNothing,
+        climbMotorOnlyExtend,
+        climbMotorOnlyShrink,
+        climbLock
     }
 
     public enum ArmState {
-        k_Basic,           //基本状態（最も下を向いている）
-        k_Aaiming,         //砲台の照準を合わせている状態
-        k_Maxup            //最も上を向いている状態
+        k_Conserve,
+        k_Adjust,
+        k_PID,
+        k_Basic,
+        k_Manual,
+        k_DoNothing
     }
 
     public enum PanelState {

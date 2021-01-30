@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.ejml:ejml-zdense:0.38">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../Public/wpilib/2020/maven/org/ejml/ejml-zdense/0.38/ejml-zdense-0.38.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../Public/wpilib/2020/maven/org/ejml/ejml-zdense/0.38/ejml-zdense-0.38-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
