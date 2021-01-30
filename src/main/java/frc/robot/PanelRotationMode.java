@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.subClass.*;
+import frc.robot.subClass.Const;
+import frc.robot.subClass.State;
 
 public class PanelRotationMode {
 
@@ -24,7 +25,7 @@ public class PanelRotationMode {
     boolean is_PanelColorHasChanged;
 
     PanelRotationMode(Servo servo) {
-        this.colorSensorServo= servo;
+        this.colorSensorServo = servo;
     }
 
     public void changeState(State state) {
@@ -33,19 +34,19 @@ public class PanelRotationMode {
         preColor = DetectedColor();
         System.out.println("PanelColor:" + preColor);
 
-        if(!is_panelRotatingTimerStart) {
+        if (!is_panelRotatingTimerStart) {
             panelRotatingTimer.reset();
             panelRotatingTimer.start();
             is_panelRotatingTimerStart = true;
         }
 
-        if(panelRotatingTimer.get() > 0.3) {
+        if (panelRotatingTimer.get() > 0.3) {
             //0.3s経つまで変わらなければ回ってない
             is_panelRotating = false;
             //色が変われば回り始めたかも
             is_panelRotatingTimerStart = !is_PanelColorHasChanged;
         } else {
-            if(is_PanelColorHasChanged) {
+            if (is_PanelColorHasChanged) {
                 //0.3s以内に変われば回ってる、タイマーリセット
                 is_panelRotating = true;
                 is_panelRotatingTimerStart = false;
@@ -53,7 +54,7 @@ public class PanelRotationMode {
             //0.3s以内に変わらないなら回っているかどうかわからないので放置
         }
 
-        if(is_panelRotating) {
+        if (is_panelRotating) {
             state.driveState = State.DriveState.kSuperLow;
             System.out.println("panelRotating!");
         } else {
@@ -126,20 +127,20 @@ public class PanelRotationMode {
         if (c == ColorCode.yellow) {
             sc = ColorCode.blue;
         }
-        if(c == ColorCode.red){
+        if (c == ColorCode.red) {
             sc = ColorCode.yellow;
         }
-        if(c == ColorCode.green){
+        if (c == ColorCode.green) {
             sc = ColorCode.red;
         }
-        if(c == ColorCode.blue){
+        if (c == ColorCode.blue) {
             sc = ColorCode.green;
         }
 
         if (DetectedColor() == c) {
             state.shooterState = State.ShooterState.kManual;
             state.shooterLeftSpeed = state.shooterRightSpeed = 0;
-        }else if (DetectedColor() == sc){
+        } else if (DetectedColor() == sc) {
             state.shooterState = State.ShooterState.kManual;
             state.shooterLeftSpeed = state.shooterRightSpeed = Const.shooterPanelSlowAutoSpeed;
         } else {

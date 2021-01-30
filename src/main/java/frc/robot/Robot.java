@@ -1,6 +1,9 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -145,7 +148,6 @@ public class Robot extends TimedRobot {
 
         shooterLeftMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.MaxIntegralAccumulator);
         shooterRightMotor.configMaxIntegralAccumulator(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.MaxIntegralAccumulator);
-
         shooterRightMotor.setSensorPhase(true);
         shooterLeftMotor.setSensorPhase(true);
 
@@ -232,7 +234,7 @@ public class Robot extends TimedRobot {
                     state.intakeBeltState = State.IntakeBeltState.kOuttake;
                 } else if (autonomousTimer.get() < 9) {
                     state.driveStraightSpeed = -0.6;
-                } else if(autonomousTimer.get() <= 15) {
+                } else if (autonomousTimer.get() <= 15) {
                 }
                 break;
         }
@@ -251,7 +253,7 @@ public class Robot extends TimedRobot {
 
     }
 
-    public  void  teleopInit() {
+    public void teleopInit() {
         state.controlMode = State.ControlMode.m_Drive;
         panelRotationMode.contractServo();
     }
@@ -283,23 +285,23 @@ public class Robot extends TimedRobot {
 
             case m_Climb:
             case m_ShootingBall:
-                if(driver.getStartButton() || operator.getStartButton()) {
+                if (driver.getStartButton() || operator.getStartButton()) {
                     //D or O Start ドライブモードへ
                     state.controlMode = State.ControlMode.m_Drive;
                     state.climbWireState = State.ClimbWireState.climbLock;
                 }
                 break;
             case m_PanelRotation:
-                if(driver.getStartButton() || operator.getStartButton()) {
+                if (driver.getStartButton() || operator.getStartButton()) {
                     //D or O Start ドライブモードへ
                     panelRotationMode.contractServo();
-                    if(!servoTimerStarted){
+                    if (!servoTimerStarted) {
                         servoTimer.reset();
                         servoTimer.start();
                         servoTimerStarted = true;
                     }
                     System.out.println(colorSensorServo.getAngle());
-                    if(servoTimer.get() > 1){
+                    if (servoTimer.get() > 1) {
                         state.controlMode = State.ControlMode.m_Drive;
                         servoTimerStarted = false;
                     }
@@ -312,12 +314,14 @@ public class Robot extends TimedRobot {
         switch (state.controlMode) {
             case m_Drive:
                 //ほかに関係なくドライブ
-                if(driver.getBumper(GenericHID.Hand.kLeft)) {
+                if (driver.getBumper(GenericHID.Hand.kLeft)) {
                     //D LBで低速モード
                     state.driveState = State.DriveState.kLow;
                 } else {
                     state.driveState = State.DriveState.kManual;
                 }
+
+                state.driveState = State.DriveState.kLow;
                 state.driveStraightSpeed = Util.deadbandProcessing(-driver.getY(GenericHID.Hand.kLeft));
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
@@ -344,12 +348,12 @@ public class Robot extends TimedRobot {
             case m_ShootingBall:
                 //Armは調整しない限り動かない
                 state.armState = State.ArmState.k_Conserve;
-
                 //D Stick ドライブを少し動かす
                 state.driveState = State.DriveState.kLow;
                 state.driveStraightSpeed = -driver.getY(GenericHID.Hand.kLeft);
                 state.driveRotateSpeed = driver.getX(GenericHID.Hand.kRight);
-
+                state.shooterMotorSpeed = shooter.getMotorSpeed();
+                System.out.println("Speed:" + state.shooterMotorSpeed);
                 if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT ボールを飛ばす
                     state.shooterState = State.ShooterState.kShoot;
@@ -358,11 +362,11 @@ public class Robot extends TimedRobot {
                     //O LT 砲台の角度をゴールへ調節する(真下にある時、上へ)
                     state.armState = State.ArmState.k_PID;
                     state.armSetAngle = Const.armShootBelowAngle;
-                } else if(operator.getYButton()) {
+                } else if (operator.getYButton()) {
                     //O Y（仮）　砲台の角度調節（InitialLineにあるとき）
                     state.armState = State.ArmState.k_PID;
                     state.armSetAngle = Const.armShootInitiationAngle;
-                } else if(operator.getAButton()) {
+                } else if (operator.getAButton()) {
                     //O A（仮）　砲台の角度調節（真下にある時、下へ）
                     state.armState = State.ArmState.k_PID;
                     state.armSetAngle = Const.armParallelAngle;
@@ -391,14 +395,14 @@ public class Robot extends TimedRobot {
                 } else if (operator.getBButton()) {
                     //O B クライムする
                     state.climbArmState = State.ClimbArmState.climbShrink;
-                } else if(Util.deadbandCheck(operator.getX(GenericHID.Hand.kRight))) {
+                } else if (Util.deadbandCheck(operator.getX(GenericHID.Hand.kRight))) {
                     //O RStick X スライド
-                    state.climbArmState =  State.ClimbArmState.climbSlide;
-                    if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
+                    state.climbArmState = State.ClimbArmState.climbSlide;
+                    if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))) {
                         //O LT 高出力でスライド
                         state.climbSlideMotorSpeed = -operator.getX(GenericHID.Hand.kLeft);
                         System.out.println("Highhhhhhhhhhhhhhhhhhhhhhhh");
-                    }else {
+                    } else {
                         //1/2の出力でスライド
                         state.climbSlideMotorSpeed = operator.getX(GenericHID.Hand.kRight) / 2;
                     }
@@ -409,7 +413,7 @@ public class Robot extends TimedRobot {
                 } else if (operator.getBumper(GenericHID.Hand.kLeft)) {
                     //O LB Climb　Motorだけ伸ばす
                     state.climbWireState = State.ClimbWireState.climbMotorOnlyExtend;
-                } else if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
+                } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT ロックする
                     state.climbWireState = State.ClimbWireState.climbLock;
                 }
@@ -423,30 +427,30 @@ public class Robot extends TimedRobot {
                 state.driveRotateSpeed = Util.deadbandProcessing(driver.getX(GenericHID.Hand.kRight));
 
                 //Arm
-                    state.armState = State.ArmState.k_PID;
-                    state.armSetAngle = Const.armPanelAngle;
+                state.armState = State.ArmState.k_PID;
+                state.armSetAngle = Const.armPanelAngle;
 
-                    if (driver.getXButton()) {
-                        //D X 青に合わせる
-                        state.panelState = State.PanelState.p_toBlue;
-                    } else if (driver.getYButton()) {
-                        //D Y 黄に合わせる
-                        state.panelState = State.PanelState.p_toYellow;
-                    } else if (driver.getBButton()) {
-                        //D B 赤に合わせる
-                        state.panelState = State.PanelState.p_toRed;
-                    } else if (driver.getAButton()) {
-                        //D A 緑に合わせる
-                        state.panelState = State.PanelState.p_toGreen;
-                    } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
-                        //D LT 手動左回転
-                        state.panelState = State.PanelState.p_ManualRot;
-                        state.panelManualSpeed = -Const.shooterPanelManualSpeed;
-                    } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
-                        //D RT 手動右回転
-                        state.panelState = State.PanelState.p_ManualRot;
-                        state.panelManualSpeed = Const.shooterPanelManualSpeed;
-                    }
+                if (driver.getXButton()) {
+                    //D X 青に合わせる
+                    state.panelState = State.PanelState.p_toBlue;
+                } else if (driver.getYButton()) {
+                    //D Y 黄に合わせる
+                    state.panelState = State.PanelState.p_toYellow;
+                } else if (driver.getBButton()) {
+                    //D B 赤に合わせる
+                    state.panelState = State.PanelState.p_toRed;
+                } else if (driver.getAButton()) {
+                    //D A 緑に合わせる
+                    state.panelState = State.PanelState.p_toGreen;
+                } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kLeft))) {
+                    //D LT 手動左回転
+                    state.panelState = State.PanelState.p_ManualRot;
+                    state.panelManualSpeed = -Const.shooterPanelManualSpeed;
+                } else if (Util.deadbandCheck(driver.getTriggerAxis(GenericHID.Hand.kRight))) {
+                    //D RT 手動右回転
+                    state.panelState = State.PanelState.p_ManualRot;
+                    state.panelManualSpeed = Const.shooterPanelManualSpeed;
+                }
                 panelRotationMode.changeState(state);
                 break;
         }

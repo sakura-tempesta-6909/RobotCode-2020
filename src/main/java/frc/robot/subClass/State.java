@@ -9,6 +9,7 @@ public class State {
     public double shooterLeftSpeed, shooterRightSpeed;
     public double shooterPIDSpeed;
     public double panelManualSpeed;
+    public double shooterMotorSpeed;
     //Arm
     public double armMotorSpeed;
     //Climb
@@ -51,6 +52,7 @@ public class State {
         shooterLeftSpeed = 0;
         shooterRightSpeed = 0;
         shooterPIDSpeed = 0;
+        shooterMotorSpeed = 0;
 
         //Intake
         intakeState = IntakeState.doNothing;

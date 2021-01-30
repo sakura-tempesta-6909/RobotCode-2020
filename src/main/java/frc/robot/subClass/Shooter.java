@@ -14,7 +14,7 @@ public class Shooter {
     public void applyState(State state) {
         switch (state.shooterState) {
             case kShoot:
-                setSpeed(-1.0, 1.0);
+                setSpeed(-0.5, 0.5);
                 break;
             case kIntake:
                 setSpeedPercent(Const.shooterIntakeSpeed, -Const.shooterIntakeSpeed);
@@ -44,5 +44,18 @@ public class Shooter {
         //Rは正で出す
         shooterLeft.set(ControlMode.PercentOutput, speedPercentLeft);
         shooterRight.set(ControlMode.PercentOutput, speedPercentRight);
+
+    }
+
+    public double getMotorSpeed() {
+        return shooterLeft.getSensorCollection().getAnalogInRaw() / 1023.0;
+    }
+
+    public double getMotorSpeed(boolean getRight) {
+        if (getRight) {
+            return shooterRight.getSensorCollection().getAnalogInRaw() / 1023.0;
+        } else {
+            return shooterLeft.getSensorCollection().getAnalogInRaw() / 1023.0;
+        }
     }
 }

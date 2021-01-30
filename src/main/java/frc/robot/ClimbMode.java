@@ -5,7 +5,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.subClass.*;
+import frc.robot.subClass.Arm;
+import frc.robot.subClass.Const;
+import frc.robot.subClass.State;
 
 public class ClimbMode {
     Arm arm;
@@ -95,10 +97,10 @@ public class ClimbMode {
     private void climbArmUp(State state) {
         double armAngle = state.armAngle;
 
-        if(armAngle < 0) {
+        if (armAngle < 0) {
             state.armState = State.ArmState.k_PID;
             state.armSetAngle = 15;
-        }else {
+        } else {
             // Arｍ機構と合うようにスピードを調整
             state.armState = State.ArmState.k_Adjust;
             state.armMotorSpeed = arm.SetFeedForward(armAngle) + Const.climbArmExtendSpeed + state.climbExtendAdjustSpeed;
@@ -129,10 +131,10 @@ public class ClimbMode {
 
     // クライムを縮める
     private void climbShrink(State state) {
-            lockServo();
-            //Armの角度変更
-            state.armState = State.ArmState.k_DoNothing;
-            setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
+        lockServo();
+        //Armの角度変更
+        state.armState = State.ArmState.k_DoNothing;
+        setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
     }
 
     // クライムをアンロックする
@@ -147,11 +149,11 @@ public class ClimbMode {
 
 
     private void setSlideMotorSpeed(double speed) {
-        if(slideMotor.getStatorCurrent() > 30) {
+        if (slideMotor.getStatorCurrent() > 30) {
             slideTimer.reset();
             slideTimer.start();
         }
-        if(slideTimer.get() < 0.3) {
+        if (slideTimer.get() < 0.3) {
             //クールダウン
             speed = 0;
         }

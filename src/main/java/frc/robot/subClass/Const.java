@@ -41,7 +41,7 @@ public class Const {
     public static final int kSlotIdx = 0;
     public static final int kPIDLoopIdx = 0;
     public static final int kTimeoutMs = 30;
-    public final static Gains kGains_ShooterVelocity = new Gains(0.01, 0.00005, 0, 0, 300, 1.00, 1023/0.00005);
+    public final static Gains kGains_ShooterVelocity = new Gains(0.01, 0.00005, 0, 0, 300, 1.00, 1023 / 0.00005);
     //In&Outtake
     public final static double shooterIntakeSpeed = 0.165;
     public final static double shooterOutTakeSpeed = -0.2;

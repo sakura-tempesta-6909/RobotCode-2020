@@ -30,11 +30,12 @@ public class IntakeBelt {
                 intake(state);
                 break;
             case kOuttake:
-                if(!is_TimerStart) {timer.reset(); timer.start(); is_TimerStart = true;}
-                if(timer.get() > 0.2) {
+                //if(!is_TimerStart) {timer.reset(); timer.start(); is_TimerStart = true;}
+                //if(timer.get() > 0.2) {
+                if (state.shooterMotorSpeed == 0.7) {
                     outtake();
                 } else {
-                    setSpeed(0,0);
+                    setSpeed(0, 0);
                 }
                 break;
             case doNothing:
