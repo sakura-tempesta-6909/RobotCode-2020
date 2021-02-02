@@ -45,10 +45,6 @@ public class ClimbMode {
                 climbArmUp(state);
                 break;
 
-            case climbShrink:
-                climbShrink(state);
-                break;
-
             case climbSlide:
                 //-で右 +で左
                 lockServo();
@@ -87,6 +83,9 @@ public class ClimbMode {
                 unlockServo();
                 setClimbMotorSpeed(-0.5);
                 break;
+            
+            case climbShrink:
+                climbShrink();
 
             case climbLock:
                 lockServo();
@@ -130,10 +129,8 @@ public class ClimbMode {
     }
 
     // クライムを縮める
-    private void climbShrink(State state) {
+    private void climbShrink() {
         lockServo();
-        //Armの角度変更
-        state.armState = State.ArmState.k_DoNothing;
         setClimbMotorSpeed(Const.climbMotorShrinkSpeed);
     }
 
