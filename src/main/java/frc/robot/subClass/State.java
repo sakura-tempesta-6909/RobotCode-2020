@@ -118,6 +118,7 @@ public class State {
     public enum ClimbArmState {
         doNothing,
         climbExtend,
+        climbShrink,
         climbSlide
     }
 
@@ -125,8 +126,7 @@ public class State {
         doNothing,
         climbMotorOnlyExtend,
         climbMotorOnlyShrink,
-        climbLock,
-        climbShrink
+        climbLock
     }
 
     public enum ArmState {

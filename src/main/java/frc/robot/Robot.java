@@ -393,8 +393,8 @@ public class Robot extends TimedRobot {
                     state.climbArmState = State.ClimbArmState.climbExtend;
                     state.climbExtendAdjustSpeed = -operator.getY(GenericHID.Hand.kLeft) / 3.5;
                 } else if (operator.getBButton()) {
-                    //O B クライムする(最大出力)
-                    state.climbWireState = State.ClimbWireState.climbShrink;
+                    //O B クライムする
+                    state.climbArmState = State.ClimbArmState.climbShrink;
                 } else if (Util.deadbandCheck(operator.getX(GenericHID.Hand.kRight))) {
                     //O RStick X スライド
                     state.climbArmState = State.ClimbArmState.climbSlide;
@@ -408,10 +408,10 @@ public class Robot extends TimedRobot {
                     }
                 }
                 if (operator.getBumper(GenericHID.Hand.kRight)) {
-                    //O RB Climb Motorだけ縮める(調整用)
+                    //O RB Climb Motorだけ縮める
                     state.climbWireState = State.ClimbWireState.climbMotorOnlyShrink;
                 } else if (operator.getBumper(GenericHID.Hand.kLeft)) {
-                    //O LB Climb　Motorだけ伸ばす(調整用)
+                    //O LB Climb　Motorだけ伸ばす
                     state.climbWireState = State.ClimbWireState.climbMotorOnlyExtend;
                 } else if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))) {
                     //O RT ロックする
