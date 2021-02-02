@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="RobotCode-2020-hello">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/libs/RobotCode-2020-hello.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
