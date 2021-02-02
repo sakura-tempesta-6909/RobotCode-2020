@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2021.2.2"
+    id "edu.wpi.first.GradleRIO" version "2021.1.2"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -77,3 +77,5 @@ jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
+
+tasks.withType(AbstractCompile)*.options*.encoding = tasks.withType(GroovyCompile)*.groovyOptions*.encoding = 'UTF-8'

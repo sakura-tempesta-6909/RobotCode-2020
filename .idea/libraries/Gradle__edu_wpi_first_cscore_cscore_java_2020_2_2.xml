@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: edu.wpi.first.cscore:cscore-java:2020.2.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../Public/wpilib/2020/maven/edu/wpi/first/cscore/cscore-java/2020.2.2/cscore-java-2020.2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../Public/wpilib/2020/maven/edu/wpi/first/cscore/cscore-java/2020.2.2/cscore-java-2020.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
