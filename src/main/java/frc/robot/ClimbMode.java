@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subClass.Arm;
 import frc.robot.subClass.Const;
-import frc.robot.subClass.OriginalTimer;
 import frc.robot.subClass.State;
 
 public class ClimbMode {
@@ -17,8 +16,8 @@ public class ClimbMode {
     private TalonSRX climbMotor;
     private Servo climbServo;
     private TalonSRX slideMotor;
-    private Timer slideTimer;
-    private OriginalTimer lockTimer;
+    private Timer lockTimer, slideTimer;
+    private boolean is_LockTimerStart;
 
     private int n_extendReverse;
 
@@ -26,7 +25,7 @@ public class ClimbMode {
         this.climbMotor = climbMotor;
         this.climbServo = climbServo;
         this.slideMotor = climbSlideMotor;
-        this.lockTimer = new OriginalTimer(0.25);
+        this.lockTimer = new Timer();
         this.slideTimer = new Timer();
         slideTimer.start();
         this.arm = arm;
