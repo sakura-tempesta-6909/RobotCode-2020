@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subClass.Arm;
 import frc.robot.subClass.Const;
+import frc.robot.subClass.OriginalTimer;
 import frc.robot.subClass.State;
 
 public class ClimbMode {
@@ -16,8 +17,8 @@ public class ClimbMode {
     private TalonSRX climbMotor;
     private Servo climbServo;
     private TalonSRX slideMotor;
-    private Timer lockTimer, slideTimer;
-    private boolean is_LockTimerStart;
+    private Timer slideTimer;
+    private OriginalTimer lockTimer;
 
     private int n_extendReverse;
 
@@ -25,7 +26,22 @@ public class ClimbMode {
         this.climbMotor = climbMotor;
         this.climbServo = climbServo;
         this.slideMotor = climbSlideMotor;
-        this.lockTimer = new Timer();
+        this.lockTimer = new OriginalTimer(0.25, 
+        () -> {
+            unlockServo();
+        }, 
+        () -> {
+            //実質0.04s
+            if (n_extendReverse > 1) {
+                unlockServo();
+                setClimbMotorSpeed(Const.climbMotorExtendSpeed);
+            } else {
+                unlockServo();
+                setClimbMotorSpeed(-1);
+                n_extendReverse++;
+            }
+        }
+        );
         this.slideTimer = new Timer();
         slideTimer.start();
         this.arm = arm;
@@ -56,27 +72,10 @@ public class ClimbMode {
             case doNothing:
                 setClimbMotorSpeed(0);
                 n_extendReverse = 0;
-                is_LockTimerStart = false;
+                lockTimer.reset();
                 break;
             case climbMotorOnlyExtend:
-                if (!is_LockTimerStart) {
-                    lockTimer.reset();
-                    lockTimer.start();
-                    is_LockTimerStart = true;
-                }
-                if (lockTimer.get() > 0.25) {
-                    //実質0.04s
-                    if (n_extendReverse > 1) {
-                        unlockServo();
-                        setClimbMotorSpeed(Const.climbMotorExtendSpeed);
-                    } else {
-                        unlockServo();
-                        setClimbMotorSpeed(-1);
-                        n_extendReverse++;
-                    }
-                } else {
-                    unlockServo();
-                }
+                lockTimer.run();
                 break;
 
             case climbMotorOnlyShrink:
