@@ -11,7 +11,7 @@ public class OriginalTimer {
     // 時間を超えた/超えてないときの処理
     private Runnable over, notOver;
 
-    OriginalTimer(double limitTime, Runnable notOver, Runnable over) {
+    public OriginalTimer(double limitTime, Runnable notOver, Runnable over) {
         this.limtTime = limitTime;
         this.notOver = notOver;
         this.over = over;
