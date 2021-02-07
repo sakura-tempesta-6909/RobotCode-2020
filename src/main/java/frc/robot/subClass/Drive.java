@@ -26,7 +26,7 @@ public class Drive extends DifferentialDrive {
                 break;
             //ドライブモード時の速さ
             case kManual :
-                setSpeed(state.driveStraightSpeed, state.driveRotateSpeed * 0.7);
+                setSpeed(state.driveStraightSpeed, state.driveRotateSpeed * 0.8);
                 break;
             case kStop :
                 stopMotor();
