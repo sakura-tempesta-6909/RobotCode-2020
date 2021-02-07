@@ -63,6 +63,7 @@ public class Arm {
             //何もしない
             case k_DoNothing:
                 ArmMove(0);
+            //指定した角度
         }
     }
 
