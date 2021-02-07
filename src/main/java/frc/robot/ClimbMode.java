@@ -17,6 +17,7 @@ public class ClimbMode {
     private TalonSRX climbMotor;
     private Servo climbServo;
     private TalonSRX slideMotor;
+
     private Timer slideTimer;
     private OriginalTimer lockTimer;
 
@@ -27,9 +28,11 @@ public class ClimbMode {
         this.climbServo = climbServo;
         this.slideMotor = climbSlideMotor;
         this.lockTimer = new OriginalTimer(0.25, 
+        // 制限時間を超えるまで
         () -> {
             unlockServo();
         }, 
+        // 制限時間を超えたら
         () -> {
             //実質0.04s
             if (n_extendReverse > 1) {
