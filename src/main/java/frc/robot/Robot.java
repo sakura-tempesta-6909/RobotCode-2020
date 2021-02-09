@@ -218,6 +218,7 @@ public class Robot extends TimedRobot {
 
         state.stateInit();
 
+        /*
         switch (gameData) {
             case "L":
                 //パワーポートの左にあるとき
@@ -238,6 +239,9 @@ public class Robot extends TimedRobot {
                 }
                 break;
         }
+        */
+
+        
 
          /*
         double targetPositionRotations = Util.deadbandProcessing(_joy.getY()) * 10.0 * 4096;
