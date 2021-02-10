@@ -162,7 +162,8 @@ public class Arm {
 
     // 砲台角度制御に関する計算式
 
-    /**  現在の砲台の角度を計算.
+    /**  
+     * 現在の砲台の角度を計算.
      * 
      * <p> (角度の最大最小差分) /（エンコーダー値の最大最小差分) * (エンコーダーの現在値最小値差分) + (角度の最小値)
      */
@@ -171,21 +172,27 @@ public class Arm {
                 (Encoder.getAnalogInRaw() - Const.armMinPoint) + Const.armMinAngle;
     }
 
-    /** 目標角度に合わせたPIDの目標値を計算.
+    /** 
+     * 目標角度に合わせたPIDの目標値を計算.
      * 
      * <p> (角度の目標値最小値差分) *（エンコーダー値の最大最小差分) / (角度の最大最小差分) + (最小値からの差分)
+     * 
+     * @param targetAngle 角度の目標値
      */
-    double setPoint(double TargetAngle) {
-        return (TargetAngle - Const.armMinAngle) * Const.armPointDifference /
+    double setPoint(double targetAngle) {
+        return (targetAngle - Const.armMinAngle) * Const.armPointDifference /
                 Const.armAngleDifference + Const.armMinPoint;
     }
 
-    /** 目標角度に合わせた重力オフセットを計算.
+    /** 
+     * 目標角度に合わせた重力オフセットを計算.
      * 
      * <p> (地面と水平な時の重力オフセット) * (cos現在角度)
+     * 
+     * @param nowAngle 現在の角度
      */
-    public double setFeedForward(double NowAngle) {
-        return Const.armMaxOffset * Math.cos(Math.toRadians(NowAngle));
+    public double setFeedForward(double nowAngle) {
+        return Const.armMaxOffset * Math.cos(Math.toRadians(nowAngle));
     }
 
 }
