@@ -158,6 +158,8 @@ bin/
 imgui.ini
 
 
+# End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij
@@ -233,3 +235,13 @@ build/
 
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
 /.idea/
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
