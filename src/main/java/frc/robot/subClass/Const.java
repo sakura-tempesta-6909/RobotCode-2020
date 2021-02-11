@@ -82,6 +82,13 @@ public class Const {
     public final static Gains kGains_ArmPosition = new Gains(8, 0.01, 10, 0, (int) (0.5 * 1025 / 8), 1.00, 0.15 * 1023 / 0.01);
     public static final int kArmPIDLoopIdx = 0;
 
+    //以下立崎追記分（完成したら整理します）
+    public static final double ArmFullSpeedTime = 5;//最大速度になるまでにかかる時間
+    public static final double ArmMaxSpeed = 0.1;
+    public static final double ArmConAng = Const.ArmFullSpeedTime * Const.ArmMaxSpeed;//台形加速実施角度（標準）
+    public static final double Acceleration = 0.1;
+
+
     //目標角度
     public static final double armShootBelowPoint = armMinPoint + 330;
     public static final double armShootBelowAngle = (armShootBelowPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
