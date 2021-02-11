@@ -367,17 +367,22 @@ public class Robot extends TimedRobot {
                     state.armState = State.ArmState.k_PID;
                     state.armSetAngle = Const.armShootBelowAngle;
                 } else if (operator.getYButton()) {
-                    //O Y（仮）　砲台の角度調節（InitialLineにあるとき）
+                    //O Y　砲台の角度調節（InitialLineにあるとき）
                     state.armState = State.ArmState.k_PID;
                     state.armSetAngle = Const.armShootInitiationAngle;
                 } else if (operator.getAButton()) {
-                    //O A（仮）　砲台の角度調節（真下にある時、下へ）
+                    //O A　砲台の角度調節（真下にある時、下へ）
                     state.armState = State.ArmState.k_PID;
                     state.armSetAngle = Const.armParallelAngle;
                 } else if (Util.deadbandCheck(operator.getY(GenericHID.Hand.kLeft))) {
                     //O LStick Y 砲台の角度を手動で調節, 正か負のみ
                     state.armState = State.ArmState.k_Adjust;
                     state.armMotorSpeed = -operator.getY(GenericHID.Hand.kLeft);
+                } else if (operator.getBButton()) {
+                    //O B 60度に角度調整//
+                    state.armState = State.ArmState.k_ConstAng;
+                    state.armSetAngle = 60; //後で変更予定
+                    state.armFinalTargetAngle = 60;
                 }
                     /*if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))&&Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
                         state.intakeBeltState = State.IntakeBeltState.kouttake;
