@@ -104,7 +104,7 @@ public class ClimbMode {
         } else {
             // Arｍ機構と合うようにスピードを調整
             state.armState = State.ArmState.k_Adjust;
-            state.armMotorSpeed = arm.SetFeedForward(armAngle) + Const.climbArmExtendSpeed + state.climbExtendAdjustSpeed;
+            state.armMotorSpeed = arm.setFeedForward(armAngle) + Const.climbArmExtendSpeed + state.climbExtendAdjustSpeed;
             System.out.println("armMotorSpeed" + state.armMotorSpeed);
         }
             /*
