@@ -19,7 +19,9 @@ public class State {
     //Arm Angle
     public double armAngle;
     public double armSetAngle;
-
+    public double DisAng;
+    public double armFinalTargetAngle;
+    
     //SubClass State
     public DriveState driveState;
     public ArmState armState;
@@ -135,6 +137,7 @@ public class State {
         k_PID,
         k_Basic,
         k_Manual,
+        k_ConstAng,
         k_DoNothing
     }
 
