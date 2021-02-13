@@ -108,9 +108,9 @@ public class Robot extends TimedRobot {
         driver = new XboxController(Const.DriveControllerPort);
 
         //cameraの初期化
-        //driveCamera = CameraServer.getInstance();
+        driveCamera = CameraServer.getInstance();
         armCamera = CameraServer.getInstance();
-        //driveCamera.startAutomaticCapture("drive", 1);
+        driveCamera.startAutomaticCapture("drive", 1);
         armCamera.startAutomaticCapture("arm", 0);
 
         //ドライブモーターの初期化
@@ -136,6 +136,7 @@ public class Robot extends TimedRobot {
         shooterRightMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
                 Const.kPIDLoopIdx,
                 Const.kTimeoutMs);
+
         shooterLeftMotor.config_kF(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kF, Const.kTimeoutMs);
         shooterLeftMotor.config_kP(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kP, Const.kTimeoutMs);
         shooterLeftMotor.config_kI(Const.kPIDLoopIdx, Const.kGains_ShooterVelocity.kI, Const.kTimeoutMs);
@@ -217,37 +218,6 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
 
         state.stateInit();
-
-        /*
-        switch (gameData) {
-            case "L":
-                //パワーポートの左にあるとき
-                System.out.println("LLLLLLLLLLLLLLL");
-
-            default:
-                //パワーポートの目の前にあるとき
-                if (autonomousTimer.get() < 3) {
-                    state.armState = State.ArmState.k_PID;
-                    state.armSetAngle = 36.5;
-                } else if (autonomousTimer.get() < 6) {
-                    state.armState = State.ArmState.k_Conserve;
-                    state.shooterState = State.ShooterState.kShoot;
-                    state.intakeBeltState = State.IntakeBeltState.kOuttake;
-                } else if (autonomousTimer.get() < 9) {
-                    state.driveStraightSpeed = -0.6;
-                } else if (autonomousTimer.get() <= 15) {
-                }
-                break;
-        }
-        */
-
-        
-
-         /*
-        double targetPositionRotations = Util.deadbandProcessing(_joy.getY()) * 10.0 * 4096;
-        driveLeftFront.set(ControlMode.Position, targetPositionRotations);
-        driveRightFront.set(ControlMode.Position, targetPositionRotations);
-         */
 
         drive.applyState(state);
         arm.applyState(state);
@@ -384,9 +354,13 @@ public class Robot extends TimedRobot {
                     state.armSetAngle = 60; //後で変更予定
                     state.armFinalTargetAngle = 60;
                 }
-                    /*if(Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))&&Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
-                        state.intakeBeltState = State.IntakeBeltState.kouttake;
-                    }*/
+
+                /*
+                * if(Util.deadandCheck(operator.getTriggerAxis(GenericHID.Hand.kRight))&&Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))){
+                * state.intakeBeltState = State.IntakeBeltState.kouttake;
+                * }
+                */
+
                 break;
 
             case m_Climb:
@@ -410,7 +384,6 @@ public class Robot extends TimedRobot {
                     if (Util.deadbandCheck(operator.getTriggerAxis(GenericHID.Hand.kLeft))) {
                         //O LT 高出力でスライド
                         state.climbSlideMotorSpeed = -operator.getX(GenericHID.Hand.kLeft);
-                        System.out.println("Highhhhhhhhhhhhhhhhhhhhhhhh");
                     } else {
                         //1/2の出力でスライド
                         state.climbSlideMotorSpeed = operator.getX(GenericHID.Hand.kRight) / 2;
