@@ -21,6 +21,10 @@ public class Util {
         SmartDashboard.putString(key, text);
     }
 
+    public static double pointToAngle(double point) {
+        return  (point - Const.armMinPoint) * Const.armAngleDifference / Const.armPointDifference + Const.armMinAngle;
+    }
+
     public enum ColorCode {
         yellow,
         red,

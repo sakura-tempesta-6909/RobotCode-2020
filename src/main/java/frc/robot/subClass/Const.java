@@ -72,8 +72,8 @@ public class Const {
     //アームの可動域(角度と抵抗の値)
     public static final double armMaxAngle = 80;
     public static final double armMinAngle = -30;
-    public static final double armMaxPoint = 506;
-    public static final double armMinPoint = 165;
+    public static final double armMaxPoint = 494;
+    public static final double armMinPoint = 159;
     //for Calculating Offset
     public static final double armAngleDifference = armMaxAngle - armMinAngle;
     public static final double armPointDifference = armMaxPoint - armMinPoint;
@@ -98,6 +98,11 @@ public class Const {
     public static final double armShootInitiationPoint = armMinPoint + 203;
     public static final double armShootInitiationAngle = (armShootInitiationPoint - armMinPoint) * armAngleDifference / armPointDifference + armMinAngle;
 
+    // For Interstellar Accuracy Challenge
+    public static final double interstellarGreenPoint = 408;
+    public static final double interStellarYellowPoint = 360;
+    public static final double interStellarBluePoint= 345;
+    public static final double interStellarRedPoint = 347;
 
     //PANEL
     public static final double shooterPanelManualSpeed = 0.10;
